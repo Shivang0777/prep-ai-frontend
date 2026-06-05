@@ -1,0 +1,354 @@
+/* ==========================================================================
+   MOCK INTERVIEW - ZERO BOX / SPATIAL TYPOGRAPHY EDITION
+   ========================================================================== */
+
+   :root {
+    --bg-dark: #030305;
+    --text-main: #ffffff;
+    --text-dim: #737373;
+    --accent-neon: #00ea8d;
+    --accent-purple: #7000ff;
+  }
+  
+  [data-theme='light'] {
+    --bg-dark: #f8f9fa;
+    --text-main: #000000;
+    --text-dim: #888888;
+    --accent-neon: #00b86e;
+    --accent-purple: #5e00d6;
+  }
+  
+  body {
+    margin: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .mock-wrapper {
+    min-height: 100vh;
+    padding: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Background Glows (No boxes, just light) */
+  .ambient-glow {
+    position: fixed;
+    width: 60vw; height: 60vh;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(112, 0, 255, 0.15) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  /* --- 🚀 INTRO SCREEN (PURE TYPOGRAPHY) --- */
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 85vh;
+    text-align: center;
+  }
+  
+  .massive-title {
+    font-size: 7rem;
+    font-weight: 900;
+    letter-spacing: -4px;
+    margin: 0;
+    color: var(--text-main);
+    line-height: 1;
+  }
+  
+  /* THE NAKED ROADMAP (Zero Boxes) */
+  .naked-flow {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin: 80px 0;
+    width: 100%;
+  }
+  
+  .naked-step {
+    position: relative;
+    text-align: left;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Massive Hollow Numbers */
+  .giant-hollow-num {
+    font-size: 6rem;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(136, 136, 136, 0.2);
+    position: absolute;
+    top: -60px; left: -20px;
+    z-index: -1;
+    transition: all 0.4s ease;
+  }
+  
+  .naked-step:hover .giant-hollow-num {
+    -webkit-text-stroke: 2px var(--accent-neon);
+    transform: translateY(-10px);
+  }
+  
+  .step-heading {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .step-desc {
+    font-size: 1rem;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  /* --- 📂 UPLOAD (TEXT-ONLY ZONE) --- */
+  .naked-upload-zone {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    transition: 0.3s;
+  }
+  
+  .naked-upload-zone:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 20px var(--accent-purple);
+  }
+  
+  .hollow-text-large {
+    font-size: 4rem;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--text-main);
+    text-transform: uppercase;
+  }
+  
+  /* --- 🎤 INTERVIEW ROOM (CINEMATIC) --- */
+  .interview-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    height: 80vh;
+    align-items: center;
+  }
+  
+  .borderless-cam {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    transform: scaleX(-1);
+    mask-image: radial-gradient(circle, black 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle, black 70%, transparent 100%);
+  }
+  
+  .floating-transcript {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .text-ai {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--text-main);
+  }
+  
+  .text-user {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  
+  /* --- 📊 REPORT (NO GRIDS) --- */
+  .floating-report-layout {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 70vh;
+  }
+  
+  .naked-score {
+    font-size: 10rem;
+    font-weight: 900;
+    color: var(--accent-neon);
+    line-height: 0.8;
+  }
+  
+  .naked-fumble-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .naked-fumble-item {
+    display: flex;
+    gap: 20px;
+    cursor: pointer;
+  }
+  
+  .naked-fumble-item:hover .fumble-title { color: var(--accent-neon); }
+  
+  .fumble-time {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #ff4757;
+  }
+  
+  .fumble-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    transition: 0.3s;
+  }
+  
+  /* BUTTON */
+  .btn-neon-line {
+    background: transparent;
+    color: var(--text-main);
+    border: none;
+    border-bottom: 2px solid var(--accent-neon);
+    padding: 10px 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s;
+  }
+  
+  .btn-neon-line:hover {
+    color: var(--accent-neon);
+    letter-spacing: 2px;
+  }
+  /* ==========================================================================
+   📱 MOCK INTERVIEW - ULTRA-RESPONSIVE MOBILE BREAKPOINT
+   ========================================================================== */
+@media (max-width: 768px) {
+  
+  /* Overall Screen Padding tight ki */
+  .mock-wrapper {
+    padding: 20px 15px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* --- 🚀 INTRO SCREEN RESET --- */
+  .hero-container {
+    min-height: auto !important;
+    padding-top: 20px !important;
+  }
+
+  /* 7rem font mobile pe screen phadd deta hai, use clamp kiya */
+  .massive-title {
+    font-size: clamp(3rem, 15vw, 4.5rem) !important;
+    letter-spacing: -2px !important;
+  }
+
+  /* Horizontal roadmap ko vertical column mein dala */
+  .naked-flow {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 50px !important;
+    margin: 60px 0 !important;
+  }
+
+  .naked-step {
+    width: 100% !important;
+    max-width: 300px !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+
+  .giant-hollow-num {
+    font-size: 4.5rem !important;
+    top: -45px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  
+  .naked-step:hover .giant-hollow-num {
+    transform: translate(-50%, -5px) !important;
+  }
+
+  /* Drop resume text fix */
+  .hollow-text-large {
+    font-size: 2.2rem !important;
+    -webkit-text-stroke: 1px var(--text-main) !important;
+    text-align: center !important;
+  }
+
+  /* --- 🎤 INTERVIEW ROOM RESET --- */
+  /* Split view ko single column stack kiya */
+  .interview-layout {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+    height: auto !important;
+    align-items: flex-start !important;
+  }
+
+  .borderless-cam {
+    max-width: 100% !important;
+    border-radius: 16px !important;
+  }
+
+  .floating-transcript {
+    gap: 15px !important;
+    text-align: center !important;
+  }
+
+  /* Text sizes ko readable aur subtle banaya */
+  .text-ai {
+    font-size: 1.6rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .text-user {
+    font-size: 1.1rem !important;
+  }
+
+  /* --- 📊 REPORT / TELEMETRY RESET --- */
+  /* Height layout hata kar auto vertical stacking kari */
+  .floating-report-layout {
+    flex-direction: column !important;
+    height: auto !important;
+    gap: 40px !important;
+    padding-bottom: 50px !important;
+  }
+
+  .naked-score {
+    font-size: 6rem !important;
+  }
+
+  /* Video aur filler boxes ki hardcoded 550px width kill kari */
+  .floating-report-layout video,
+  .floating-report-layout div[style*="width: 550px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Cringe logs button alignment padding */
+  .cringe-btn {
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* General buttons layout adjust */
+  .btn-neon-line {
+    font-size: 1.2rem !important;
+  }
+}

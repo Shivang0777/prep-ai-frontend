@@ -1,0 +1,105 @@
+[
+    {
+      "id": 1,
+      "title": "Two Sum",
+      "difficulty": "Easy",
+      "topic": "Arrays",
+      "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+      "example": "Input: nums = [2,7,11,15], target = 9 \nOutput: [0,1]",
+      "snippets": {
+        "javascript": "function twoSum(nums, target) {\n  // write code\n}",
+        "python": "def twoSum(nums, target):\n    # write code"
+      },
+      "testCases": [{ "inputDisplay": "[2,7,11,15], 9", "expected": "[0,1]", "injector": { "javascript": "console.log(JSON.stringify(twoSum([2,7,11,15], 9)));", "python": "print(twoSum([2,7,11,15], 9))" } }]
+    },
+    {
+      "id": 2,
+      "title": "Reverse String",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "description": "Write a function that reverses a string. The input string is given as an array of characters.",
+      "example": "Input: s = ['h','e','l','l','o'] \nOutput: ['o','l','l','e','h']",
+      "snippets": { "javascript": "function reverseString(s) { }", "python": "def reverse_string(s):" },
+      "testCases": [{ "inputDisplay": "['h','e','l','l','o']", "expected": "[\"o\",\"l\",\"l\",\"e\",\"h\"]", "injector": { "javascript": "let s=['h','e','l','l','o']; reverseString(s); console.log(JSON.stringify(s));", "python": "s=['h','e','l','l','o']; reverse_string(s); print(s)" } }]
+    },
+    {
+      "id": 3,
+      "title": "Palindrome Number",
+      "difficulty": "Easy",
+      "topic": "Math",
+      "description": "Check if an integer is a palindrome.",
+      "example": "Input: 121 -> Output: true",
+      "snippets": { "javascript": "function isPalindrome(x) { }", "python": "def is_palindrome(x):" },
+      "testCases": [{ "inputDisplay": "121", "expected": "true", "injector": { "javascript": "console.log(isPalindrome(121));", "python": "print(is_palindrome(121))" } }]
+    },
+    {
+      "id": 4,
+      "title": "Search Insert Position",
+      "difficulty": "Easy",
+      "topic": "Binary Search",
+      "description": "Return the index where target would be inserted in a sorted array.",
+      "example": "Input: [1,3,5,6], 5 -> Output: 2",
+      "snippets": { "javascript": "function searchInsert(nums, target) { }", "python": "def search_insert(nums, target):" },
+      "testCases": [{ "inputDisplay": "[1,3,5,6], 5", "expected": "2", "injector": { "javascript": "console.log(searchInsert([1,3,5,6], 5));", "python": "print(search_insert([1,3,5,6], 5))" } }]
+    },
+    {
+      "id": 5,
+      "title": "Fibonacci Number",
+      "difficulty": "Easy",
+      "topic": "Dynamic Programming",
+      "description": "Calculate the n-th Fibonacci number.",
+      "example": "Input: n = 4 -> Output: 3",
+      "snippets": { "javascript": "function fib(n) { }", "python": "def fib(n):" },
+      "testCases": [{ "inputDisplay": "4", "expected": "3", "injector": { "javascript": "console.log(fib(4));", "python": "print(fib(4))" } }]
+    },
+    {
+      "id": 6,
+      "title": "FizzBuzz",
+      "difficulty": "Easy",
+      "topic": "Simulation",
+      "description": "Return an array of strings from 1 to n with Fizz/Buzz logic.",
+      "example": "n = 3 -> ['1','2','Fizz']",
+      "snippets": { "javascript": "function fizzBuzz(n) { }", "python": "def fizz_buzz(n):" },
+      "testCases": [{ "inputDisplay": "3", "expected": "[\"1\",\"2\",\"Fizz\"]", "injector": { "javascript": "console.log(JSON.stringify(fizzBuzz(3)));", "python": "print(fizz_buzz(3))" } }]
+    },
+    {
+      "id": 7,
+      "title": "Maximum Subarray",
+      "difficulty": "Medium",
+      "topic": "Kadane Algorithm",
+      "description": "Find the contiguous subarray with the largest sum.",
+      "example": "[-2,1,-3,4,-1,2,1,-5,4] -> 6",
+      "snippets": { "javascript": "function maxSubArray(nums) { }", "python": "def max_sub_array(nums):" },
+      "testCases": [{ "inputDisplay": "[-2,1,-3,4,-1,2,1,-5,4]", "expected": "6", "injector": { "javascript": "console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));", "python": "print(max_sub_array([-2,1,-3,4,-1,2,1,-5,4]))" } }]
+    },
+    {
+      "id": 8,
+      "title": "Single Number",
+      "difficulty": "Easy",
+      "topic": "Bit Manipulation",
+      "description": "Find the element that appears only once in an array where every other element appears twice.",
+      "example": "[2,2,1] -> 1",
+      "snippets": { "javascript": "function singleNumber(nums) { }", "python": "def single_number(nums):" },
+      "testCases": [{ "inputDisplay": "[2,2,1]", "expected": "1", "injector": { "javascript": "console.log(singleNumber([2,2,1]));", "python": "print(single_number([2,2,1]))" } }]
+    },
+    {
+      "id": 9,
+      "title": "Valid Anagram",
+      "difficulty": "Easy",
+      "topic": "Strings",
+      "description": "Determine if t is an anagram of s.",
+      "example": "s = 'anagram', t = 'nagaram' -> true",
+      "snippets": { "javascript": "function isAnagram(s, t) { }", "python": "def is_anagram(s, t):" },
+      "testCases": [{ "inputDisplay": "'anagram', 'nagaram'", "expected": "true", "injector": { "javascript": "console.log(isAnagram('anagram', 'nagaram'));", "python": "print(is_anagram('anagram', 'nagaram'))" } }]
+    },
+    {
+      "id": 10,
+      "title": "Missing Number",
+      "difficulty": "Easy",
+      "topic": "Math",
+      "description": "Find the missing number in the range [0, n] from an array.",
+      "example": "[3,0,1] -> 2",
+      "snippets": { "javascript": "function missingNumber(nums) { }", "python": "def missing_number(nums):" },
+      "testCases": [{ "inputDisplay": "[3,0,1]", "expected": "2", "injector": { "javascript": "console.log(missingNumber([3,0,1]));", "python": "print(missing_number([3,0,1]))" } }]
+    }
+  ]

@@ -1,0 +1,263 @@
+/* --- GLOBAL ABOUT STYLES --- */
+.about-section {
+    width: 100%;
+    min-height: 100vh;
+    padding: 120px 0 100px;
+    background-color: var(--bg-charcoal);
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.about-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+/* --- TEXT STYLING --- */
+.about-badge {
+    color: var(--neon-pink);
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.about-title {
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 25px;
+}
+
+.gradient-text-v2 {
+    display: inline-block;
+    background: linear-gradient(90deg, #00f3ff, #d946ef);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.about-description {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 550px;
+}
+
+.about-stats-row {
+    display: flex;
+    gap: 40px;
+}
+
+.stat-node h3 {
+    font-size: 2.2rem;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.stat-node span {
+    color: var(--neon-cyan);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* --- VIDEO FRAME --- */
+.video-frame {
+    position: relative;
+    border-radius: 40px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+    background: #000;
+}
+
+.featured-video {
+    width: 100%;
+    display: block;
+    filter: brightness(0.9);
+}
+
+/* --- TEAM SECTION (THE 4 MEMBERS LIST) --- */
+.about-team-footer {
+    border-top: 1px solid var(--glass-border);
+    padding-top: 50px;
+}
+
+.team-header-tag {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    letter-spacing: 3px;
+}
+
+.team-list-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.team-row-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.team-row-item:hover {
+    padding-left: 20px;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.05), transparent);
+}
+
+.m-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.m-idx {
+    color: var(--neon-purple);
+    font-family: monospace;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.m-name-tag {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.m-role {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.m-actions {
+    display: flex;
+    gap: 30px;
+}
+
+.social-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Icon aur text ke beech gap */
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    color: var(--neon-pink);
+    transform: translateY(-2px);
+}
+
+.wa-hover:hover {
+    color: #25D366 !important; /* WhatsApp Green */
+    text-shadow: 0 0 10px rgba(37, 211, 102, 0.3);
+}
+
+.social-link svg {
+    font-size: 1.1rem; /* Icons size */
+}
+
+/* ==========================================================================
+   📱 ULTRA RESPONSIVE MEDIA OVERRIDES (968px & Below)
+   ========================================================================== */
+@media (max-width: 968px) {
+    .about-section {
+        padding: 80px 0 60px !important;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+        margin-bottom: 60px !important;
+    }
+
+    .about-description {
+        max-width: 100% !important;
+        font-size: 1.05rem !important;
+    }
+
+    /* Stats auto layout alignment */
+    .about-stats-row {
+        gap: 30px !important;
+        flex-wrap: wrap !important; /* Mobile par automatic adjust honge stats */
+    }
+
+    .stat-node h3 {
+        font-size: 1.8rem !important;
+    }
+
+    /* Video scaling lock */
+    .video-frame {
+        border-radius: 20px !important; /* Mobile friendly corners */
+        max-width: 100% !important;
+    }
+
+    /* Team section responsive conversion */
+    .team-row-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+        padding: 20px 0 !important;
+    }
+
+    .team-row-item:hover {
+        padding-left: 10px !important;
+    }
+
+    .m-info {
+        gap: 15px !important;
+    }
+
+    .m-name-tag {
+        font-size: 1.3rem !important;
+    }
+
+    /* Social actions padding fix alignment */
+    .m-actions {
+        padding-left: 32px !important; /* Matrix offset adjusted cleanly */
+        gap: 20px !important;
+    }
+}
+.m-actions {
+    padding-left: 32px !important; 
+    gap: 15px 25px !important; /* 🔥 Pehla value: Row gap (agar link niche toote), Doosra value: Column gap */
+    flex-wrap: wrap !important; /* 🚀 MAGIC LINE: Isse text katega nahi, automatic doosri line mein aa jayega */
+    display: flex !important;
+    width: calc(100% - 32px) !important;
+    box-sizing: border-box !important;
+}
+
+.social-link {
+    font-size: 0.75rem !important; /* Mobile par fonts ko thoda crisp kiya */
+    letter-spacing: 0.5px !important;
+    flex-shrink: 0 !important; /* Elements ko pichakne se rokega */
+}
+
+.social-link svg {
+    font-size: 1rem !important; /* Icons ka size screen ke proportion mein set kiya */
+}

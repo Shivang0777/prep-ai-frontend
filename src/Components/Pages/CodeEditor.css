@@ -1,0 +1,227 @@
+/* --- 1. GLOBAL RESET & CONTAINER --- */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #0b0c10;
+  font-family: 'Inter', sans-serif;
+}
+
+.editor-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background-color: #0b0c10;
+  color: white;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* Loading & Error views */
+.loading-core { background:#0b0c10; height:100vh; display:flex; align-items:center; justify-content:center; color:#66fcf1; }
+.error-mission { background:#0b0c10; height:100vh; padding:50px; color:white; }
+
+/* --- 2. HEADER STYLING --- */
+.editor-header {
+  height: 50px;
+  background: #2d2d2d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #333;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.editor-header h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.back-btn {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- 3. DROPDOWN & BUTTONS --- */
+.lang-select {
+  background-color: #111;
+  color: #66fcf1;
+  border: 1px solid #45a29e;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.run-btn {
+  background: #32ba67;
+  color: white;
+  border: none;
+  padding: 6px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- 4. WORKSPACE LAYOUT --- */
+.workspace {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* LEFT PANEL (Description) */
+.problem-panel {
+  width: 35%;
+  background: #2d2d2d;
+  border-right: 1px solid #333;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.problem-panel p { color: #b4b4b4; font-size: 14px; line-height: 1.5; }
+.badge { font-size: 11px; font-weight: bold; text-transform: uppercase; }
+.easy { color: #32ba67; }
+
+.example-box {
+  background: #1e1e1e;
+  padding: 15px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+.example-box h5 { margin: 0 0 5px 0; color: #888; }
+.example-box pre { margin: 0; color: #66fcf1; font-size: 13px; white-space: pre-wrap; }
+
+/* RIGHT PANEL (Code + Output) */
+.code-area-wrapper {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-panel {
+  flex: 1.8;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Console Area */
+.console-panel {
+  flex: 1;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.console-header {
+  display: flex;
+  background: #252526;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+}
+.active-tab { background: #111; color: #66fcf1 !important; }
+.active-result { background: #111; color: #2ecc71 !important; }
+
+.console-output {
+  padding: 15px;
+  overflow-y: auto;
+  flex: 1;
+}
+.console-title { color: #666; font-size: 11px; margin: 0 0 5px 0; }
+.testcase-box { background: #2d2d2d; padding: 8px; marginBottom: 10px; border-radius: 4px; }
+.output-box { marginTop: 10px; background: #1a1a1a; padding: 10px; border-radius: 4px; }
+
+/* ==========================================================================
+   📱 768px ULTRA MOBILE RESPONSIVE STACK OVERRIDES
+   ========================================================================== */
+@media (max-width: 768px) {
+  html, body, .editor-container {
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  .editor-header {
+    height: auto !important;
+    min-height: 55px !important;
+    padding: 10px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Side-by-side view killed completely */
+  .workspace {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .problem-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 280px !important;
+    border-right: none !important;
+    border-bottom: 2px solid #333 !important;
+  }
+
+  .code-area-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Monaco dynamic working sizing frame lock */
+  .code-panel {
+    width: 100% !important;
+    height: 400px !important;
+    min-height: 380px !important;
+    flex: none !important;
+  }
+
+  .console-panel {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 240px !important;
+    flex: none !important;
+  }
+
+  /* Monaco Engine Force Fit */
+  .monaco-editor, 
+  .monaco-editor .overflow-guard, 
+  .monaco-editor-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+/* --- 1. SETTINGS & VARIABLES (Updated for Theme Support) --- */
+:root {
+  /* Default (Dark Theme) */
+  --bg-charcoal: #0f1115;      /* Deep Modern Grey */
+  --bg-card-home: rgba(255, 255, 255, 0.03);
+  --neon-pink: #d946ef;        /* Hot Pink Glow */
+  --neon-purple: #8b5cf6;      /* Electric Purple */
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;   /* Muted Slate */
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent: #6c5ce7;           /* Dashboard Purple/Blue */
+  --cursor-color: rgba(217, 70, 239, 0.04);
+}
+
+/* --- LIGHT THEME OVERRIDE --- */
+[data-theme='light'] {
+  --bg-charcoal: #f8fafc;      /* Soft Light Greyish Blue */
+  --bg-card-home: #ffffff;
+  --text-primary: #1e293b;     /* Deep Charcoal */
+  --text-secondary: #64748b;   /* Muted Blue/Grey */
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --cursor-color: rgba(108, 92, 231, 0.08); /* Soft Purple Glow */
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+/* --- 2. LAYOUT ROOT --- */
+.home-root {
+  background-color: var(--bg-charcoal);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color 0.4s ease; /* Smooth transition */
+}
+
+/* --- 3. INTERACTIVE GLOW (Cursor Follow) --- */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 500px; 
+  height: 500px;
+  background: radial-gradient(circle, var(--cursor-color) 0%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: -1; 
+}
+
+/* --- 4. HERO SECTION --- */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 100px 0;
+  /* Ambient lighting logic */
+  background-image: 
+    radial-gradient(circle at 10% 20%, var(--cursor-color) 0%, transparent 40%);
+}
+
+.hero-grid-container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 0 50px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: center;
+  z-index: 10;
+}
+
+/* --- 5. TEXT CONTENT STYLING --- */
+.hero-tag-neon {
+  color: var(--neon-pink);
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.animate-line { 
+  display: block; 
+}
+
+.hero-heading {
+  font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--text-primary);
+}
+
+.neon-text {
+  /* Gradient text fix for light mode visibility */
+  background: linear-gradient(90deg, var(--text-primary), var(--neon-pink), var(--neon-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+.hero-description {
+  /* 1. Base Color - Force visibility with an electric cyan tint */
+  color: #00f3ff !important; 
+  
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 30px 0 40px;
+  max-width: 520px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  
+  /* 2. Sharpness & Visibility */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  z-index: 50; /* Baaki glows ke upar rakhne ke liye */
+
+  /* 3. The Glow - Door se chamakne wala setup */
+  text-shadow: 
+    0 0 8px rgba(0, 243, 255, 0.8), 
+    0 0 20px rgba(0, 243, 255, 0.2);
+
+  transition: all 0.4s ease;
+}
+
+/* --- Light Mode Fix --- */
+[data-theme='light'] .hero-description {
+  color: #334155 !important;
+  text-shadow: none !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+}
+
+/* Light Mode: Professional and Readable */
+[data-theme='light'] .hero-description {
+  color: #334155 !important; /* Force dark color in light mode */
+  text-shadow: none;
+  font-weight: 500;
+  background: none;
+}
+
+/* --- 6. BUTTONS --- */
+.hero-action-group { 
+  display: flex; 
+  gap: 20px; 
+}
+
+.btn-neon-pink {
+  background: var(--neon-pink);
+  color: white; 
+  border: none;
+  padding: 18px 38px; 
+  border-radius: 10px;
+  font-weight: 700; 
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(217, 70, 239, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.btn-neon-pink:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.btn-outline-glass {
+  background: var(--bg-card-home); /* Theme aware background */
+  color: var(--text-primary); 
+  border: 1px solid var(--glass-border);
+  padding: 18px 38px; 
+  border-radius: 10px;
+  font-weight: 700; 
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-glass:hover {
+  background: var(--glass-border);
+  transform: translateY(-2px);
+}
+
+/* --- 7. VISUAL / RIGHT CONTENT --- */
+.visual-fallback {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.glow-sphere {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--cursor-color) 0%, transparent 70%);
+  filter: blur(40px);
+  z-index: 1;
+}
+
+.hero-main-logo {
+  width: 100%;
+  max-width: 450px; 
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 0 20px var(--cursor-color));
+  position: relative;
+}
+
+.floating-card {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg-card-home);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(15px);
+  padding: 15px 25px;
+  border-radius: 16px;
+  z-index: 3;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.floating-card h3 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.floating-card p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* --- 8. SOCIAL PROOF / STATS --- */
+.user-stats-neon { 
+  display: flex; 
+  align-items: center; 
+  gap: 15px; 
+  margin-top: 50px; 
+}
+
+.avatar-pile { 
+  display: flex; 
+}
+
+.pile-circle { 
+  width: 32px; 
+  height: 32px; 
+  border-radius: 50%; 
+  border: 2px solid var(--bg-charcoal); 
+  margin-left: -10px;
+  background: var(--text-secondary); /* Dynamic background */
+}
+
+.p1 { margin-left: 0; }
+
+.user-stats-neon p { 
+  font-size: 0.85rem; 
+  color: var(--text-secondary); 
+}
+
+.user-stats-neon span { 
+  color: #10b981; /* Keep success green same */
+  font-weight: bold; 
+}
+
+/* --- 9. LOWER SECTIONS --- */
+.dark-content-wrap {
+  background-color: var(--bg-charcoal);
+  position: relative;
+  z-index: 20; 
+  transition: background-color 0.4s ease;
+}
+
+/* --- 10. MOBILE FIXES --- */
+@media (max-width: 968px) {
+  .hero-grid-container { 
+    grid-template-columns: 1fr; 
+    text-align: center; 
+    padding: 100px 30px 50px; 
+  }
+  .hero-description, .hero-action-group { 
+    margin: 20px auto; 
+    justify-content: center; 
+  }
+  .hero-main-logo { 
+    margin: 40px auto; 
+    max-width: 300px; 
+  }
+  .floating-card {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: -30px;
+    width: 200px;
+  }
+}

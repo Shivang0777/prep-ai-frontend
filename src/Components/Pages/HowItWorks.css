@@ -1,0 +1,265 @@
+.hiw-section {
+  /* background: #050505; <- Isko hta ke variable kiya */
+  background-color: var(--bg-charcoal);
+  padding: 120px 8%;
+  color: var(--text-primary);
+  overflow: hidden;
+  transition: background-color 0.4s ease;
+}
+
+/* Header Styling */
+.hiw-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.hiw-tag {
+  color: var(--neon-pink); /* Slogan se match karne ke liye pink kiya, ya blue bhi rakh sakte ho */
+  font-weight: 800;
+  letter-spacing: 4px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.hiw-main-title {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-top: 10px;
+  letter-spacing: -2px;
+  color: var(--text-primary);
+}
+
+.hiw-main-title span {
+  /* Title gradient theme ke hisab se chamkega */
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Grid Layout */
+.hiw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 100px;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+/* Vertical Tabs & Progress */
+.hiw-tabs-container {
+  display: flex;
+  gap: 30px;
+  position: relative;
+}
+
+.progress-line {
+  width: 2px;
+  background: var(--glass-border); /* Line color variable */
+  height: 100%;
+  position: relative;
+  border-radius: 10px;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  transition: all 0.5s ease;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.hiw-tabs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+}
+
+.hiw-tab {
+  padding: 10px 0;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+
+.tab-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hiw-tab h3 {
+  font-size: 1.8rem;
+  color: var(--text-secondary); /* Unselected state */
+  transition: 0.3s;
+}
+
+.hiw-tab.active h3 {
+  color: var(--text-primary);
+  transform: translateX(10px);
+}
+
+.step-no {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Glass Engine Card */
+.hiw-visual-engine {
+  perspective: 2000px;
+  height: 550px;
+}
+
+.engine-glass-card {
+  background: var(--bg-card-home); /* Light mode mein white, dark mein darkish */
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 40px;
+  padding: 60px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+  transition: background 0.4s ease, border 0.4s ease;
+}
+
+.scanner-line-v2 {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  opacity: 0.2;
+  z-index: 1;
+}
+
+.engine-icon-v2 {
+  font-size: 5rem;
+  margin-bottom: 25px;
+  filter: drop-shadow(0 0 20px currentColor);
+}
+
+.engine-glass-card h2 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.engine-glass-card p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 400px;
+}
+
+.engine-footer {
+  margin-top: 40px;
+  padding: 10px 20px;
+  background: var(--glass-border);
+  border-radius: 100px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.glow-sphere {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  filter: blur(120px);
+  opacity: 0.15;
+  z-index: -1;
+}
+
+/* Mobile Fix */
+@media (max-width: 1024px) {
+  .hiw-grid { grid-template-columns: 1fr; gap: 50px; }
+  .hiw-main-title { font-size: 2.5rem; }
+  .hiw-visual-engine { height: 450px; }
+}
+
+/* --- MOBILE & TABLET RESPONSIVENESS --- */
+
+@media (max-width: 1024px) {
+  .hiw-grid {
+      grid-template-columns: 1fr; /* Side-by-side hta kar ek ke niche ek */
+      gap: 60px;
+      padding: 0 20px;
+  }
+
+  .hiw-main-title {
+      font-size: 2.8rem; /* Font thoda chota */
+  }
+
+  .hiw-visual-engine {
+      height: auto;
+      min-height: 400px;
+      order: 1; /* Visual card ko pehle dikhao mobile pe (optional, but looks better) */
+  }
+
+  .hiw-tabs-container {
+      order: 2;
+      flex-direction: column; /* Tabs ko stack karo */
+  }
+
+  .engine-glass-card {
+      padding: 40px 20px;
+  }
+
+  .engine-glass-card h2 {
+      font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hiw-section {
+      padding: 80px 5%;
+  }
+
+  .hiw-main-title {
+      font-size: 2.2rem;
+  }
+
+  .progress-line {
+      display: none; /* Mobile par vertical line ajeeb lagti hai, hta dete hain */
+  }
+
+  .hiw-tab h3 {
+      font-size: 1.3rem; /* Mobile friendly text */
+  }
+
+  .hiw-tab.active h3 {
+      transform: translateX(5px); /* Chota animation */
+  }
+
+  .engine-icon-v2 {
+      font-size: 3.5rem;
+  }
+
+  .engine-glass-card p {
+      font-size: 1rem;
+  }
+}

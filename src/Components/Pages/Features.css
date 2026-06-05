@@ -1,0 +1,147 @@
+.features-section {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-charcoal);
+    padding: 100px 0;
+    box-sizing: border-box;
+    position: relative;
+    transition: background-color 0.4s ease;
+}
+
+.features-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.features-badge {
+    color: var(--neon-pink);
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.features-header h2 {
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -2px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* --- THE MODERN CARD (Boring hta diya) --- */
+.feature-card {
+    background: var(--bg-card-home);
+    padding: 50px 35px;
+    border-radius: 32px; /* Thoda zyada rounded for modern look */
+    border: 1px solid var(--glass-border);
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+}
+
+/* Hover par Card ke piche ka Glow */
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-12px);
+    border-color: var(--neon-purple);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+/* Icon Box Fix */
+.f-icon-box {
+    font-size: 3rem;
+    color: var(--neon-purple);
+    margin-bottom: 30px;
+    display: inline-block;
+    transition: transform 0.4s ease;
+    filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.3));
+}
+
+.feature-card:hover .f-icon-box {
+    transform: scale(1.1) rotate(-5deg);
+    color: var(--neon-pink);
+}
+
+.feature-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+/* Ek choti si "Reflection" line card ke upar se guzregi hover pe */
+.feature-card::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 50%;
+    height: 300%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: 0s;
+}
+
+.feature-card:hover::after {
+    top: 100%;
+    left: 100%;
+    transition: all 0.8s ease;
+}
+
+/* Mobile Fixes */
+@media (max-width: 768px) {
+    .features-section {
+        padding: 80px 20px;
+    }
+    .feature-card {
+        padding: 40px 25px;
+    }
+    .features-header h2 {
+        font-size: 2.2rem;
+    }
+}

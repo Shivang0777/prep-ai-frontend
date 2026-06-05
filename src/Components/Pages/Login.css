@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
+
+/* --- THEME SYSTEM STABLE CORE --- */
+:root, [data-theme='dark'] {
+    --auth-bg: #000;
+    --auth-card: #0a0a0a;
+    --auth-text: #fff;
+    --auth-accent: #00f2ff;
+    --auth-muted: #666;
+    --auth-input-line: #222;
+    --auth-smart-bg: #0a0a0a;
+    --auth-card-glow: rgba(0, 242, 255, 0.2);
+}
+
+[data-theme='light'] {
+    --auth-bg: #f5f7f9;
+    --auth-card: #ffffff;
+    --auth-text: #1a1a1a;
+    --auth-accent: #2563eb; 
+    --auth-muted: #888;
+    --auth-input-line: #ddd;
+    --auth-smart-bg: #ffffff;
+    --auth-card-glow: rgba(37, 99, 235, 0.15);
+}
+
+.auth-portal-root {
+    width: 100%;
+    height: 100vh;
+    background: var(--auth-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+/* Neural Background Effect */
+.neural-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.node {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--auth-accent);
+    box-shadow: 0 0 10px var(--auth-accent);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: floatNodes 10s infinite linear;
+}
+
+@keyframes floatNodes {
+    0% { transform: translateY(0) scale(1); opacity: 0.3; }
+    50% { opacity: 0.7; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+}
+
+/* Verification Card responsive upgrade */
+.verification-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 2px;
+    background: linear-gradient(180deg, var(--auth-card-glow), transparent);
+    border-radius: 20px;
+    position: relative;
+    z-index: 10;
+    box-sizing: border-box;
+    transition: filter 0.3s ease;
+}
+
+/* Smart prompt popup background focus filter blur */
+.blur-focus {
+    filter: blur(4px);
+    pointer-events: none;
+}
+
+.card-inner {
+    background: var(--auth-card);
+    padding: 40px 30px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
+}
+
+/* Scanner Line Animation */
+.scanner-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--auth-accent);
+    box-shadow: 0 0 20px var(--auth-accent), 0 0 40px var(--auth-accent);
+    z-index: 20;
+    pointer-events: none;
+}
+
+.portal-header { text-align: center; margin-bottom: 35px; }
+
+.status-indicator {
+    font-size: 0.7rem;
+    color: var(--auth-muted);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.pulse-green { width: 6px; height: 6px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88; animation: pulse 1.5s infinite; }
+.pulse-red { width: 6px; height: 6px; background: #ff3c3c; border-radius: 50%; box-shadow: 0 0 10px #ff3c3c; animation: pulse 0.5s infinite; }
+
+@keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+h1 { font-size: 1.5rem; color: var(--auth-text); margin: 0 0 10px 0; font-weight: 800; text-align: center; }
+
+/* Cyber Inputs system fix */
+.cyber-input-group { position: relative; margin-bottom: 25px; width: 100%; }
+
+.cyber-input-group label {
+    font-size: 0.65rem;
+    color: var(--auth-accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.cyber-input-group input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--auth-input-line);
+    padding: 10px 0;
+    color: var(--auth-text);
+    font-size: 1rem;
+    outline: none;
+    font-family: 'JetBrains Mono', monospace;
+    box-sizing: border-box;
+}
+
+/* Focused active node glowing line effect */
+.input-border {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--auth-accent);
+    transition: width 0.4s ease;
+}
+.cyber-input-group input:focus ~ .input-border { 
+    width: 100%; 
+    box-shadow: 0 0 10px var(--auth-accent); 
+}
+
+/* Auth Buttons */
+.auth-btn {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: 1px solid var(--auth-accent);
+    color: var(--auth-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+.auth-btn:hover:not(.loading) { 
+    background: var(--auth-accent); 
+    color: var(--auth-bg); 
+    box-shadow: 0 0 25px var(--auth-card-glow); 
+}
+
+.auth-btn.loading { border-color: #ff3c3c; color: #ff3c3c; cursor: wait; }
+
+.portal-footer { margin-top: 25px; text-align: center; font-size: 0.8rem; color: var(--auth-muted); }
+.portal-footer span { color: var(--auth-text); cursor: pointer; border-bottom: 1px solid var(--auth-accent); transition: 0.2s; }
+.portal-footer span:hover { color: var(--auth-accent); }
+
+/* --- SMART LOGIN PROMPT COMPONENT --- */
+.smart-login-prompt {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    background: var(--auth-smart-bg);
+    border: 1px solid var(--auth-accent);
+    border-radius: 15px;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--auth-card-glow);
+    box-sizing: border-box;
+}
+
+.smart-prompt-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.avatar-mini {
+    width: 38px;
+    height: 38px;
+    background: var(--auth-accent);
+    color: var(--auth-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.user-meta { overflow: hidden; flex: 1; }
+.user-meta h4 { color: var(--auth-text); margin: 0; font-size: 0.85rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-meta p { color: var(--auth-muted); margin: 0; font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.close-prompt {
+    background: transparent;
+    border: none;
+    color: var(--auth-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+.close-prompt:hover { color: #ff3c3c; }
+
+.quick-auth-btn {
+    width: 100%;
+    background: var(--auth-accent);
+    color: var(--auth-bg);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.quick-auth-btn:hover {
+    background: var(--auth-text) !important;
+    color: var(--auth-card) !important;
+    box-shadow: 0 0 15px rgba(255,255,255,0.8);
+}
+
+.error-display {
+    color: #ff4b2b;
+    font-size: 0.75rem;
+    margin-bottom: 1.2rem;
+    text-align: center;
+    letter-spacing: 1px;
+    background: rgba(255, 75, 43, 0.08);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 75, 43, 0.2);
+}
+
+/* ==========================================================================
+   📱 LOGIN PORTAL ULTRA MOBILE RESPONSIVE ADAPTATION (LESS THAN 768px)
+   ========================================================================== */
+/* ==========================================================================
+   📱 LOGIN PORTAL COMPLETE MOBILE & TABLET RESPONSIVE PATCH (LESS THAN 768px)
+   ========================================================================== */
+   @media (max-width: 768px) {
+    .auth-portal-root {
+        padding: 10px !important;
+        align-items: center !important;
+        display: flex !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 1. Card container constraints (Forcing screen limits) */
+    .verification-card {
+        width: 100% !important;
+        max-width: calc(100vw - 24px) !important; /* Dabba screen se 1px bhi bahar nahi bhagega */
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+    }
+
+    .card-inner {
+        padding: 30px 20px !important; /* Inner side padding reduced for extra space */
+        box-sizing: border-box !important;
+        width: 100% !important;
+        overflow: hidden !important; /* Internal components clipping avoided */
+    }
+
+    .portal-header {
+        margin-bottom: 25px !important;
+        width: 100% !important;
+    }
+
+    /* 🚨 2. HEADLINE OVERFLOW KILLER (Identity Verification text wrap fix) */
+    .card-inner h1 { 
+        font-size: 1.3rem !important; /* Size perfectly scaled down for mobile screen */
+        line-height: 1.4 !important;
+        white-space: normal !important; /* Lambi line ko single block se normal wrap block kiya */
+        word-wrap: break-word !important; /* Let long words split if required natively */
+        overflow-wrap: break-word !important;
+        text-align: center !important;
+        width: 100% !important;
+        display: block !important;
+        margin: 0 auto 5px auto !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .status-indicator {
+        margin-bottom: 8px !important;
+    }
+
+    /* 3. Cyber Input system layout fields */
+    .cyber-input-group {
+        margin-bottom: 20px !important;
+        width: 100% !important;
+    }
+
+    .cyber-input-group input {
+        font-size: 0.95rem !important; /* Mobile typography focus */
+        padding: 8px 0 !important;
+    }
+
+    /* 4. Auth Button responsive adaptation */
+    .auth-btn {
+        padding: 14px !important;
+        font-size: 0.9rem !important;
+        margin-top: 5px !important;
+    }
+
+    /* 5. Smart Prompt Banner fluid layout changes */
+    .smart-login-prompt {
+        top: auto !important;
+        bottom: 15px !important;
+        right: 15px !important;
+        left: 15px !important;
+        width: calc(100% - 30px) !important; /* Bottom dashboard card standard layout conversion */
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.6), 0 0 15px var(--auth-card-glow) !important;
+        padding: 15px !important;
+    }
+
+    .smart-prompt-header {
+        margin-bottom: 12px !important;
+    }
+}

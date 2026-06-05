@@ -1,0 +1,156 @@
+.main-nav {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  /* Scroll hone par variable border dikhega */
+  transition: all 0.3s ease;
+}
+
+.nav-container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--text-main); /* Updated */
+}
+
+/* Logo Image Styling */
+.nav-custom-logo {
+  height: 38px;
+  width: auto;
+  margin-right: 12px;
+  filter: drop-shadow(0 0 8px var(--accent-glow)); /* Dynamic Glow */
+  transition: transform 0.3s ease;
+}
+
+.brand-logo:hover .nav-custom-logo {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.blue-accent { color: var(--accent); } /* Updated to use your Purple/Blue */
+
+.nav-links {
+  display: flex;
+  gap: 35px;
+  list-style: none;
+  align-items: center; /* Toggle switch ko center karne ke liye */
+}
+
+.nav-links li, .custom-li {
+  font-size: 1rem; /* Slightly smaller for professional look */
+  font-weight: 600;
+  color: var(--text-dim); /* Updated */
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.nav-links li a { 
+  text-decoration: none; 
+  color: inherit; 
+}
+
+.nav-links li:hover, .custom-li:hover { 
+  color: var(--accent); 
+}
+
+/* Active State for Links */
+.nav-links li a.active {
+  color: var(--accent);
+}
+
+/* Theme Switcher Button (JSX mein use hoga) */
+.theme-switcher-btn {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 20px;
+    color: var(--text-main);
+}
+
+.theme-switcher-btn:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+}
+
+.nav-btns {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.login-btn-minimal {
+  text-decoration: none;
+  color: var(--text-main); /* Updated */
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.register-btn-solid {
+  text-decoration: none;
+  background: var(--accent); /* Updated */
+  color: white !important;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px var(--accent-glow);
+  transition: 0.3s;
+}
+
+.register-btn-solid:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.mobile-toggle { 
+  display: none; 
+  font-size: 1.5rem; 
+  background: none; 
+  border: none; 
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background: var(--bg-card);
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .nav-links.show { display: flex; }
+  .nav-btns { display: none; }
+  .mobile-toggle { display: block; }
+}

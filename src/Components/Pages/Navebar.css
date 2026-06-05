@@ -1,0 +1,109 @@
+/* Navbar main container */
+.main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 70px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Logo */
+  .main > div:first-child a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1d4ed8; /* Blue */
+    text-decoration: none;
+  }
+  
+  /* Menu Links */
+  .main ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .main ul li a,
+  .main ul li a.features,
+  .main ul li a.work {
+    color: #333333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .main ul li a:hover,
+  .main ul li a.features:hover,
+  .main ul li a.work:hover {
+    color: #1d4ed8; /* Hover blue */
+  }
+  
+  /* Auth Buttons */
+  .main > div:last-child a.login {
+    padding: 8px 16px;
+    border: 1px solid #1d4ed8;
+    color: #1d4ed8;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .main > div:last-child a.login:hover {
+    background-color: #1d4ed8;
+    color: #ffffff;
+  }
+  
+  .main > div:last-child a.register {
+    padding: 8px 16px;
+    background-color: #1d4ed8;
+    color: #ffffff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .main > div:last-child a.register:hover {
+    background-color: #1b40c5; /* Darker blue */
+  }
+  
+  /* Responsive - Mobile */
+  @media (max-width: 768px) {
+    .main {
+      flex-direction: column;
+      height: auto;
+      padding: 10px 20px;
+    }
+  
+    .main ul {
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      margin-top: 10px;
+    }
+  
+    .main > div:last-child {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      margin-top: 10px;
+    }
+  
+    .main > div:last-child a.login,
+    .main > div:last-child a.register {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  

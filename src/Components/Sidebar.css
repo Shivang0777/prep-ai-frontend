@@ -1,0 +1,477 @@
+/* ==========================================================================
+   📱 MOBILE RESPONSIVENESS (TOP NAVIGATION & HEADER MODE)
+   ========================================================================== */
+
+  /* 1. Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+/* --- 🌑 DARK THEME (Current Design - Default) --- */
+:root {
+  --bg-main: #0b0c10;
+  --bg-sidebar: #030712;
+  --bg-card: #1f2833;
+  --text-main: #ffffff;
+  --text-dim: #888888;
+  --accent: #6c5ce7;
+  --border: #333333;
+}
+
+/* --- ☀️ LIGHT THEME (New Premium Look) --- */
+[data-theme='light'] {
+  --bg-main:linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);        /* Light Greyish White */
+  --bg-sidebar: #ffffff;    /* Pure White Sidebar */
+  --bg-card: #ffffff;       /* White Cards */
+  --text-main: #1f2833;    
+   /* Dark Text */
+   --text-main: #1a1a1a;      
+  --graph-line: #4834d4;     
+  --text-dim: #636e72;      /* Grey Text */
+  --accent: #4834d4;        /* Deep Purple */
+  --border: #dcdde1;        /* Light Border */
+}
+
+/* Dashboard Wrapper Fix ताकी बैकग्राउंड चेंज हो सके */
+.dashboard-layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-main); /* ये लाइन ज़रूरी है */
+  transition: background 0.3s ease;
+}
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background: #020b0f; /* Fallback background */
+  overflow-x: hidden;
+  scroll-behavior: smooth; /* Smooth scroll ke liye zaroori */
+}
+/* --- 🛠️ STRUCTURE FIX --- */
+.dashboard-layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-main);
+  transition: background 0.3s ease;
+}
+
+.sidebar-fixed-area {
+  width: 260px;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg-sidebar);
+}
+
+/* --- 🖼️ LOGO SIZE FIX (Important!) --- */
+.sidebar-fixed-area img {
+  width: 150px; /* या जितना तुझे सही लगे */
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 20px auto; /* सेंटर करने के लिए */
+}
+
+.content-scroll-area {
+  flex-grow: 1;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* 2. Main Wrapper */
+.app-world {
+  width: 100%;
+  min-height: 100vh;
+  /* Perspective ko yahan se hata diya hai taaki scrolling block na ho */
+  background: radial-gradient(circle at top, #0f2a33, #020b0f);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. Content Area */
+.app-content {
+  width: 100%;
+  /* Navbar ki height (80px) ka gap */
+  padding-top: 80px; 
+  
+  /* Flex direction column ensure karta hai ki sections line mein aayein */
+  display: flex;
+  flex-direction: column; 
+  flex: 1;
+}
+
+/* 4. PageWrapper Fix */
+/* PageWrapper ke andar jo content div hai, wo poori width lega */
+.app-content > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 5. Section spacing */
+section {
+  width: 100%;
+  position: relative;
+  display: block;
+}
+
+/* Anchor target adjustment (Taaki navbar ke piche na chhup jaye heading) */
+#register-section {
+  scroll-margin-top: 80px;
+}
+.app-content > div {
+  display: flex;
+  flex-direction: column; /* Components stack honge */
+  width: 100%;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+/* ==========================================================================
+   📱 MOBILE RESPONSIVENESS MASTER FIX (Add at the very bottom of App.css)
+   ========================================================================== */
+
+   /* ==========================================================================
+   📱 MOBILE RESPONSIVENESS MASTER FIX (Add at the very bottom of App.css)
+   ========================================================================== */
+
+/* ==========================================================================
+   📱 SIDEBAR MOBILE MEDIA QUERY - THE ULTIMATE CLEAN FIX
+   ========================================================================== */
+   @media (max-width: 768px) {
+  
+    /* 1. Global Reset (Preloader aur Core HTML ko bilkul nahi chheda) */
+    .dashboard-layout-wrapper,
+    .app-world {
+      width: 100% !important;
+      max-width: 100vw !important;
+      min-height: 100vh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: block !important; /* Fixed buggy flex chains */
+      background: var(--bg-main) !important;
+    }
+  
+    /* 2. Content Scrolling Container (Sirf ISKO padding di hai top nav ki) */
+    .content-scroll-area,
+    .app-content {
+      width: 100% !important;
+      max-width: 100vw !important;
+      height: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      padding-top: 65px !important; /* 👈 Strict single top gap */
+      box-sizing: border-box !important;
+      display: block !important;
+    }
+  
+    /* 3. Sidebar turns into Top Navbar 🚀 */
+    .sidebar-fixed-area,
+    .sidebar {
+      width: 100% !important;
+      height: 65px !important;          
+      min-height: auto !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      margin: 0 !important;
+      padding: 0px 15px !important;     
+      border-right: none !important;
+      border-bottom: 1px solid var(--border) !important;
+      z-index: 9999 !important;
+      background: var(--bg-sidebar) !important; 
+      display: flex !important;
+      flex-direction: row !important;   
+      justify-content: space-between !important;
+      align-items: center !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      overflow: hidden !important;
+    }
+  
+    /* Branding text & Logo fixed layout */
+    .logo {
+      display: block !important;
+      width: 26px !important;           
+      height: auto !important;
+      margin: 0 !important;
+    }
+  
+    .brand {
+      display: flex !important;
+      align-items: center !important;
+      margin: 0 !important;
+    }
+  
+    .brand h2 {
+      font-size: 14px !important;       
+      margin: 0 !important;
+      color: var(--text-main) !important;
+    }
+  
+    /* 4. Swipeable Horizontal Menu Container */
+    .menu {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
+      width: auto !important;
+      max-width: 65% !important;        
+      height: 100% !important;
+      gap: 12px !important;
+      margin: 0 0 0 10px !important;
+      padding: 0 5px !important;
+      overflow-x: auto !important;      
+      white-space: nowrap !important;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    .menu::-webkit-scrollbar {
+      display: none !important; /* Scrollbar hidden */
+    }
+  
+    /* 5. Menu Items & Links formatting */
+    .menu-item, 
+    .menu .menu-item[style*="display: flex"],
+    .menu a.menu-item {
+      display: flex !important;
+      padding: 2px 4px !important;       
+      flex-direction: column !important; 
+      justify-content: center !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;         
+      margin: 0 !important;
+      gap: 2px !important;
+      text-decoration: none !important;
+      color: var(--text-dim) !important; /* Default unselected text color */
+      background: transparent !important;
+    }
+  
+    .menu-item svg {
+      font-size: 15px !important;
+      margin: 0 !important;
+      color: var(--text-dim) !important;
+    }
+  
+    .menu-item span {
+      font-size: 9px !important;        
+      font-weight: 500 !important;
+      color: var(--text-dim) !important;
+      display: block !important;
+    }
+  
+    /* 6. 🚨 THE COLOR FIX: Light/Dark mode mein active state par text proper chamkega */
+    .menu-item.active,
+    .menu .menu-item.active,
+    .menu-item.active span,
+    .menu-item.active svg {
+      color: var(--accent) !important; /* Hard accent color like purple/blue */
+      font-weight: 700 !important;
+      background: transparent !important;
+    }
+  
+    /* 7. Hide Desktop Areas */
+    .theme-switch-wrapper,
+    .user-profile {
+      display: none !important;        
+    }
+  
+    /* 8. Safe internal structural component wrapping */
+    .dashboard-content div[style*="display: flex"] {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      height: auto !important;
+    }
+  }
+
+/* --- 🌍 SIDEBAR CONTAINER --- */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  min-height: 100vh;
+  /* Hardcoded #1f2833 ko var se replace kiya */
+  background-color: var(--bg-sidebar); 
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  /* Border color bhi variable se */
+  border-right: 1px solid var(--border); 
+  color: var(--text-main);
+  left: 0;
+  top: 0;
+  margin: 0;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* 👈 Ye line add kar (Padding handle karne ke liye) */
+  z-index: 2000;
+}
+
+/* --- 1. LOGO STYLING --- */
+.brand {
+  margin-bottom: 40px;
+}
+.brand h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--text-main); /* Fixed White ko var kiya */
+  letter-spacing: 1px;
+}
+.brand span {
+  color: var(--accent); /* Purple ko variable se connect kiya */
+}
+
+/* --- 2. MENU STYLING --- */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 18px;
+  text-decoration: none;
+  color: var(--text-dim); /* Light grey text */
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Hover & Active State */
+.menu-item:hover, .menu-item.active {
+  background-color: var(--accent); /* Purple BG */
+  color: #ffffff !important; /* Text hamesha white rahega hover pe */
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+  transform: translateX(5px);
+}
+
+/* --- 3. USER PROFILE (Bottom) --- */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+  cursor: pointer;
+}
+
+.user-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+}
+
+.user-info h4 {
+  font-size: 14px;
+  margin: 0;
+  color: var(--text-main);
+}
+
+.user-info small {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.logout-icon {
+  margin-left: auto;
+  color: #e74c3c;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.logout-icon:hover {
+  transform: scale(1.2);
+}
+
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+@media (max-width: 768px) {
+
+  /* 1. Theme Switch Wrapper se laptop wali inline-padding ka asar khatam kiya */
+  .theme-switch-wrapper {
+    display: flex !important;
+    padding: 0 !important; /* Inline padding reset */
+    margin: 0 5px !important;
+  }
+
+  /* Theme Button ko ek gol compact icon button bana diya */
+  .theme-toggle-btn {
+    padding: 8px !important; /* Choti uniform padding */
+    border-radius: 50% !important; /* Gol shape */
+    background: var(--border) !important;
+    gap: 0 !important; /* Spacer zero */
+    width: 35px !important;
+    height: 35px !important;
+    justify-content: center !important;
+  }
+
+  /* 🚨 Mobile par 'Light Mode' / 'Dark Mode' ka bada text hide kiya */
+  .theme-toggle-btn span {
+    display: none !important;
+  }
+
+  .theme-toggle-btn svg {
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+
+
+  /* 2. User Profile Wrapper adjustment */
+  .user-profile {
+    display: flex !important;
+    align-items: center !important;      /* 👈 Vertical baseline alignment strict center */
+    justify-content: center !important;
+    padding: 0 !important;
+    margin-left: 8px !important;
+    gap: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    height: 100% !important;             /* Navbar ki poori height lega parent element */
+  }
+
+  /* RM wale Avatar Image ko smooth center kiya */
+  .user-profile img {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    border: 1px solid var(--accent) !important;
+    display: block !important;           /* 🚨 Inline block ki default baseline margin katne ke liye */
+    object-fit: cover !important;
+    margin: 0 !important;                /* Puraane margin ko zero kiya */
+  }
+
+  /* 🚨 Mobile par User Name, Subtitle aur Logout icon hide kiya (Kyunki header mein already logout hai) */
+  .user-profile .user-info,
+  .user-profile .logout-icon {
+    display: none !important;
+  }
+
+
+  /* 3. Pure Top Navbar ka structure balanced structural fitment */
+  .sidebar-fixed-area, 
+  .sidebar {
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  /* Swipeable Menu ka gap and size manage kiya taaki sab cheezein ek line mein fit ho jayein */
+  .menu {
+    max-width: 50% !important; /* 👈 Logo aur end-buttons ke beech perfect space allocation */
+    margin: 0 !important;
+  }
+}

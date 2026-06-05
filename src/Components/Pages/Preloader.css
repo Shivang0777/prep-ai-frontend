@@ -1,0 +1,38 @@
+.preloader-container {
+    height: 100vh;
+    width: 100vw;
+    background-color: #000000; /* Pitch Black */
+    position: fixed;
+    z-index: 9999; /* Sabse upar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.text-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Masking effect ke liye zaroori */
+}
+
+.intro-text {
+    font-size: 5rem; /* Bada Text */
+    font-weight: 900;
+    color: #fff;
+    margin: 0;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -2px;
+    position: absolute; /* Overlap na kare */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .intro-text {
+        font-size: 2.5rem;
+    }
+}

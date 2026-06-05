@@ -1,0 +1,407 @@
+/* --- GLOBAL ARENA STYLES --- */
+.arena-main-layout {
+  flex: 1;
+  padding: 40px;
+  background: var(--bg-main);
+  min-height: 100vh;
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+}
+
+/* --- VIEW 1: WELCOME STAGE --- */
+.welcome-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.briefing-box {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  padding: 50px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  text-align: center;
+  max-width: 600px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  color: var(--text-main);
+}
+
+.briefing-icon {
+  font-size: 50px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px var(--accent));
+}
+
+.briefing-box h1 {
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+
+.briefing-box p {
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.briefing-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-main);
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.briefing-list li svg {
+  color: var(--accent);
+}
+
+.enter-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 16px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: 0.3s;
+  box-shadow: 0 10px 20px var(--accent-glow);
+}
+
+/* --- VIEW 2: ARENA HUB (SECTOR MAP) --- */
+.hub-header {
+  margin-bottom: 40px;
+  border-left: 4px solid var(--accent);
+  padding-left: 20px;
+}
+
+.hub-header h2 {
+  font-size: 28px;
+  color: var(--accent);
+  margin: 0;
+}
+
+.hub-header p {
+  color: var(--text-dim);
+}
+
+.sector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.sector-card {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  transition: 0.3s;
+}
+
+.sector-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px var(--accent-glow);
+}
+
+.sector-icon-box {
+  width: 50px;
+  height: 50px;
+  background: var(--bg-main);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.sector-card h3 {
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+/* --- 🔍 SEARCH & FILTER BAR --- */
+.arena-top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.nav-info button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.nav-info h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.pro-search-box {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 10px 15px;
+  border-radius: 10px;
+  gap: 10px;
+  color: var(--text-dim);
+}
+
+.pro-search-box input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  outline: none;
+  width: 200px;
+}
+
+.pro-dropdown select {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* --- 📊 MISSION TABLE --- */
+.arena-table-container {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.arena-pro-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.arena-pro-table th {
+  text-align: left;
+  color: var(--text-dim);
+  font-size: 12px;
+  padding: 20px 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.arena-row td {
+  padding: 20px 15px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-main);
+}
+
+.arena-row:hover {
+  background: var(--bg-main);
+}
+
+.title-cell {
+  font-weight: 600;
+}
+
+/* Difficulty Tags */
+.diff-tag { 
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.05);
+}
+.diff-tag.easy { color: #2ecc71; background: rgba(46,204,113,0.1); }
+.diff-tag.medium { color: #f1c40f; background: rgba(241,196,15,0.1); }
+.diff-tag.hard { color: #e74c3c; background: rgba(231,76,60,0.1); }
+
+.arena-solve-btn {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+
+.arena-solve-btn:hover {
+  letter-spacing: 0.5px;
+}
+
+/* Loading State */
+.pro-loading-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-main);
+  color: var(--accent);
+}
+
+.pro-spinner {
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* ==========================================================================
+   📱 MOBILE ULTRA RESPONSIVE STACK (LESS THAN 768px)
+   ========================================================================== */
+/* ==========================================================================
+   📱 MOBILE & TABLET RESPONSIVE STACK OVERRIDES (UP TO 1024px)
+   ========================================================================== */
+   @media (max-width: 1024px) {
+    .arena-main-layout {
+      padding: 15px !important;
+    }
+  
+    /* 1. Top Bar aur search elements ko forcefully vertical kiya */
+    .arena-top-nav {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 15px !important;
+      margin-bottom: 20px !important;
+    }
+  
+    .nav-controls {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 10px !important;
+      width: 100% !important;
+    }
+  
+    .pro-search-box, 
+    .pro-search-box input,
+    .pro-dropdown, 
+    .pro-dropdown select {
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  
+    /* 2. Container aur Table ki horizontal stretching block ki */
+    .arena-table-container {
+      padding: 0 !important;
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      width: 100% !important;
+      overflow-x: hidden !important;
+    }
+  
+    /* 🚨 CRITICAL FORCE: Table ko grid/block layout mein crash kiya */
+    table.arena-pro-table {
+      display: block !important;
+      width: 100% !important;
+    }
+  
+    /* Desktop header ko saaf gayab kiya */
+    table.arena-pro-table thead {
+      display: none !important;
+    }
+  
+    table.arena-pro-table tbody {
+      display: block !important;
+      width: 100% !important;
+    }
+  
+    /* 3. Har Ek Row ko independent solid Mobile Card banaya */
+    table.arena-pro-table tr.arena-row {
+      display: flex !important;
+      flex-direction: column !important; /* Items upar-niche */
+      background: var(--bg-card) !important;
+      margin-bottom: 20px !important;
+      padding: 15px !important;
+      border-radius: 12px !important;
+      border: 1px solid var(--border) !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+    }
+  
+    /* 4. Cells ko side-by-side labels ke sath flex kiya */
+    table.arena-pro-table tr.arena-row td {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important; /* Label left, data right */
+      padding: 12px 0 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      font-size: 14px !important;
+      background: transparent !important; /* Row hover color override reset */
+    }
+  
+    /* 5. Custom Fake Labels generation for mobile cards */
+    table.arena-pro-table tr.arena-row td.id-cell::before {
+      content: "Mission ID" !important;
+      color: var(--text-dim) !important;
+      font-weight: bold;
+    }
+  
+    table.arena-pro-table tr.arena-row td.title-cell::before {
+      content: "Title" !important;
+      color: var(--text-dim) !important;
+      font-weight: bold;
+    }
+  
+    table.arena-pro-table tr.arena-row td.diff-cell::before {
+      content: "Difficulty" !important;
+      color: var(--text-dim) !important;
+      font-weight: bold;
+    }
+  
+    /* 6. Action Column aur Launch Button Fix */
+    table.arena-pro-table tr.arena-row td:last-child {
+      border-bottom: none !important;
+      padding-top: 15px !important;
+      justify-content: center !important; /* Button pure card ke center mein */
+      display: block !important;
+      width: 100% !important;
+    }
+  
+    /* Launch Mission button ab poora dabba banega responsive primary button jaisa */
+    .arena-solve-btn {
+      width: 100% !important;
+      background: var(--accent, #66fcf1) !important; /* Fallback color set to cyan */
+      color: #000 !important; /* Text dark black for premium readability */
+      justify-content: center !important;
+      padding: 12px !important;
+      border-radius: 8px !important;
+      font-weight: 900 !important;
+      text-align: center !important;
+      box-shadow: 0 4px 12px var(--accent-glow) !important;
+      box-sizing: border-box !important;
+    }
+  }

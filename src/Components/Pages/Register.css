@@ -1,0 +1,345 @@
+/* --- THEME VARIABLES --- */
+:root {
+  --reg-bg: #050505;
+  --reg-text: #ffffff;
+  --reg-bot-bubble: #111111;
+  --reg-bot-border: #222222;
+  --reg-input-bg: #0d1117;
+  --reg-input-border: #333333;
+  --reg-card-grad: linear-gradient(145deg, #0d1117, #050505);
+  --reg-muted: #94a3b8;
+  --reg-nav-grad: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+  --reg-card-border: #30363d;
+}
+
+[data-theme='light'] {
+  --reg-bg: #f8fafc;
+  --reg-text: #0f172a;
+  --reg-bot-bubble: #ffffff;
+  --reg-bot-border: #e2e8f0;
+  --reg-input-bg: #ffffff;
+  --reg-input-border: #cbd5e1;
+  --reg-card-grad: linear-gradient(145deg, #ffffff, #f1f5f9);
+  --reg-muted: #64748b;
+  --reg-nav-grad: linear-gradient(to bottom, rgba(248, 250, 252, 0.9) 0%, transparent 100%);
+  --reg-card-border: #e2e8f0;
+}
+
+/* --- YOUR ORIGINAL CODE (100% INTENDED DESKTOP VIEW) --- */
+
+.onboarding-full-page {
+  width: 100%; height: 100vh; 
+  background: var(--reg-bg); 
+  display: flex; flex-direction: column; overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.3s ease;
+}
+
+.chat-flow {
+  flex: 1; overflow-y: auto; padding: 100px 25% 200px 25%;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.msg-wrapper { display: flex; width: 100%; }
+.msg-wrapper.bot { justify-content: flex-start; }
+.msg-wrapper.user { justify-content: flex-end; }
+
+.chat-bubble {
+  max-width: 75%; padding: 14px 20px; border-radius: 20px;
+  font-size: 1rem; line-height: 1.5; 
+  color: var(--reg-text); 
+}
+
+.bot .chat-bubble { 
+  background: var(--reg-bot-bubble); 
+  border: 1px solid var(--reg-bot-border); 
+  border-bottom-left-radius: 4px; 
+}
+
+.user .chat-bubble { 
+  background: #3b82f6; 
+  color: #fff; 
+  border-bottom-right-radius: 4px; 
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); 
+}
+
+.pass-reveal { display: flex; align-items: center; gap: 12px; }
+.pass-reveal button { background: transparent; border: none; color: var(--reg-text); cursor: pointer; font-size: 1rem; }
+
+.typing-status { font-size: 0.8rem; color: var(--reg-muted); margin-left: 10px; font-style: italic; }
+
+/* QUICK OPTIONS */
+.options-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 10px; }
+.opt-chip {
+  background: var(--reg-input-bg); 
+  border: 1px solid var(--reg-input-border); 
+  color: #3b82f6;
+  padding: 8px 18px; border-radius: 50px; cursor: pointer; transition: 0.3s;
+}
+.opt-chip:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+
+/* IDENTITY CARD */
+.identity-card {
+  background: var(--reg-card-grad);
+  border: 1px solid var(--reg-card-border); 
+  padding: 35px; border-radius: 25px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+  margin-top: 20px;
+}
+
+.card-top { border-bottom: 1px solid var(--reg-bot-border); padding-bottom: 15px; margin-bottom: 25px; }
+.chip { background: #238636; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+
+.id-field { margin-bottom: 18px; }
+.id-field label { font-size: 0.65rem; color: var(--reg-muted); font-weight: 700; letter-spacing: 1.5px; }
+.id-field p { color: #3b82f6; font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
+.id-split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.launch-btn {
+  width: 100%; padding: 16px; background: #3b82f6; border: none;
+  color: white; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;
+}
+.launch-btn:hover { background: #2563eb; transform: scale(1.02); }
+
+/* INPUT BOX */
+.bottom-bar { position: fixed; bottom: 40px; width: 100%; display: flex; justify-content: center; }
+.input-pill {
+  width: 45%; 
+  background: var(--reg-input-bg); 
+  border: 1px solid var(--reg-input-border);
+  padding: 10px 20px; border-radius: 50px; display: flex; align-items: center;
+}
+.input-pill input { 
+  flex: 1; background: transparent; border: none; 
+  color: var(--reg-text); 
+  outline: none; padding: 5px; 
+}
+.input-pill button { background: #3b82f6; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+
+/* --- TOP NAVIGATION BAR --- */
+.onboarding-nav {
+  position: fixed; top: 0; left: 0; width: 100%; padding: 20px 60px;
+  display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+  background: var(--reg-nav-grad);
+  backdrop-filter: blur(5px); 
+}
+
+.nav-logo {
+  font-size: 1.2rem; font-weight: 900; 
+  color: var(--reg-text);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.nav-logo span { color: #3b82f6; }
+
+.nav-login-btn {
+  background: var(--reg-bot-bubble);
+  border: 1px solid var(--reg-bot-border);
+  color: var(--reg-muted);
+  padding: 10px 20px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 8px;
+}
+.nav-login-btn span { color: #3b82f6; font-weight: 800; }
+.nav-login-btn:hover { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: var(--reg-text); transform: translateY(-2px); }
+
+/* --- THE NEON DIVIDER LINE --- */
+.card-top {
+  border-bottom: 1px solid var(--reg-bot-border);
+  padding-bottom: 20px; margin-bottom: 25px; position: relative;
+}
+.card-top::after {
+  content: ""; position: absolute; bottom: -1px; left: 0;
+  width: 60px; height: 2px; background: #3b82f6;
+  box-shadow: 0 0 10px #3b82f6;
+}
+
+/* --- DESKTOP SMART IDENTITY CARD --- */
+.smart-identity-card {
+  position: fixed; top: 100px; right: 40px; z-index: 2000; width: 320px;
+  background: var(--reg-input-bg);
+  border: 1px solid #3b82f6;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+  padding: 20px;
+}
+
+/* Desktop Actions Stack Setup */
+.smart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.smart-actions button {
+  width: 100%;
+  padding: 12px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.continue-btn {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ==========================================================================
+   📱 ULTRA MOBILE OVERRIDES BLOCK (900px & Below) - 100% MATCH TO SCREENSHOTS
+   ========================================================================== */
+@media (max-width: 900px) { 
+  .chat-flow { 
+      padding: 230px 15px 140px 15px !important; /* Top padding expanded to clear space for stretched card */
+  } 
+  
+  .chat-bubble {
+      max-width: 85% !important; 
+      font-size: 0.95rem !important;
+  }
+
+  .bottom-bar {
+      bottom: 15px !important;
+      padding: 0 15px !important;
+      box-sizing: border-box !important;
+  }
+
+  .input-pill { 
+      width: 100% !important; 
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+  } 
+
+  .onboarding-nav { 
+      padding: 15px !important; 
+  }
+
+  .id-split {
+      grid-template-columns: 1fr !important; 
+      gap: 10px !important;
+  }
+
+  .identity-card {
+      padding: 20px !important;
+      border-radius: 16px !important;
+  }
+
+  /* 🚨 SMART POPUP COMPACT HORIZONTAL STRETCH OVERRIDE */
+  .smart-identity-card { 
+      position: fixed !important;
+      top: 70px !important;         /* Login navbar ke bilkul niche chipkaya */
+      bottom: auto !important; 
+      right: 15px !important; 
+      left: 15px !important; 
+      width: calc(100% - 30px) !important; 
+      max-width: none !important;
+      box-sizing: border-box !important;
+      padding: 16px !important;
+      border-radius: 14px !important;
+      z-index: 9999 !important;      
+      background: rgba(13, 17, 23, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+      border: 1px solid #3b82f6 !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* Inner elements reset wrapper code execution */
+  .smart-card-inner {
+      display: flex !important;
+      flex-direction: column !important; 
+      align-items: stretch !important;
+      gap: 14px !important;
+      width: 100% !important;
+  }
+
+  /* 👤 USER LAYOUT: Avatar aur text parallel clean row mein */
+  .user-info {
+      display: flex !important;
+      flex-direction: row !important; 
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 15px !important;
+      width: 100% !important;
+  }
+
+  /* Text elements container structure */
+  .user-info > div:last-of-type {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 2px !important;
+  }
+
+  .smart-identity-card .user-name {
+      font-size: 1rem !important;
+      color: #ffffff !important;
+      line-height: 1.3 !important;
+      white-space: normal !important;
+      font-weight: 700 !important;
+      margin: 0 !important;
+  }
+
+  .smart-identity-card .welcome-back {
+      font-size: 0.65rem !important;
+      color: var(--reg-muted) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+      margin: 0 !important;
+  }
+
+  /* 🔵 PERFECT ROUND AVATAR RESET */
+  .avatar-circle {
+      width: 42px !important;
+      height: 42px !important;
+      font-size: 1.1rem !important;
+      flex-shrink: 0 !important;       /* Ellipse (andaa) banna band forced */
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: #3b82f6 !important;
+      color: #ffffff !important;
+  }
+
+  /* 🎯 BUTTONS MECHANICS: Side-by-side single clean row */
+  .smart-actions {
+      display: flex !important;
+      flex-direction: row !important;    /* 🔥 Force layout to run horizontally */
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      width: 100% !important;
+      margin-top: 0 !important;
+  }
+
+  /* Action buttons inline spaces normalization rules */
+  .smart-actions button {
+      flex: 1 !important;               /* Equal width to both button links */
+      width: 50% !important;
+      padding: 12px 10px !important;     /* Touch responsive click size target */
+      font-size: 0.75rem !important;
+      font-weight: 800 !important;
+      white-space: nowrap !important;    /* Prevents button words from wrapping */
+      border-radius: 8px !important;
+      text-align: center !important;
+      margin: 0 !important;
+  }
+
+  .continue-btn {
+      background: #ffffff !important;
+      color: #000000 !important;
+  }
+
+  .switch-btn {
+      background: transparent !important;
+      color: var(--reg-muted) !important;
+      border: 1px solid var(--reg-input-border) !important;
+  }
+}
