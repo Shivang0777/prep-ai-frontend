@@ -7,7 +7,7 @@ import Features from "./Features";
 import About from "./About"; 
 import Footer from "../Footer"; 
 import "./Home.css";
-import logoImg from "../../assets/logo.png";
+
 
 const Home = () => {
   const spotlightRef = useRef(null);
@@ -102,7 +102,7 @@ const Home = () => {
                  
                  {/* Floating Tagda Logo */}
                  <motion.img 
-                    src={logoImg} 
+                    src="/logo.png"
                     alt="Prep AI Logo" 
                     className="hero-main-logo"
                     initial={{ y: 0 }}

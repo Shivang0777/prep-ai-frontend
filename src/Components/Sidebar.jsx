@@ -23,7 +23,7 @@ const Sidebar = ({ toggleTheme, currentTheme }) => {
   return (
     <aside className="sidebar">
       {/* 1. LOGO SECTION */}
-      <img src="/src/assets/logo.png" alt="Logo" className="logo" />
+      <img src="/logo.png" alt="Logo" className="logo" />
       <div 
         className="brand" 
         onClick={() => navigate('/dashboard')} 
