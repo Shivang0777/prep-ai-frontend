@@ -4,7 +4,7 @@ import "./Navebar.css";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaSun, FaMoon } from "react-icons/fa";
-// import logoImg from "../assets/logo.png";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
