@@ -4,7 +4,7 @@ import "./Navebar.css";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaSun, FaMoon } from "react-icons/fa";
-import logoImg from "../assets/logo.png";
+// import logoImg from "../assets/logo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const Navbar = () => {
         <div className="logo-section">
           {/* Logo par click karne se bhi top par jaye scroll hoke */}
           <div onClick={() => handleNav("top", "/")} className="brand-logo" style={{cursor: 'pointer'}}>
-              <img src={logoImg} alt="Prep AI Logo" className="nav-custom-logo" />
+              <img src="/logo.png" alt="Prep AI Logo" className="nav-custom-logo" />
               <span style={{ color: 'var(--text-main)' }}>PREP <span className="blue-accent">AI</span></span>
           </div>
         </div>
