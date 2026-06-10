@@ -17,10 +17,10 @@ const Footer = () => {
                         <h2 className="footer-logo">Prep AI</h2>
                         <p className="brand-text">Elevating your interview performance with real-time AI insights. Practice smarter, not harder.</p>
                         <div className="social-links">
-                            <a href="#" target="_blank" rel="noreferrer"><FaLinkedin /></a>
-                            <a href="#" target="_blank" rel="noreferrer"><FaGithub /></a>
+                            <a href="https://www.linkedin.com/in/shivang-verma-1b8219323" target="_blank" rel="noreferrer"><FaLinkedin /></a>
+                            <a href="https://github.com/Shivang0777" target="_blank" rel="noreferrer"><FaGithub /></a>
                             <a href="#" target="_blank" rel="noreferrer"><FaTwitter /></a>
-                            <a href="#" target="_blank" rel="noreferrer"><FaInstagram /></a>
+                            <a href="https://www.instagram.com/shivang_verma07?igsh=MWVtOWc5cXo3bjVkYQ==" target="_blank" rel="noreferrer"><FaInstagram /></a>
                             
                             {/* CLEAN WHATSAPP LOGIC */}
                             <a 
@@ -49,13 +49,13 @@ const Footer = () => {
                         <h4>Get in Touch</h4>
                         <div className="contact-item">
                             <FaEnvelope className="contact-icon" />
-                            <span>support@prepai.com</span>
+                            <span>shivangv456@gmail.com</span>
                         </div>
                         {/* Phone number link ko bhi WhatsApp se connect kar diya */}
                         <a href={`https://wa.me/${phoneNumber}`} target="_blank" rel="noreferrer" className="contact-item-link">
                             <div className="contact-item">
                                 <FaPhoneAlt className="contact-icon" />
-                                <span>+91 9876543210</span>
+                                <span>+91 7668377272</span>
                             </div>
                         </a>
                     </div>

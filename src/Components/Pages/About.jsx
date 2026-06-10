@@ -11,8 +11,8 @@ const About = () => {
             name: 'Shivang', 
             // role: 'Founder & Lead Architect', 
             li: 'https://www.linkedin.com/in/shivang-verma-1b8219323', 
-            gh: 'https://github.com/yourprofile',
-            wa: '' // Apna 10-digit no. 91 ke saath yahan daal
+            gh: 'https://github.com/Shivang0777',
+            wa: '7668377272' // Apna 10-digit no. 91 ke saath yahan daal
         },
       
        

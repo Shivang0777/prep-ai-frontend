@@ -1,3 +1,4 @@
+/* --- MAIN NAVBAR STYLING --- */
 .main-nav {
   width: 100%;
   position: fixed;
@@ -6,7 +7,7 @@
   z-index: 2000;
   display: flex;
   align-items: center;
-  /* Scroll hone par variable border dikhega */
+  /* Scroll hone par variable border/background dikhega */
   transition: all 0.3s ease;
 }
 
@@ -20,6 +21,7 @@
   align-items: center;
 }
 
+/* --- LOGO SECTION --- */
 .brand-logo {
   display: flex;
   align-items: center;
@@ -27,10 +29,9 @@
   text-decoration: none;
   font-weight: 800;
   font-size: 1.4rem;
-  color: var(--text-main); /* Updated */
+  color: var(--text-main);
 }
 
-/* Logo Image Styling */
 .nav-custom-logo {
   height: 38px;
   width: auto;
@@ -43,8 +44,11 @@
   transform: scale(1.1) rotate(-5deg);
 }
 
-.blue-accent { color: var(--accent); } /* Updated to use your Purple/Blue */
+.blue-accent { 
+  color: var(--accent); 
+}
 
+/* --- NAVIGATION LINKS --- */
 .nav-links {
   display: flex;
   gap: 35px;
@@ -53,12 +57,13 @@
 }
 
 .nav-links li, .custom-li {
-  font-size: 1rem; /* Slightly smaller for professional look */
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text-dim); /* Updated */
+  color: var(--text-dim);
   cursor: pointer;
-  transition: 0.3s;
   text-decoration: none;
+  position: relative; /* Highlight underline setup ke liye */
+  transition: color 0.3s ease;
 }
 
 .nav-links li a { 
@@ -70,30 +75,58 @@
   color: var(--accent); 
 }
 
-/* Active State for Links */
-.nav-links li a.active {
-  color: var(--accent);
+/* --- ✨ SCROLL SPY HIGHLIGHT STYLES --- */
+.custom-li.active-link {
+  color: var(--accent) !important; /* Active section par text color badlega */
+  font-weight: 700;
 }
 
-/* Theme Switcher Button (JSX mein use hoga) */
+/* Link ke niche dynamic glowing underscore (line) */
+.custom-li::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  transition: transform 0.3s ease;
+  border-radius: 2px;
+}
+
+/* Jab section active hoga tab line smooth stretch hogi */
+.custom-li.active-link::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* --- THEME SWITCHER BUTTON --- */
 .theme-switcher-btn {
-    background: var(--bg-sidebar);
-    border: 1px solid var(--border);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 20px;
-    color: var(--text-main);
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 20px;
+  color: var(--text-main);
 }
 
 .theme-switcher-btn:hover {
-    background: var(--accent-glow);
-    border-color: var(--accent);
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}
+
+/* --- RIGHT SIDE WRAPPER (Buttons + Toggle) --- */
+.nav-right-side {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .nav-btns {
@@ -104,14 +137,16 @@
 
 .login-btn-minimal {
   text-decoration: none;
-  color: var(--text-main); /* Updated */
+  color: var(--text-main);
   font-weight: 700;
   font-size: 0.9rem;
+  white-space: nowrap;
+  transition: 0.3s;
 }
 
 .register-btn-solid {
   text-decoration: none;
-  background: var(--accent); /* Updated */
+  background: var(--accent);
   color: white !important;
   padding: 10px 24px;
   border-radius: 10px;
@@ -119,6 +154,8 @@
   font-weight: 700;
   box-shadow: 0 8px 20px var(--accent-glow);
   transition: 0.3s;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .register-btn-solid:hover {
@@ -135,7 +172,23 @@
   color: var(--text-main);
 }
 
+
+/* --- 📱 ULTRA RESPONSIVE MEDIA QUERY (900px) --- */
 @media (max-width: 900px) {
+  .nav-container {
+    padding: 0 16px; /* Phone par side space tight na ho */
+  }
+
+  .brand-text {
+    display: none; /* Mobile par 'PREP AI' text gayab, sirf logo image dikhegi */
+  }
+
+  .nav-custom-logo {
+    margin-right: 0;
+    height: 34px; /* Logo thoda compact mobile ke liye */
+  }
+
+  /* Dropdown menu animations ke sath */
   .nav-links {
     display: none;
     position: absolute;
@@ -144,13 +197,40 @@
     width: 100%;
     flex-direction: column;
     background: var(--bg-card);
-    padding: 20px;
+    padding: 24px;
     border-bottom: 1px solid var(--border);
     gap: 20px;
     text-align: center;
+    box-sizing: border-box;
   }
   
-  .nav-links.show { display: flex; }
-  .nav-btns { display: none; }
-  .mobile-toggle { display: block; }
+  .nav-links.show { 
+    display: flex; 
+  }
+  
+  .mobile-toggle { 
+    display: block; 
+    margin-left: 4px;
+  }
+
+  /* Bahar wale buttons mobile par bade saste aur fit lagenge */
+  .nav-btns {
+    gap: 12px;
+  }
+
+  .login-btn-minimal {
+    font-size: 0.8rem;
+  }
+
+  .register-btn-solid {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  /* Mobile dropdown mein active links ke underline ko thoda adjust karne ke liye */
+  .custom-li::after {
+    bottom: -2px;
+    width: 60px; /* Mobile menu mein poori line ke badle choti line acchi lagti hai */
+  }
 }
