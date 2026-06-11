@@ -124,18 +124,18 @@ const ReadModule = () => {
     }, []);
 
    // --- 🎙️ SPEECH ENGINE (EASY MOBILE-PROOF VERSION) ---
-   useEffect(() => {
+ // --- 🎙️ SPEECH ENGINE (PERMANENT PHONE CORRECTION) ---
+ useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition();
         
-        // 🎯 PHONE FIX: Mobile par continuous stream crash hota hai, isliye false rakha hai
+        // 🎯 PHONE FIX: Mobile network limits par crash rokne ke liye short-burst pattern
         recognitionRef.current.continuous = false; 
-        recognitionRef.current.interimResults = false; // Sirf final solid text uthayega
+        recognitionRef.current.interimResults = false; 
         recognitionRef.current.lang = 'en-US';
 
         recognitionRef.current.onresult = (event) => {
-            // 🎯 PHONE FIX: Direct final result block se text nikaalo
             const transcript = event.results[0][0].transcript;
             setUserTranscript(transcript);
 
@@ -160,15 +160,17 @@ const ReadModule = () => {
             }
         };
 
-        // Mobile autostop listener block
+        recognitionRef.current.onerror = (e) => {
+            console.error("Speech Execution Warning:", e.error);
+        };
+
         recognitionRef.current.onend = () => {
-            if (recording) {
-                try { recognitionRef.current.start(); } catch (e) {}
-            }
+            // state handler functions internally managed without state loop restarts
+            setRecording(false);
         };
     }
     if (questions.length === 0) fetchSpeakingTasks();
-}, [questions, currentIndex, recording]);
+}, [questions, currentIndex]); // 🎯 FIXED: Remove recording dynamic dependency to secure state locks
 
     const speakSingleWord = (word) => {
         window.speechSynthesis.cancel();
@@ -187,26 +189,50 @@ const ReadModule = () => {
     };
 
     const toggleRecording = async () => {
+        // 🎯 PHONE FIX: Android/iOS core hardware pipelines wake lock toggle
+        if (window.AudioContext || window.webkitAudioContext) {
+            const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+            const ctxInstance = new AudioCtxClass();
+            if (ctxInstance.state === 'suspended') {
+                await ctxInstance.resume();
+            }
+        }
+
         if (recording) {
             setRecording(false);
-            recognitionRef.current.stop();
-            if (mediaRecorderRef.current) mediaRecorderRef.current.stop();
+            try { if (recognitionRef.current) recognitionRef.current.stop(); } catch(e){}
+            try { if (mediaRecorderRef.current) mediaRecorderRef.current.stop(); } catch(e){}
         } else {
             resetState();
             startTimeRef.current = Date.now();
-            recognitionRef.current.start();
             setRecording(true);
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorderRef.current = new MediaRecorder(stream);
+                if (recognitionRef.current) {
+                    try { recognitionRef.current.start(); } catch(err){ console.log(err); }
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: { echoCancellation: true, noiseSuppression: true } 
+                });
+
+                // 🎯 PHONE FIX: Dynamic Audio Fallback Engine Containers
+                let targetMimeType = 'audio/webm;codecs=opus';
+                if (!MediaRecorder.isTypeSupported(targetMimeType)) {
+                    targetMimeType = 'audio/mp4'; // Android native browser & Safari audio pipeline override
+                }
+
+                mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: targetMimeType });
                 audioChunksRef.current = [];
                 mediaRecorderRef.current.ondataavailable = (e) => audioChunksRef.current.push(e.data);
                 mediaRecorderRef.current.onstop = () => {
-                    const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+                    const blob = new Blob(audioChunksRef.current, { type: targetMimeType });
                     setAudioUrl(URL.createObjectURL(blob));
                 };
                 mediaRecorderRef.current.start();
-            } catch (err) { console.error("Mic Error:", err); }
+            } catch (err) { 
+                console.error("Mic Error:", err); 
+                setRecording(false);
+            }
         }
     };
 
