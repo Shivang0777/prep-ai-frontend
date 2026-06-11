@@ -283,6 +283,7 @@
   .header-actions {
     width: 100% !important;
     display: flex !important;
+    flex-wrap: wrap !important;     /* ✨ Yeh circles ko katne se rokega aur automatic niche adjust karega */
     justify-content: flex-start !important;
     gap: 10px !important;
   }
@@ -301,8 +302,16 @@
 }
 
 /* 🎯 ISKO BHI ADD KARO MOBILE QUERY KE ANDAR: SVG clear positioning ke liye */
-.notif-btn svg, .logout-btn-header svg {
-  font-size: 16px !important;
+/* Dono circles ke andar ke icons ko force-color do */
+.notif-btn svg {
+  fill: var(--text-main) !important; 
+  color: var(--text-main) !important;
+  display: block !important;
+}
+
+.logout-btn-header svg {
+  fill: #ff4b2b !important; /* Isse logout icon hamesha solid red dikhega */
+  color: #ff4b2b !important;
   display: block !important;
 }
 
