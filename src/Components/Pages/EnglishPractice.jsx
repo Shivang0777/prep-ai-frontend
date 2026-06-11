@@ -208,26 +208,76 @@ const ReadModule = () => {
             setRecording(true);
             try {
                 if (recognitionRef.current) {
-                    try { recognitionRef.current.start(); } catch(err){ console.log(err); }
+                    try { recognitionRef.current.start(); } catch(err){}
                 }
 
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: { echoCancellation: true, noiseSuppression: true } 
                 });
 
-                // 🎯 PHONE FIX: Dynamic Audio Fallback Engine Containers
-                let targetMimeType = 'audio/webm;codecs=opus';
-                if (!MediaRecorder.isTypeSupported(targetMimeType)) {
-                    targetMimeType = 'audio/mp4'; // Android native browser & Safari audio pipeline override
+                // Android aur iOS dono ke liye safe dynamic hybrid container
+                let targetMimeType = 'audio/mp4'; 
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    targetMimeType = 'audio/webm;codecs=opus';
                 }
 
                 mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: targetMimeType });
                 audioChunksRef.current = [];
                 mediaRecorderRef.current.ondataavailable = (e) => audioChunksRef.current.push(e.data);
-                mediaRecorderRef.current.onstop = () => {
+                
+                // 🎯 SERVERLESS WHISPER ENGINE WITH SECURE ENVIRONMENT VARIABLES
+                mediaRecorderRef.current.onstop = async () => {
                     const blob = new Blob(audioChunksRef.current, { type: targetMimeType });
                     setAudioUrl(URL.createObjectURL(blob));
+                    setUserTranscript("AI is decoding your voice... Please wait 1s");
+
+                    try {
+                        // Secure API Call using Vite Env variables (GitHub Bypass)
+                        const hfResponse = await fetch(
+                            "https://api-inference.huggingface.co/models/openai/whisper-large-v3",
+                            {
+                                headers: { 
+                                    Authorization: `Bearer ${import.meta.env.VITE_HF_WHISPER_KEY}` 
+                                },
+                                method: "POST",
+                                body: blob,
+                            }
+                        );
+                        
+                        const aiResult = await hfResponse.json();
+                        
+                        if (aiResult && aiResult.text) {
+                            const cleanTranscript = aiResult.text.trim();
+                            setUserTranscript(cleanTranscript);
+
+                            // Metrics mapping logic untouched
+                            if (questions.length > 0 && questions[currentIndex]) {
+                                const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
+                                const spoken = cleanTranscript.toLowerCase();
+                                const targetWords = target.split(/\s+/);
+                                const spokenWords = spoken.split(/\s+/);
+                                
+                                let matches = 0;
+                                targetWords.forEach(word => {
+                                    if (spokenWords.includes(word)) matches++;
+                                });
+                                setAccuracy(Math.floor((matches / targetWords.length) * 100));
+
+                                if (startTimeRef.current) {
+                                    const wordCount = spokenWords.length;
+                                    const minutes = (Date.now() - startTimeRef.current) / 1000 / 60;
+                                    setWpm(Math.round(wordCount / Math.max(minutes, 0.01)));
+                                }
+                            }
+                        } else {
+                            setUserTranscript("Could not process voice clearly, please try again.");
+                        }
+                    } catch (apiErr) {
+                        console.error("HF Error:", apiErr);
+                        setUserTranscript("AI Network Timeout. Please check connection.");
+                    }
                 };
+
                 mediaRecorderRef.current.start();
             } catch (err) { 
                 console.error("Mic Error:", err); 
