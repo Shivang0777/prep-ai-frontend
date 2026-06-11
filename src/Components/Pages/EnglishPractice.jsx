@@ -123,44 +123,52 @@ const ReadModule = () => {
         }
     }, []);
 
-    useEffect(() => {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            recognitionRef.current = new SpeechRecognition();
-            recognitionRef.current.continuous = true;
-            recognitionRef.current.interimResults = true;
-            recognitionRef.current.lang = 'en-US';
+   // --- 🎙️ SPEECH ENGINE (EASY MOBILE-PROOF VERSION) ---
+   useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        
+        // 🎯 PHONE FIX: Mobile par continuous stream crash hota hai, isliye false rakha hai
+        recognitionRef.current.continuous = false; 
+        recognitionRef.current.interimResults = false; // Sirf final solid text uthayega
+        recognitionRef.current.lang = 'en-US';
 
-            recognitionRef.current.onresult = (event) => {
-                let interimTranscript = '';
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    interimTranscript += event.results[i][0].transcript;
+        recognitionRef.current.onresult = (event) => {
+            // 🎯 PHONE FIX: Direct final result block se text nikaalo
+            const transcript = event.results[0][0].transcript;
+            setUserTranscript(transcript);
+
+            if (questions.length > 0 && questions[currentIndex]) {
+                const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
+                const spoken = transcript.toLowerCase();
+                const targetWords = target.split(/\s+/);
+                const spokenWords = spoken.split(/\s+/);
+                
+                let matches = 0;
+                targetWords.forEach(word => {
+                    if (spokenWords.includes(word)) matches++;
+                });
+
+                setAccuracy(Math.floor((matches / targetWords.length) * 100));
+
+                if (startTimeRef.current) {
+                    const wordCount = spokenWords.length;
+                    const minutes = (Date.now() - startTimeRef.current) / 1000 / 60;
+                    setWpm(Math.round(wordCount / Math.max(minutes, 0.01)));
                 }
-                setUserTranscript(interimTranscript);
+            }
+        };
 
-                if (questions.length > 0 && questions[currentIndex]) {
-                    const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
-                    const spoken = interimTranscript.toLowerCase();
-                    const targetWords = target.split(/\s+/);
-                    const spokenWords = spoken.split(/\s+/);
-                    
-                    let matches = 0;
-                    targetWords.forEach(word => {
-                        if (spokenWords.includes(word)) matches++;
-                    });
-
-                    setAccuracy(Math.floor((matches / targetWords.length) * 100));
-
-                    if (startTimeRef.current) {
-                        const wordCount = spokenWords.length;
-                        const minutes = (Date.now() - startTimeRef.current) / 1000 / 60;
-                        setWpm(Math.round(wordCount / Math.max(minutes, 0.01)));
-                    }
-                }
-            };
-        }
-        if (questions.length === 0) fetchSpeakingTasks();
-    }, [questions, currentIndex]);
+        // Mobile autostop listener block
+        recognitionRef.current.onend = () => {
+            if (recording) {
+                try { recognitionRef.current.start(); } catch (e) {}
+            }
+        };
+    }
+    if (questions.length === 0) fetchSpeakingTasks();
+}, [questions, currentIndex, recording]);
 
     const speakSingleWord = (word) => {
         window.speechSynthesis.cancel();
@@ -691,6 +699,8 @@ const GrammarModule = () => {
     const [questions, setQuestions] = useState([]); 
     const [loadingQuestions, setLoadingQuestions] = useState(true);
 
+    const recognitionRef = useRef(null);
+
     const fetchAIQuestions = async () => {
         setLoadingQuestions(true);
         try {
@@ -722,32 +732,63 @@ const GrammarModule = () => {
         }
     };
 
+    // 🎯 INITIALIZE QUESTIONS ON MOUNT
     useEffect(() => {
         fetchAIQuestions();
     }, []);
 
-    const toggleRecording = () => {
+    // 🎯 FIX: ADDED MISSING MOBILE-PROOF SPEECH LISTENERS WITH EXPLICIT CLEANUP
+    useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert("Speech Recognition not supported! Use Chrome bro.");
+        if (SpeechRecognition) {
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.continuous = false; // Short-burst processing for smooth phone support
+            recognitionRef.current.interimResults = false;
+            recognitionRef.current.lang = 'en-US';
+
+            recognitionRef.current.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                // Append securely to text area text inputs
+                setInputText(prev => prev ? prev + " " + transcript : transcript);
+            };
+
+            recognitionRef.current.onerror = (e) => {
+                console.error("Grammar Speech Logic Failure:", e.error);
+                setIsRecording(false);
+            };
+
+            recognitionRef.current.onend = () => {
+                setIsRecording(false);
+            };
+        }
+
+        return () => {
+            if (recognitionRef.current) {
+                try { recognitionRef.current.stop(); } catch(e){}
+            }
+        };
+    }, []);
+
+    const toggleRecording = async () => {
+        // Universal pipeline wake lock for Android/iOS device hardware
+        if (window.AudioContext || window.webkitAudioContext) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioCtx();
+            if (ctx.state === 'suspended') await ctx.resume();
+        }
+
+        if (!recognitionRef.current) {
+            alert("Speech Recognition engine not initialized or supported on this phone viewport.");
             return;
         }
 
         if (isRecording) {
-            setIsRecording(false); 
-            return;
+            setIsRecording(false);
+            try { recognitionRef.current.stop(); } catch(e){}
+        } else {
+            setIsRecording(true);
+            try { recognitionRef.current.start(); } catch (err) { console.error(err); }
         }
-
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-IN'; 
-        recognition.interimResults = false;
-        recognition.onstart = () => setIsRecording(true);
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            setInputText(transcript);
-        };
-        recognition.onend = () => setIsRecording(false);
-        recognition.start();
     };
 
     const handleAnalyze = async () => {
@@ -820,7 +861,7 @@ const GrammarModule = () => {
                         </motion.div>
                     ))}
                     
-                    <motion.div whileHover={{ scale: 1.03 }} onClick={fetchAIQuestions} className="grammar-battle-grid-block reload-trigger-button">
+                    <motion.div whileHover={{ scale: 1.03 }} onClick={fetchAIQuestions} className="grammar-battle-grid-block reload-trigger-button" style={{cursor: 'pointer'}}>
                         <FaSync className={loadingQuestions ? "spin-animation" : ""} /> 
                         <strong style={{ fontSize: '1rem' }}>New Tasks</strong>
                     </motion.div>
