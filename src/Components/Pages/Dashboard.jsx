@@ -61,9 +61,15 @@ const Dashboard = () => {
                         <FaFire /> <span>{streak} Days</span>
                     </div>
                     
-                    <button className="notif-btn" aria-label="Notification">
-                        <FaRegBell />
-                    </button>
+                    <button className="notif-btn" aria-label="Notification" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <FaRegBell style={{ 
+        color: '#3b82f6',     /* ✨ Isse icon bright blue color mein hamesha chamkega */
+        fill: '#3b82f6', 
+        width: '18px', 
+        height: '18px', 
+        display: 'block' 
+    }} />
+</button>
                     
                     {/* 🎯 FIXED: Mobile par button ko choke hone se bachane ke liye text ko responsive wrapper mein dala */}
                     <button onClick={handleLogout} className="logout-btn-header" title="Logout Session">
