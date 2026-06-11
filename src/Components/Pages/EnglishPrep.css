@@ -1,5 +1,5 @@
 /* ==========================================================================
-   🎨 FLUID SKIN LAYER: Configured completely on theme variables
+   🎨 CLARITY SKIN ARCHITECTURE: Fully dependent on parent system layout rules
    ========================================================================== */
 
    .dashboard-content-layout {
@@ -8,9 +8,10 @@
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
-    overflow-x: hidden;
+    background: transparent !important; /* Theme toggler handles bg */
   }
   
+  /* Internal navigation sub-sidebar alignment specs */
   .internal-sidebar {
     width: 200px;
     flex-shrink: 0;
@@ -21,7 +22,6 @@
     padding-right: 20px;
     margin-right: 20px;
     background: transparent;
-    transition: all 0.3s ease;
   }
   
   .brand-title {
@@ -92,10 +92,10 @@
     height: 2.5rem;
     display: inline-block;
     margin-left: 5px;
-    animation: blink-anim 0.8s infinite alternate;
+    animation: cursor-blink-loop 0.8s infinite alternate;
   }
   
-  @keyframes blink-anim {
+  @keyframes cursor-blink-loop {
     0% { opacity: 1; }
     100% { opacity: 0; }
   }
@@ -107,7 +107,7 @@
   }
   
   .bell-header-btn {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.1);
     color: var(--text-main);
     border: 1px solid var(--border);
     width: 40px;
@@ -126,7 +126,13 @@
     background: linear-gradient(135deg, #3b82f6, #818cf8);
   }
   
-  /* --- Rigid Split Section Layout --- */
+  /* --- Container Flow Wrapper --- */
+  .content-render-fluid-box-wrapper {
+    width: 100%;
+    display: block;
+  }
+  
+  /* --- Two Column Split System (Only loaded inside ReadModule) --- */
   .modules-and-stats-flex-container {
     display: flex;
     flex-direction: row;
@@ -135,19 +141,6 @@
     align-items: flex-start;
   }
   
-  .active-module-render-box {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .stats-panel-sticky-wrapper {
-    width: 300px;
-    position: sticky;
-    top: 20px;
-    flex-shrink: 0;
-  }
-  
-  /* --- Internal Render Elements --- */
   .inner-module-card-box {
     background: var(--bg-card);
     border-radius: 24px;
@@ -156,7 +149,7 @@
   }
   
   .local-xp-tracker-card {
-    background: var(--bg-sidebar, rgba(0,0,0,0.05));
+    background: var(--bg-sidebar, rgba(0,0,0,0.02));
     padding: 20px;
     border-radius: 16px;
     margin-bottom: 25px;
@@ -164,7 +157,7 @@
   }
   
   .category-dropdown-native {
-    background: var(--bg-sidebar, rgba(0,0,0,0.05));
+    background: var(--bg-sidebar, rgba(0,0,0,0.02));
     color: var(--accent);
     border: 1px solid var(--border);
     padding: 8px 15px;
@@ -174,12 +167,12 @@
   }
   
   .word-playback-display-area {
-    background: var(--bg-sidebar, rgba(0,0,0,0.05));
+    background: var(--bg-sidebar, rgba(0,0,0,0.02));
     color: var(--text-main);
     padding: 35px;
-    borderRadius: 20px;
-    lineHeight: 1.7;
-    fontSize: 1.5rem;
+    border-radius: 20px;
+    line-height: 1.7;
+    font-size: 1.5rem;
     border-left: 5px solid var(--accent);
     min-height: 150px;
     margin-bottom: 25px;
@@ -194,44 +187,46 @@
   .transcript-sub-card {
     flex: 1;
     padding: 15px;
-    background: var(--bg-main, rgba(0,0,0,0.02));
+    background: var(--bg-main, rgba(0,0,0,0.01));
     border-radius: 12px;
     border: 1px dashed var(--border);
   }
   
-  .accuracy-meters-stacking-panel {
+  .accuracy-meters-sidebar-flex {
     display: flex;
     flex-direction: column;
     gap: 10px;
     justify-content: center;
   }
   
-  /* --- Vocab Structure Layout --- */
+  /* --- Vocab 100% Full Width Architecture --- */
   .outer-vocab-card-body {
     background: var(--bg-card);
     border-radius: 16px;
     border: 1px solid var(--border);
-    min-height: 1050px;
+    min-height: 950px;
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   
   .vocab-diagram-box-container {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: var(--bg-main, rgba(0,0,0,0.05));
+    background: var(--bg-main, rgba(0,0,0,0.02));
     padding: 15px;
     border-radius: 12px;
     border: 1px dashed var(--border);
   }
   
-  /* --- Grammar Structure Layout --- */
+  /* --- Grammar 100% Full Width Architecture --- */
   .inner-grammar-card-architecture {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 24px;
     overflow: hidden;
+    width: 100%;
   }
   
   .grammar-battle-grid-block {
@@ -245,7 +240,7 @@
   }
   
   .grammar-battle-grid-block.active {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   }
   
   .reload-trigger-button {
@@ -259,10 +254,10 @@
   }
   
   .spin-animation {
-    animation: spin-loop 1s linear infinite;
+    animation: loop-spin-loader 1s linear infinite;
   }
   
-  @keyframes spin-loop {
+  @keyframes loop-spin-loader {
     100% { transform: rotate(360deg); }
   }
   
@@ -277,13 +272,14 @@
     border: 1px solid var(--border);
   }
   
-  /* --- Dashboard Panel Cards --- */
+  /* --- Stats Dashboard Card Panel Design --- */
   .stats-panel-card-wrapper {
-    background: var(--bg-sidebar, rgba(0,0,0,0.05));
+    background: var(--bg-sidebar, rgba(0,0,0,0.02));
     border-radius: 20px;
     border: 1px solid var(--border);
     padding: 25px;
     width: 100%;
+    box-sizing: border-box;
   }
   
   .stat-box-item {
@@ -315,7 +311,7 @@
   }
   
   /* ==========================================================================
-     📱 MOBILE SYSTEM RESPONSIVE DESTRUCTION CONSTRAINTS
+     📱 MOBILE & TABLET STACK PHYSICS RULES
      ========================================================================== */
   @media (max-width: 1150px) {
     .modules-and-stats-flex-container {

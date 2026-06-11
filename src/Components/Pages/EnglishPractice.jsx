@@ -62,7 +62,7 @@ const StatsPanel = ({ streak = 0, totalXP = 0, level = 1, accuracy = 0 }) => (
     </div>
 );
 
-// --- MODULE 1: READING (NASA VERSION 🚀) ---
+// --- MODULE 1: READING (STATS PANEL DIRECTLY EMBEDDED INSIDE HERE FOR LIVE SYNC 🎯) ---
 const ReadModule = () => {
     const [questions, setQuestions] = useState([]); 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -261,105 +261,120 @@ const ReadModule = () => {
     const currentData = questions[currentIndex] || { text: "", topic: "AI", xp: 100 };
 
     return (
-        <div className="inner-module-card-box">
-            {/* 🏆 TOP XP BAR */}
-            <div className="local-xp-tracker-card">
-                <div style={{display:'flex', justifyContent:'space-between', alignItems: 'center', marginBottom: 10}}>
-                    <div style={{color:'var(--accent)', fontWeight:800, fontSize: '1.1rem'}}>🔥 STREAK: {streak} DAYS</div>
-                    <div style={{textAlign: 'right'}}>
-                        <span style={{color:'#facc15', fontWeight:900, fontSize: '1.2rem'}}>💰 {totalXP} XP</span>
-                        <div style={{color:'#4ade80', fontSize: '0.8rem', fontWeight:'bold'}}>RANK: LEVEL {level}</div>
-                    </div>
-                </div>
-                
-                <div style={{width: '100%', height: 6, background: 'var(--border)', borderRadius: 10, overflow: 'hidden'}}>
-                    <div style={{width: `${progressInLevel}%`, height: '100%', background: 'linear-gradient(90deg, #3b82f6, #4ade80)', boxShadow: '0 0 10px #3b82f6' }} />
-                </div>
-                <div style={{display:'flex', justifyContent:'space-between', marginTop: 5}}>
-                    <small style={{color: 'var(--text-dim)'}}>LVL {level}</small>
-                    <small style={{color: 'var(--text-dim)'}}>{totalXP % 1000} / 1000 XP</small>
-                    <small style={{color: 'var(--text-dim)'}}>LVL {level + 1}</small>
-                </div>
-            </div>
-
-            {/* HEADER & CATEGORY */}
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20}}>
-                <select value={category} onChange={(e) => { setCategory(e.target.value); fetchSpeakingTasks(e.target.value); }}
-                    className="category-dropdown-native">
-                    <option value="System Design & Tech">💻 Technical</option>
-                    <option value="Business Meetings">💼 Business</option>
-                    <option value="General Conversation">🏠 General</option>
-                </select>
-                <h2 style={{color: 'var(--accent)', fontSize: '1.5rem', margin: 0}}>{currentData.topic}</h2>
-            </div>
+        /* 🎯 CO-JOINED WRAPPER LAYOUT INSIDE READ MODULE FOR STATIC GRID FLUID PHYSICS */
+        <div className="modules-and-stats-flex-container">
             
-            {/* 📝 INTERACTIVE TEXT BOX */}
-            <div className="word-playback-display-area">
-                {currentData.text.split(" ").map((word, index) => {
-                    const clean = word.toLowerCase().replace(/[.,!]/g, "");
-                    const isMatched = userTranscript.toLowerCase().includes(clean);
-                    return (
-                        <span key={index} onClick={() => speakSingleWord(word)}
-                            style={{ color: !userTranscript ? 'var(--text-dim)' : isMatched ? '#4ade80' : '#ef4444', marginRight: '10px', cursor: 'pointer', display: 'inline-block' }}>
-                            {word}
-                        </span>
-                    );
-                })}
-            </div>
-
-            {/* 📊 LIVE STATS & AUDIO */}
-            <div className="live-transcript-stats-row">
-                <div className="transcript-sub-card">
-                    <small style={{color: 'var(--text-dim)'}}>TRANSCRIPT:</small>
-                    <p style={{color: 'var(--text-main)', fontStyle:'italic', margin: '10px 0'}}>"{userTranscript || "Ready..."}"</p>
-                    {audioUrl && !recording && <audio controls src={audioUrl} style={{width: '100%', height: 30, marginTop: 15}} />}
-                </div>
-                <div className="accuracy-meters-sidebar-flex">
-                    <div style={{width: '100px', textAlign:'center', border: `1px solid ${accuracy >= 50 ? '#4ade80' : '#f43f5e'}`, borderRadius: 10, padding: '5px', background:'var(--bg-main, rgba(0,0,0,0.05))'}}>
-                        <div style={{color: accuracy >= 50 ? '#4ade80' : '#f43f5e', fontWeight: 800}}>{accuracy}%</div>
-                        <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>ACCURACY</small>
+            {/* Left Main Question Workspace */}
+            <div className="inner-module-card-box" style={{ flex: 1, minWidth: 0 }}>
+                {/* 🏆 TOP XP BAR */}
+                <div className="local-xp-tracker-card">
+                    <div style={{display:'flex', justifyContent:'space-between', alignItems: 'center', marginBottom: 10}}>
+                        <div style={{color:'var(--accent)', fontWeight:800, fontSize: '1.1rem'}}>🔥 STREAK: {streak} DAYS</div>
+                        <div style={{textAlign: 'right'}}>
+                            <span style={{color:'#facc15', fontWeight:900, fontSize: '1.2rem'}}>💰 {totalXP} XP</span>
+                            <div style={{color:'#4ade80', fontSize: '0.8rem', fontWeight:'bold'}}>RANK: LEVEL {level}</div>
+                        </div>
                     </div>
-                    <div style={{width: '100px', textAlign:'center', border: '1px solid var(--accent)', borderRadius: 10, padding: '5px', background:'var(--bg-main, rgba(0,0,0,0.05))'}}>
-                        <div style={{color: 'var(--accent)', fontWeight: 800}}>{wpm}</div>
-                        <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>WPM</small>
-                    </div>
-                </div>
-            </div>
-
-            {/* 🕹️ CONTROLS */}
-            <div style={{display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
-                <div style={{display:'flex', gap: 15, alignItems:'center'}}>
-                    <button onClick={toggleRecording} style={{padding: '12px 30px', borderRadius: 50, background: recording ? '#ef4444' : 'var(--accent)', color:'white', border:'none', fontWeight:'bold', cursor:'pointer'}}>
-                        {recording ? 'Stop' : 'Record'}
-                    </button>
                     
-                    <div style={{display:'flex', alignItems:'center', background:'var(--bg-main, rgba(0,0,0,0.05))', borderRadius:'50px', border:'1px solid var(--accent)'}}>
-                        <button onClick={handleSpeakAll} style={{background: 'transparent', border: 'none', color: 'var(--accent)', padding: '10px 15px', cursor: 'pointer', fontWeight:'bold'}}>🔈 Listen</button>
-                        <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} style={{background:'transparent', color:'var(--accent)', border:'none', borderLeft:'1px solid var(--accent)', padding:'0 5px', outline:'none', cursor:'pointer'}}>
-                            <option value="0.8">0.8x</option><option value="1.0">1.0x</option><option value="1.2">1.2x</option>
-                        </select>
+                    <div style={{width: '100%', height: 6, background: 'var(--border)', borderRadius: 10, overflow: 'hidden'}}>
+                        <div style={{width: `${progressInLevel}%`, height: '100%', background: 'linear-gradient(90deg, #3b82f6, #4ade80)', boxShadow: '0 0 10px #3b82f6' }} />
                     </div>
+                    <div style={{display:'flex', justifyContent:'space-between', marginTop: 5}}>
+                        <small style={{color: 'var(--text-dim)'}}>LVL {level}</small>
+                        <small style={{color: 'var(--text-dim)'}}>{totalXP % 1000} / 1000 XP</small>
+                        <small style={{color: 'var(--text-dim)'}}>LVL {level + 1}</small>
+                    </div>
+                </div>
+
+                {/* HEADER & CATEGORY */}
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20}}>
+                    <select value={category} onChange={(e) => { setCategory(e.target.value); fetchSpeakingTasks(e.target.value); }}
+                        className="category-dropdown-native">
+                        <option value="System Design & Tech">💻 Technical</option>
+                        <option value="Business Meetings">💼 Business</option>
+                        <option value="General Conversation">🏠 General</option>
+                    </select>
+                    <h2 style={{color: 'var(--accent)', fontSize: '1.5rem', margin: 0}}>{currentData.topic}</h2>
                 </div>
                 
-                <div style={{display:'flex', gap: 10}}>
-                    <button onClick={() => { if(currentIndex > 0) setCurrentIndex(c => c-1); resetState(); }} 
-                        style={{background: 'var(--bg-sidebar, rgba(0,0,0,0.02))', color: 'var(--text-main)', padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border)', cursor:'pointer'}}>
-                        Prev
-                    </button>
-
-                    <button 
-                        onClick={handleNextAndSave} 
-                        disabled={accuracy < 50}
-                        style={{
-                            background: accuracy < 50 ? 'var(--border)' : accuracy >= 80 ? 'var(--accent)' : '#f59e0b', 
-                            color: 'white', padding: '12px 30px', borderRadius: 10, border:'none', 
-                            fontWeight:'bold', cursor: accuracy < 50 ? 'not-allowed' : 'pointer',
-                            transition: '0.3s'
-                        }}
-                    >
-                        {accuracy < 50 ? `Locked (${accuracy}%)` : accuracy >= 80 ? 'Next & Save +100 XP' : 'Next & Save +20 XP'}
-                    </button>
+                {/* 📝 INTERACTIVE TEXT BOX */}
+                <div className="word-playback-display-area">
+                    {currentData.text.split(" ").map((word, index) => {
+                        const clean = word.toLowerCase().replace(/[.,!]/g, "");
+                        const isMatched = userTranscript.toLowerCase().includes(clean);
+                        return (
+                            <span key={index} onClick={() => speakSingleWord(word)}
+                                style={{ color: !userTranscript ? 'var(--text-dim)' : isMatched ? '#4ade80' : '#ef4444', marginRight: '10px', cursor: 'pointer', display: 'inline-block' }}>
+                                {word}
+                            </span>
+                        );
+                    })}
                 </div>
+
+                {/* 📊 LIVE STATS & AUDIO */}
+                <div className="live-transcript-stats-row">
+                    <div className="transcript-sub-card">
+                        <small style={{color: 'var(--text-dim)'}}>TRANSCRIPT:</small>
+                        <p style={{color: 'var(--text-main)', fontStyle:'italic', margin: '10px 0'}}>"{userTranscript || "Ready..."}"</p>
+                        {audioUrl && !recording && <audio controls src={audioUrl} style={{width: '100%', height: 30, marginTop: 15}} />}
+                    </div>
+                    <div className="accuracy-meters-sidebar-flex">
+                        <div style={{width: '100px', textAlign:'center', border: `1px solid ${accuracy >= 50 ? '#4ade80' : '#f43f5e'}`, borderRadius: 10, padding: '5px', background:'var(--bg-main, rgba(0,0,0,0.05))'}}>
+                            <div style={{color: accuracy >= 50 ? '#4ade80' : '#f43f5e', fontWeight: 800}}>{accuracy}%</div>
+                            <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>ACCURACY</small>
+                        </div>
+                        <div style={{width: '100px', textAlign:'center', border: '1px solid var(--accent)', borderRadius: 10, padding: '5px', background:'var(--bg-main, rgba(0,0,0,0.05))'}}>
+                            <div style={{color: 'var(--accent)', fontWeight: 800}}>{wpm}</div>
+                            <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>WPM</small>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 🕹️ CONTROLS */}
+                <div style={{display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
+                    <div style={{display:'flex', gap: 15, alignItems:'center'}}>
+                        <button onClick={toggleRecording} style={{padding: '12px 30px', borderRadius: 50, background: recording ? '#ef4444' : 'var(--accent)', color:'white', border:'none', fontWeight:'bold', cursor:'pointer'}}>
+                            {recording ? 'Stop' : 'Record'}
+                        </button>
+                        
+                        <div style={{display:'flex', alignItems:'center', background:'var(--bg-main, rgba(0,0,0,0.05))', borderRadius:'50px', border:'1px solid var(--accent)'}}>
+                            <button onClick={handleSpeakAll} style={{background: 'transparent', border: 'none', color: 'var(--accent)', padding: '10px 15px', cursor: 'pointer', fontWeight:'bold'}}>🔈 Listen</button>
+                            <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} style={{background:'transparent', color:'var(--accent)', border:'none', borderLeft:'1px solid var(--accent)', padding:'0 5px', outline:'none', cursor:'pointer'}}>
+                                <option value="0.8">0.8x</option><option value="1.0">1.0x</option><option value="1.2">1.2x</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style={{display:'flex', gap: 10}}>
+                        <button onClick={() => { if(currentIndex > 0) setCurrentIndex(c => c-1); resetState(); }} 
+                            style={{background: 'var(--bg-sidebar, rgba(0,0,0,0.02))', color: 'var(--text-main)', padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border)', cursor:'pointer'}}>
+                            Prev
+                        </button>
+
+                        <button 
+                            onClick={handleNextAndSave} 
+                            disabled={accuracy < 50}
+                            style={{
+                                background: accuracy < 50 ? 'var(--border)' : accuracy >= 80 ? 'var(--accent)' : '#f59e0b', 
+                                color: 'white', padding: '12px 30px', borderRadius: 10, border:'none', 
+                                fontWeight:'bold', cursor: accuracy < 50 ? 'not-allowed' : 'pointer',
+                                transition: '0.3s'
+                            }}
+                        >
+                            {accuracy < 50 ? `Locked (${accuracy}%)` : accuracy >= 80 ? 'Next & Save +100 XP' : 'Next & Save +20 XP'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* 🎯 FIXED: Stats panel right side mein embedded hai read module ke andruni logic se dynamic re-render hone k liye */}
+            <div className="stats-panel-sticky-wrapper" style={{ width: '300px', flexShrink: 0 }}>
+                <StatsPanel 
+                    streak={streak} 
+                    totalXP={totalXP} 
+                    level={level} 
+                    accuracy={accuracy}
+                />
             </div>
         </div>
     );
@@ -957,16 +972,11 @@ const EnglishPrep = () => {
         };
     }, []);
 
-    // 🎯 LOCALSTORAGE REAL-TIME VARIABLES DIRECT FORWARDED TO STATS PANEL
-    const liveXP = Number(localStorage.getItem('userXP')) || 0;
-    const liveStreak = Number(localStorage.getItem('userStreak')) || 0;
-    const liveLevel = Math.floor(liveXP / 1000) + 1;
-    
     return (
-        /* --- 🌍 MAIN WRAPPER (Fluid Theme Passthrough Layer) --- */
+        /* --- 🌍 MAIN WRAPPER (Fluid Canvas - 100% Theme Safe Passthrough) --- */
         <div className="dashboard-content-layout">
             
-            {/* --- 🟦 INTERNAL SUB-SIDEBAR (Pro Plan Block Removed 🎯) --- */}
+            {/* --- 🟦 INTERNAL SUB-SIDEBAR --- */}
             <div className="internal-sidebar">
                 <div className="brand-title">
                     <FaLayerGroup color="#3b82f6" /> Prep<span>AI</span>
@@ -1003,23 +1013,13 @@ const EnglishPrep = () => {
                     </div>
                 </div>
     
-                {/* --- TWO COLUMN WRAPPED WORKSPACE --- */}
-                <div className="modules-and-stats-flex-container">
-                    <div className="active-module-render-box">
-                        {activeTab === 'read' && <ReadModule />}
-                        {activeTab === 'vocab' && <VocabModule />}
-                        {activeTab === 'grammar' && <GrammarModule />}
-                    </div>
-
-                    {/* Right-Side Dashboard Sync Box */}
-                    <div className="stats-panel-sticky-wrapper">
-                        <StatsPanel 
-                            streak={liveStreak} 
-                            totalXP={liveXP} 
-                            level={liveLevel} 
-                            accuracy={liveXP > 0 ? 85 : 0}
-                        />
-                    </div>
+                {/* --- 🎯 CONDITIONAL LAYOUT SWAPPER: Only ReadModule has the sticky right panel now --- */}
+                <div className="content-render-fluid-box-wrapper">
+                    {activeTab === 'read' && <ReadModule />}
+                    
+                    {/* Vocab and Grammar will take 100% full width automatically when loaded */}
+                    {activeTab === 'vocab' && <VocabModule />}
+                    {activeTab === 'grammar' && <GrammarModule />}
                 </div>
             </div>
         </div>
