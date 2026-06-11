@@ -6,8 +6,8 @@ import HowItWorks from "./How_it_works";
 import Features from "./Features"; 
 import About from "./About"; 
 import Footer from "../Footer"; 
+import Pricing from '../Pricing/Pricing'; // Pricing component call kiya
 import "./Home.css";
-
 
 const Home = () => {
   const spotlightRef = useRef(null);
@@ -56,13 +56,13 @@ const Home = () => {
             <div className="hero-tag-neon">✨ PREP AI INTERACTIVE</div>
             
             <h1 className="hero-heading">
-  <div className="animate-line">Don’t Just Prepare.
-  </div>
-  <div className="animate-line neon-text">Let AI Engineer </div>
-  <div className="animate-line">Your Professional Edge</div>
-</h1>            
+              <div className="animate-line">Don’t Just Prepare.</div>
+              <div className="animate-line neon-text">Let AI Engineer </div>
+              <div className="animate-line">Your Professional Edge</div>
+            </h1>            
+            
             <p className="hero-description">
-            Move beyond static mock tests and boring forms. Step into a high-fidelity conversational grid where Prep AI live-analyzes your expertise, verifies your tech-stack, and synthesizes a bulletproof professional identity in real-time.
+              Move beyond static mock tests and boring forms. Step into a high-fidelity conversational grid where Prep AI live-analyzes your expertise, verifies your tech-stack, and synthesizes a bulletproof professional identity in real-time.
             </p>
 
             <div className="hero-action-group">
@@ -129,6 +129,10 @@ const Home = () => {
       <div className="dark-content-wrap">
         <div id="how-it-works-section"><HowItWorks /></div>
         <div id="features-section"><Features /></div>
+        
+        {/* 🚀 Naya Pricing Section Features ke theek baad render kiya */}
+        <div id="pricing-section"><Pricing /></div>
+        
         <div id="about-section"><About /></div>
         <Footer />
       </div>

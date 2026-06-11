@@ -16,8 +16,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 // --- RIGHT PANEL (STATS) ---
-// ✅ अब ये बाहर से डेटा (Props) रिसीव करेगा
-// यहाँ हमने 0 डिफ़ॉल्ट वैल्यू दे दी है ताकि 'undefined' का एरर न आए
+// 🔥 Simple Stats Panel Component with Gradient Text and Icons
 const StatsPanel = ({ streak = 0, totalXP = 0, level = 1, accuracy = 0 }) => (
     <div className="stats-panel" style={{ width: '300px', minWidth: '300px' }}>
         <div style={{ marginBottom: 40 }}>
@@ -1056,33 +1055,43 @@ const EnglishPrep = () => {
 
     const fullTitle = "English Studio"; 
     const fullSubtitle = "Refine your communication skills for high-stakes interviews.";
-
+    
     useEffect(() => {
-        if (hasRun.current) return;
-        hasRun.current = true;
-
+        let isCancelled = false; // ✨ Strict Mode ke double trigger ko rokne ke liye
+    
         const runTypingSequence = async () => {
             // 1. Title Type
+            setTitleText(""); // Pehle clear karo taaki double-type na ho
             for (let i = 0; i < fullTitle.length; i++) {
+                if (isCancelled) return; // Agar components reload ho toh loop yahin stop ho jaye
                 setTitleText(prev => prev + fullTitle[i]);
                 await new Promise(r => setTimeout(r, 100)); 
             }
-
+    
             // 2. Pause
             await new Promise(r => setTimeout(r, 300));
+            if (isCancelled) return;
             setTypingPhase('subtitle');
-
+    
             // 3. Subtitle Type
+            setSubtitleText(""); // Clear subtitle before typing
             for (let i = 0; i < fullSubtitle.length; i++) {
+                if (isCancelled) return;
                 setSubtitleText(prev => prev + fullSubtitle[i]);
                 await new Promise(r => setTimeout(r, 30));
             }
-
+    
             // 4. Done
+            if (isCancelled) return;
             setTypingPhase('done');
         };
-
+    
         runTypingSequence();
+    
+        // 🧹 Cleanup function: Component unmount hote hi purana asynchronous code cancel
+        return () => {
+            isCancelled = true;
+        };
     }, []);
     
     return (
@@ -1118,7 +1127,7 @@ const EnglishPrep = () => {
         alignItems: 'center', 
         gap: '10px' 
     }}>
-        <FaLayerGroup color="#3b82f6" /> Interview<span>X</span>
+        <FaLayerGroup color="#3b82f6" /> Prep<span>AI</span>
     </div>
     
     {/* Navigation Items */}

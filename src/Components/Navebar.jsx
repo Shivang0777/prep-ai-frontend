@@ -132,6 +132,12 @@ const Navbar = () => {
             Features
           </li>
           <li 
+  className={`custom-li ${activeSection === "pricing-section" ? "active-link" : ""}`} 
+  onClick={() => handleNav("pricing-section", "/")}
+>
+  Pricing
+</li>
+          <li 
             className={`custom-li ${activeSection === "how-it-works-section" ? "active-link" : ""}`} 
             onClick={() => handleNav("how-it-works-section", "/")}
           >
