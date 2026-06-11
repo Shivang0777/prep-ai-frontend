@@ -1,330 +1,384 @@
-/* --- 1. IMPORT PREMIUM FONT --- */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
-
-/* --- 2. GLOBAL RESET & SCROLLBAR --- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
+/* --- Global Variables Injection Guard --- */
+:root {
+    --bg-main: #0b0c10;
+    --bg-card: #1f2833;
+    --bg-sidebar: #151a22;
+    --text-main: #c5a059;
+    --text-dim: #8a99ad;
+    --border: #2d3748;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+  }
+  
+  /* --- Main Layout Grid Architecture --- */
+  .dashboard-content-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
     background: var(--bg-main);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-dim);
-}
-
-.dashboard-wrapper {
-    display: grid;
-    /* Desktop Layout: Sidebar | Main | Stats */
-    grid-template-columns: 260px 1fr 300px; 
-    height: 100vh;
-    background-color: var(--bg-main); /* Light or Dark via App.css */
-    color: var(--text-main);
-    font-family: 'Outfit', sans-serif;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-/* --- 3. SIDEBAR (Glassy Look) --- */
-.sidebar {
-    background: var(--bg-sidebar);
-    border-right: 1px solid var(--border);
-    padding: 30px 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  /* --- Internal Sidebar --- */
+  .internal-sidebar {
+    width: 240px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    backdrop-filter: blur(10px);
-    z-index: 100;
-}
-
-.brand-title {
-    font-size: 1.8rem;
-    font-weight: 700;
+    gap: 10px;
+    border-right: 1px solid var(--border);
+    padding-right: 20px;
+    margin-right: 20px;
+    background: var(--bg-sidebar);
+    transition: all 0.3s ease;
+  }
+  
+  .brand-title {
     color: var(--text-main);
-    margin-bottom: 50px;
-    letter-spacing: -1px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 10px;
-}
-.brand-title span { color: var(--accent); }
-
-.nav-item {
+  }
+  
+  .nav-item {
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+  
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-main);
+  }
+  
+  .nav-item.active {
+    color: var(--text-main);
+    background: var(--accent-glow);
+  }
+  
+  /* --- Main Workspace Architecture --- */
+  .main-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0; /* Clear CSS flex width scaling issue */
+  }
+  
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    width: 100%;
+    gap: 15px;
+  }
+  
+  .title-text-stack h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .title-text-stack p {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    margin: 5px 0 0 0;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+  
+  .cursor-blink {
+    background: var(--accent);
+    width: 4px;
+    height: 2.5rem;
+    display: inline-block;
+    margin-left: 5px;
+    animation: blink 0.8s infinite alternate;
+  }
+  
+  @keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  .header-actions-profile-circles {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .bell-header-btn {
+    background: #111;
+    color: white;
+    border: 1px solid #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+  }
+  
+  .avatar-header-gradient {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #818cf8);
+  }
+  
+  /* --- Modules Container Split Area --- */
+  .modules-and-stats-flex-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    align-items: flex-start;
+  }
+  
+  .active-module-render-box {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .stats-panel-sticky-wrapper {
+    width: 300px;
+    position: sticky;
+    top: 20px;
+    flex-shrink: 0;
+  }
+  
+  /* --- Module Cards & Content Wrappers --- */
+  .xp-container-card {
+    background: var(--bg-sidebar);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+  }
+  
+  .interactive-text-display-box {
+    background: var(--bg-sidebar);
+    color: var(--text-main);
+    padding: 30px;
+    border-radius: 20px;
+    line-height: 1.7;
+    font-size: 1.4rem;
+    border-left: 5px solid var(--accent);
+    min-height: 140px;
+    margin-bottom: 25px;
+  }
+  
+  .live-feedback-flex-row {
+    margin-bottom: 25px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .transcript-box-log {
+    flex: 1;
+    padding: 15px;
+    background: var(--bg-main);
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+  }
+  
+  .accuracy-meters-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .category-dropdown-select {
+    background: var(--bg-sidebar);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  /* --- Vocab Template Diagram Specifics --- */
+  .inner-vocab-wrapper-box {
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    min-height: 900px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .diagram-card-box {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 16px;
-    margin-bottom: 8px;
-    border-radius: 12px;
-    cursor: pointer;
-    color: var(--text-dim);
-    transition: all 0.3s ease;
-    font-weight: 500;
-    border: 1px solid transparent;
-}
-
-.nav-item:hover {
     background: var(--bg-main);
-    color: var(--text-main);
-}
-
-.nav-item.active {
-    background: var(--accent-glow);
-    color: var(--accent);
-    border-left: 3px solid var(--accent);
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.05);
-}
-
-/* --- 4. CENTER STAGE (Main Area) --- */
-.main-area {
-    padding: 40px;
-    overflow-y: auto;
-    /* Subtle Grid Pattern - Theme Responsive */
-    background-image: radial-gradient(var(--border) 1px, transparent 1px);
-    background-size: 40px 40px;
-    background-color: var(--bg-main);
-}
-
-.header-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.module-card {
+    padding: 15px 25px;
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+    min-width: 280px;
+    justify-content: center;
+  }
+  
+  /* --- Grammar Battle Cards --- */
+  .inner-grammar-module-main {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 40px;
-    min-height: 400px;
-    position: relative;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.03); /* Lighter shadow for light theme */
-    animation: fadeUp 0.5s ease;
-}
-
-/* --- 5. RIGHT STATS PANEL --- */
-.stats-panel {
-    background: var(--bg-sidebar);
-    border-left: 1px solid var(--border);
-    padding: 30px;
+    border-radius: 24px;
+    overflow: hidden;
+  }
+  
+  .battle-selector-card-item {
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .battle-selector-card-item.active {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .add-new-trigger-btn {
+    border: 2px dashed var(--border);
+    color: #3fb950;
     display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
-
-.stat-box {
-    background: var(--bg-card);
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(46, 160, 67, 0.05);
+  }
+  
+  .spin-animation {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* --- Dashboard Side Stats Panel Design --- */
+  .stats-panel {
+    background: var(--bg-sidebar);
+    border-radius: 20px;
     border: 1px solid var(--border);
     padding: 25px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-    transition: 0.3s;
-}
-
-.stat-box:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-.stat-header { 
-    font-size: 0.8rem; 
-    color: var(--text-dim); 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    font-weight: 600;
-    margin-bottom: 12px; 
-}
-
-.stat-value { 
-    font-size: 2.2rem; 
-    font-weight: 800; 
-    /* Gradient adapted for light/dark visibility */
-    background: linear-gradient(to right, var(--text-main), var(--text-dim));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.stat-sub { 
-    font-size: 0.85rem; 
-    margin-top: 5px; 
-    font-weight: 500;
-    color: var(--accent);
-}
-
-/* --- COMPONENTS --- */
-.primary-btn {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 14px 30px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px var(--accent-glow);
-}
-
-.text-area-dark {
     width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .stat-box {
     background: var(--bg-main);
     border: 1px solid var(--border);
-    color: var(--text-main);
-    padding: 20px;
-    border-radius: 12px;
-    margin: 20px 0;
-    font-family: 'Outfit', sans-serif;
-    font-size: 1rem;
-    transition: 0.3s;
-}
-
-.activity-item {
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .stat-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 3px;
+  }
+  
+  .stat-sub {
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  
+  .activity-item {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
+    padding: 10px 0;
     border-bottom: 1px solid var(--border);
-    font-size: 0.9rem;
-    color: var(--text-dim);
-}
-
-/* --- 📱 MOBILE RESPONSIVENESS (Media Queries) --- */
-
-/* For Tablets and Small Desktops */
-@media (max-width: 1100px) {
-    .dashboard-wrapper {
-        grid-template-columns: 80px 1fr 250px; /* Sidebar shrinks to icons only */
+    font-size: 0.85rem;
+    color: var(--text-main);
+  }
+  
+  /* ==========================================================================
+     📱 SYSTEM-WIDE MOBILE REPAIR BREAKPOINT
+     ========================================================================== */
+  @media (max-width: 992px) {
+    .modules-and-stats-flex-container {
+      flex-direction: column;
     }
-    .brand-title span, .nav-item span {
-        display: none; /* Hide text, keep icons if you use icons */
+    .stats-panel-sticky-wrapper {
+      width: 100%;
+      position: relative;
+      top: 0;
     }
-}
-
-/* For Phones and Small Tablets */
-@media (max-width: 768px) {
-    .dashboard-wrapper {
-        grid-template-columns: 1fr; /* Single column layout */
-        grid-template-rows: auto 1fr auto;
-        height: auto;
-        overflow-y: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-content-layout {
+      flex-direction: column;
+      padding: 10px;
     }
-
-    .sidebar {
-        height: auto;
-        padding: 15px;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        position: sticky;
-        top: 0;
-    }
-
-    .brand-title {
-        margin-bottom: 0;
-        font-size: 1.2rem;
-    }
-
-    .nav-item {
-        padding: 10px;
-        margin-bottom: 0;
-    }
-
-    .main-area {
-        padding: 20px;
-    }
-
-    .module-card {
-        padding: 20px;
-        min-height: auto;
-    }
-
-    .stats-panel {
-        border-left: none;
-        border-top: 1px solid var(--border);
-        padding: 20px;
-    }
-
-    .stat-box {
-        margin-bottom: 15px;
-    }
-}
-
-/* Extra Small Devices */
-@media (max-width: 480px) {
-    .header-bar h1 {
-        font-size: 1.5rem;
-    }
-    .stat-value {
-        font-size: 1.8rem;
-    }
-}
-/* --- 📱 RESPONSIVENESS START --- */
-
-/* Jab screen 768px se chhoti hogi (Mobile View) */
-@media (max-width: 768px) {
-    /* Main Layout stack ho jayega */
-    .practice-page-layout {
-        flex-direction: column !important;
-        padding: 10px !important;
-        gap: 10px !important;
-    }
-
-    /* Sidebar top bar ban jayega */
+  
     .internal-sidebar {
-        width: 100% !important;
-        flex-direction: row !important;
-        height: auto !important;
-        border-right: none !important;
-        border-bottom: 1px solid var(--border);
-        padding: 10px !important;
-        margin-right: 0 !important;
-        justify-content: space-around;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: var(--bg-sidebar);
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding-right: 0;
+      padding-bottom: 15px;
+      margin-right: 0;
+      margin-bottom: 20px;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
-
-    /* Sidebar ke text chhup jayenge sirf icons dikhenge */
-    .internal-sidebar span, 
-    .brand-title span {
-        display: none !important;
+  
+    .brand-title {
+      margin-bottom: 0;
+      margin-right: 15px;
     }
-
-    /* Main Card full width ho jayega */
-    .module-card {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 15px !important;
+  
+    .header-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
     }
-
-    /* Buttons ek ke niche ek aayenge */
-    div[style*="display: flex; justify-content: center"] {
-        flex-direction: column !important;
-        gap: 10px !important;
+  
+    .title-text-stack h1 {
+      font-size: 2rem;
     }
-
-    /* Stats panel niche chala jayega */
-    div[style*="width: 320px"] {
-        width: 100% !important;
-        position: static !important;
+  
+    .live-feedback-flex-row {
+      flex-direction: column;
     }
-}
-
-/* --- 📱 RESPONSIVENESS END --- */
+  
+    .accuracy-meters-stack {
+      flex-direction: row;
+      width: 100%;
+    }
+    
+    .accuracy-meters-stack > div {
+      flex: 1;
+    }
+  }
