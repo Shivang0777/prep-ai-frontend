@@ -1,29 +1,18 @@
-/* --- Global Variables Injection Guard --- */
-:root {
-    --bg-main: #0b0c10;
-    --bg-card: #1f2833;
-    --bg-sidebar: #151a22;
-    --text-main: #c5a059;
-    --text-dim: #8a99ad;
-    --border: #2d3748;
-    --accent: #3b82f6;
-    --accent-glow: rgba(59, 130, 246, 0.15);
-  }
-  
-  /* --- Main Layout Grid Architecture --- */
-  .dashboard-content-layout {
+/* ==========================================================================
+   🎨 FLUID SKIN LAYER: Configured completely on theme variables
+   ========================================================================== */
+
+   .dashboard-content-layout {
     display: flex;
     width: 100%;
     min-height: 100vh;
-    background: var(--bg-main);
     padding: 20px;
     box-sizing: border-box;
     overflow-x: hidden;
   }
   
-  /* --- Internal Sidebar --- */
   .internal-sidebar {
-    width: 240px;
+    width: 200px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -31,7 +20,7 @@
     border-right: 1px solid var(--border);
     padding-right: 20px;
     margin-right: 20px;
-    background: var(--bg-sidebar);
+    background: transparent;
     transition: all 0.3s ease;
   }
   
@@ -49,7 +38,7 @@
     padding: 12px;
     border-radius: 10px;
     cursor: pointer;
-    color: var(--text-dim);
+    color: var(--text-dim, #8a99ad);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -58,22 +47,20 @@
   }
   
   .nav-item:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-main);
   }
   
   .nav-item.active {
-    color: var(--text-main);
-    background: var(--accent-glow);
+    color: var(--text-main, #ffffff);
+    background: var(--accent-glow, rgba(59, 130, 246, 0.15));
   }
   
-  /* --- Main Workspace Architecture --- */
   .main-area {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    min-width: 0; /* Clear CSS flex width scaling issue */
+    min-width: 0;
   }
   
   .header-bar {
@@ -82,7 +69,6 @@
     align-items: center;
     margin-bottom: 25px;
     width: 100%;
-    gap: 15px;
   }
   
   .title-text-stack h1 {
@@ -98,20 +84,18 @@
     font-size: 1.05rem;
     color: var(--text-dim);
     margin: 5px 0 0 0;
-    max-width: 600px;
-    line-height: 1.5;
   }
   
   .cursor-blink {
-    background: var(--accent);
+    background: var(--accent, #3b82f6);
     width: 4px;
     height: 2.5rem;
     display: inline-block;
     margin-left: 5px;
-    animation: blink 0.8s infinite alternate;
+    animation: blink-anim 0.8s infinite alternate;
   }
   
-  @keyframes blink {
+  @keyframes blink-anim {
     0% { opacity: 1; }
     100% { opacity: 0; }
   }
@@ -123,9 +107,9 @@
   }
   
   .bell-header-btn {
-    background: #111;
-    color: white;
-    border: 1px solid #333;
+    background: rgba(0,0,0,0.2);
+    color: var(--text-main);
+    border: 1px solid var(--border);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -133,7 +117,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.2s;
   }
   
   .avatar-header-gradient {
@@ -143,7 +126,7 @@
     background: linear-gradient(135deg, #3b82f6, #818cf8);
   }
   
-  /* --- Modules Container Split Area --- */
+  /* --- Rigid Split Section Layout --- */
   .modules-and-stats-flex-container {
     display: flex;
     flex-direction: row;
@@ -164,156 +147,165 @@
     flex-shrink: 0;
   }
   
-  /* --- Module Cards & Content Wrappers --- */
-  .xp-container-card {
-    background: var(--bg-sidebar);
+  /* --- Internal Render Elements --- */
+  .inner-module-card-box {
+    background: var(--bg-card);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    padding: 25px;
+  }
+  
+  .local-xp-tracker-card {
+    background: var(--bg-sidebar, rgba(0,0,0,0.05));
     padding: 20px;
     border-radius: 16px;
     margin-bottom: 25px;
     border: 1px solid var(--border);
   }
   
-  .interactive-text-display-box {
-    background: var(--bg-sidebar);
-    color: var(--text-main);
-    padding: 30px;
-    border-radius: 20px;
-    line-height: 1.7;
-    font-size: 1.4rem;
-    border-left: 5px solid var(--accent);
-    min-height: 140px;
-    margin-bottom: 25px;
-  }
-  
-  .live-feedback-flex-row {
-    margin-bottom: 25px;
-    display: flex;
-    gap: 20px;
-  }
-  
-  .transcript-box-log {
-    flex: 1;
-    padding: 15px;
-    background: var(--bg-main);
-    border-radius: 12px;
-    border: 1px dashed var(--border);
-  }
-  
-  .accuracy-meters-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-  }
-  
-  .category-dropdown-select {
-    background: var(--bg-sidebar);
+  .category-dropdown-native {
+    background: var(--bg-sidebar, rgba(0,0,0,0.05));
     color: var(--accent);
     border: 1px solid var(--border);
     padding: 8px 15px;
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
-    outline: none;
   }
   
-  /* --- Vocab Template Diagram Specifics --- */
-  .inner-vocab-wrapper-box {
+  .word-playback-display-area {
+    background: var(--bg-sidebar, rgba(0,0,0,0.05));
+    color: var(--text-main);
+    padding: 35px;
+    borderRadius: 20px;
+    lineHeight: 1.7;
+    fontSize: 1.5rem;
+    border-left: 5px solid var(--accent);
+    min-height: 150px;
+    margin-bottom: 25px;
+  }
+  
+  .live-transcript-stats-row {
+    margin-bottom: 25px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .transcript-sub-card {
+    flex: 1;
+    padding: 15px;
+    background: var(--bg-main, rgba(0,0,0,0.02));
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+  }
+  
+  .accuracy-meters-stacking-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  /* --- Vocab Structure Layout --- */
+  .outer-vocab-card-body {
     background: var(--bg-card);
     border-radius: 16px;
     border: 1px solid var(--border);
-    min-height: 900px;
+    min-height: 1050px;
     display: flex;
     flex-direction: column;
   }
   
-  .diagram-card-box {
+  .vocab-diagram-box-container {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: var(--bg-main);
-    padding: 15px 25px;
+    background: var(--bg-main, rgba(0,0,0,0.05));
+    padding: 15px;
     border-radius: 12px;
     border: 1px dashed var(--border);
-    min-width: 280px;
-    justify-content: center;
   }
   
-  /* --- Grammar Battle Cards --- */
-  .inner-grammar-module-main {
+  /* --- Grammar Structure Layout --- */
+  .inner-grammar-card-architecture {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 24px;
     overflow: hidden;
   }
   
-  .battle-selector-card-item {
-    padding: 15px;
-    border-radius: 12px;
+  .grammar-battle-grid-block {
+    padding: 20px;
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: 0.3s;
   }
   
-  .battle-selector-card-item.active {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  .grammar-battle-grid-block.active {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
   
-  .add-new-trigger-btn {
+  .reload-trigger-button {
     border: 2px dashed var(--border);
     color: #3fb950;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    background: rgba(46, 160, 67, 0.05);
+    gap: 12px;
+    background: var(--accent-glow) !important;
   }
   
   .spin-animation {
-    animation: spin 1s linear infinite;
+    animation: spin-loop 1s linear infinite;
   }
   
-  @keyframes spin {
+  @keyframes spin-loop {
     100% { transform: rotate(360deg); }
   }
   
-  /* --- Dashboard Side Stats Panel Design --- */
-  .stats-panel {
-    background: var(--bg-sidebar);
+  .grammar-loader-box-fallback {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  
+  /* --- Dashboard Panel Cards --- */
+  .stats-panel-card-wrapper {
+    background: var(--bg-sidebar, rgba(0,0,0,0.05));
     border-radius: 20px;
     border: 1px solid var(--border);
     padding: 25px;
     width: 100%;
-    box-sizing: border-box;
   }
   
-  .stat-box {
-    background: var(--bg-main);
+  .stat-box-item {
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 15px;
     margin-bottom: 15px;
   }
   
-  .stat-header {
+  .stat-header-lbl {
     font-size: 0.75rem;
     text-transform: uppercase;
     color: var(--text-dim);
-    letter-spacing: 0.5px;
-    margin-bottom: 5px;
   }
   
-  .stat-value {
+  .stat-value-display {
     font-size: 1.5rem;
     font-weight: 800;
-    margin-bottom: 3px;
   }
   
-  .stat-sub {
-    font-size: 0.7rem;
-    font-weight: 600;
-  }
-  
-  .activity-item {
+  .activity-item-row {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
@@ -323,16 +315,14 @@
   }
   
   /* ==========================================================================
-     📱 SYSTEM-WIDE MOBILE REPAIR BREAKPOINT
+     📱 MOBILE SYSTEM RESPONSIVE DESTRUCTION CONSTRAINTS
      ========================================================================== */
-  @media (max-width: 992px) {
+  @media (max-width: 1150px) {
     .modules-and-stats-flex-container {
       flex-direction: column;
     }
     .stats-panel-sticky-wrapper {
-      width: 100%;
-      position: relative;
-      top: 0;
+      width: 100% !important;
     }
   }
   
@@ -341,44 +331,18 @@
       flex-direction: column;
       padding: 10px;
     }
-  
     .internal-sidebar {
       width: 100%;
-      border-right: none;
-      border-bottom: 1px solid var(--border);
-      padding-right: 0;
-      padding-bottom: 15px;
-      margin-right: 0;
-      margin-bottom: 20px;
       flex-direction: row;
       flex-wrap: wrap;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      margin-right: 0;
+      padding-bottom: 15px;
     }
-  
-    .brand-title {
-      margin-bottom: 0;
-      margin-right: 15px;
-    }
-  
     .header-bar {
       flex-direction: column;
       align-items: flex-start;
       gap: 15px;
-    }
-  
-    .title-text-stack h1 {
-      font-size: 2rem;
-    }
-  
-    .live-feedback-flex-row {
-      flex-direction: column;
-    }
-  
-    .accuracy-meters-stack {
-      flex-direction: row;
-      width: 100%;
-    }
-    
-    .accuracy-meters-stack > div {
-      flex: 1;
     }
   }

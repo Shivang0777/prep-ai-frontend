@@ -19,50 +19,50 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // --- RIGHT PANEL (STATS) ---
 const StatsPanel = ({ streak = 0, totalXP = 0, level = 1, accuracy = 0 }) => (
-    <div className="stats-panel">
-        <div style={{ marginBottom: 30 }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: 20, color: 'white', fontWeight: 600 }}>Your Dashboard</h3>
+    <div className="stats-panel-card-wrapper">
+        <div style={{ marginBottom: 40 }}>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: 25, color: 'var(--text-main)', fontWeight: 600 }}>Your Dashboard</h3>
             
             {/* Streak Card */}
-            <div className="stat-box">
-                <div className="stat-header">Weekly Streak</div>
-                <div className="stat-value" style={{ background: 'linear-gradient(to right, #f87171, #facc15)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <div className="stat-box-item">
+                <div className="stat-header-lbl">Weekly Streak</div>
+                <div className="stat-value-display" style={{ background: 'linear-gradient(to right, #f87171, #facc15)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {streak} Days <FaFire color="#f87171" style={{ marginLeft: 5, fontSize: '1.5rem', verticalAlign: 'middle' }} />
                 </div>
-                <div className="stat-sub" style={{ color: '#f87171' }}>Keep the flame alive!</div>
+                <div className="stat-sub-lbl" style={{ color: '#f87171' }}>Keep the flame alive!</div>
             </div>
 
             {/* XP Card */}
-            <div className="stat-box">
-                <div className="stat-header">Total XP</div>
-                <div className="stat-value" style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <div className="stat-box-item">
+                <div className="stat-header-lbl">Total XP</div>
+                <div className="stat-value-display" style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {typeof totalXP === 'number' ? totalXP.toLocaleString() : totalXP} XP
                 </div>
-                <div className="stat-sub" style={{ color: '#60a5fa' }}>Level {level} Architect</div>
+                <div className="stat-sub-lbl" style={{ color: '#60a5fa' }}>Level {level} Architect</div>
             </div>
 
             {/* Accuracy Card */}
-            <div className="stat-box">
-                <div className="stat-header">Accuracy Rate</div>
-                <div className="stat-value" style={{ background: 'linear-gradient(to right, #4ade80, #22c55e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <div className="stat-box-item">
+                <div className="stat-header-lbl">Accuracy Rate</div>
+                <div className="stat-value-display" style={{ background: 'linear-gradient(to right, #4ade80, #22c55e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {accuracy}%
                 </div>
-                <div className="stat-sub" style={{ color: '#4ade80' }}>Top 10% in batch</div>
+                <div className="stat-sub-lbl" style={{ color: '#4ade80' }}>Top 10% in batch</div>
             </div>
         </div>
 
         <div>
-            <h3 style={{ fontSize: '0.8rem', color: '#555', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 15, fontWeight: 700 }}>Recent Log</h3>
-            <div className="activity-item">
+            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 15, fontWeight: 700 }}>Recent Log</h3>
+            <div className="activity-item-row">
                 <span>Speaking Task</span> 
                 <span style={{ color: '#4ade80', fontWeight: 'bold' }}>+{accuracy >= 80 ? '100' : '0'} XP</span>
             </div>
-            <div className="activity-item"><span>Daily Bonus</span> <span style={{ color: '#4ade80', fontWeight: 'bold' }}>+10 XP</span></div>
+            <div className="activity-item-row"><span>Daily Bonus</span> <span style={{ color: '#4ade80', fontWeight: 'bold' }}>+10 XP</span></div>
         </div>
     </div>
 );
 
-// --- MODULE 1: READING ---
+// --- MODULE 1: READING (NASA VERSION 🚀) ---
 const ReadModule = () => {
     const [questions, setQuestions] = useState([]); 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -261,112 +261,111 @@ const ReadModule = () => {
     const currentData = questions[currentIndex] || { text: "", topic: "AI", xp: 100 };
 
     return (
-        <div className="practice-module-layout-inner">
-            <div className="module-main-body">
-                {/* 🏆 TOP XP BAR */}
-                <div className="xp-container-card">
-                    <div style={{display:'flex', justifyContent:'space-between', alignItems: 'center', marginBottom: 10}}>
-                        <div style={{color:'var(--accent)', fontWeight:800, fontSize: '1.1rem'}}>🔥 STREAK: {streak} DAYS</div>
-                        <div style={{textAlign: 'right'}}>
-                            <span style={{color:'#facc15', fontWeight:900, fontSize: '1.2rem'}}>💰 {totalXP} XP</span>
-                            <div style={{color:'#4ade80', fontSize: '0.8rem', fontWeight:'bold'}}>RANK: LEVEL {level}</div>
-                        </div>
+        <div className="inner-module-card-box">
+            {/* 🏆 TOP XP BAR */}
+            <div className="local-xp-tracker-card">
+                <div style={{display:'flex', justifyContent:'space-between', alignItems: 'center', marginBottom: 10}}>
+                    <div style={{color:'var(--accent)', fontWeight:800, fontSize: '1.1rem'}}>🔥 STREAK: {streak} DAYS</div>
+                    <div style={{textAlign: 'right'}}>
+                        <span style={{color:'#facc15', fontWeight:900, fontSize: '1.2rem'}}>💰 {totalXP} XP</span>
+                        <div style={{color:'#4ade80', fontSize: '0.8rem', fontWeight:'bold'}}>RANK: LEVEL {level}</div>
                     </div>
-                    
-                    <div style={{width: '100%', height: 6, background: 'var(--border)', borderRadius: 10, overflow: 'hidden'}}>
-                        <div style={{width: `${progressInLevel}%`, height: '100%', background: 'linear-gradient(90deg, #3b82f6, #4ade80)', boxShadow: '0 0 10px #3b82f6'}} />
-                    </div>
-                    <div style={{display:'flex', justifyContent:'space-between', marginTop: 5}}>
-                        <small style={{color: 'var(--text-dim)'}}>LVL {level}</small>
-                        <small style={{color: 'var(--text-dim)'}}>{totalXP % 1000} / 1000 XP</small>
-                        <small style={{color: 'var(--text-dim)'}}>LVL {level + 1}</small>
-                    </div>
-                </div>
-
-                {/* HEADER & CATEGORY */}
-                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20, flexWrap:'wrap', gap:10}}>
-                    <select value={category} onChange={(e) => { setCategory(e.target.value); fetchSpeakingTasks(e.target.value); }}
-                        className="category-dropdown-select">
-                        <option value="System Design & Tech">💻 Technical</option>
-                        <option value="Business Meetings">💼 Business</option>
-                        <option value="General Conversation">🏠 General</option>
-                    </select>
-                    <h2 style={{color: 'var(--accent)', fontSize: '1.5rem', margin:0}}>{currentData.topic}</h2>
                 </div>
                 
-                {/* 📝 INTERACTIVE TEXT BOX */}
-                <div className="interactive-text-display-box">
-                    {currentData.text.split(" ").map((word, index) => {
-                        const clean = word.toLowerCase().replace(/[.,!]/g, "");
-                        const isMatched = userTranscript.toLowerCase().includes(clean);
-                        return (
-                            <span key={index} onClick={() => speakSingleWord(word)}
-                                style={{ color: !userTranscript ? 'var(--text-dim)' : isMatched ? '#4ade80' : '#ef4444', marginRight: '10px', cursor: 'pointer', display: 'inline-block' }}>
-                                {word}
-                            </span>
-                        );
-                    })}
+                <div style={{width: '100%', height: 6, background: 'var(--border)', borderRadius: 10, overflow: 'hidden'}}>
+                    <div style={{width: `${progressInLevel}%`, height: '100%', background: 'linear-gradient(90deg, #3b82f6, #4ade80)', boxShadow: '0 0 10px #3b82f6' }} />
                 </div>
+                <div style={{display:'flex', justifyContent:'space-between', marginTop: 5}}>
+                    <small style={{color: 'var(--text-dim)'}}>LVL {level}</small>
+                    <small style={{color: 'var(--text-dim)'}}>{totalXP % 1000} / 1000 XP</small>
+                    <small style={{color: 'var(--text-dim)'}}>LVL {level + 1}</small>
+                </div>
+            </div>
 
-                {/* 📊 LIVE STATS & AUDIO */}
-                <div className="live-feedback-flex-row">
-                    <div className="transcript-box-log">
-                        <small style={{color: 'var(--text-dim)'}}>TRANSCRIPT:</small>
-                        <p style={{color: 'var(--text-main)', fontStyle:'italic', margin: '10px 0'}}>"{userTranscript || "Ready..."}"</p>
-                        {audioUrl && !recording && <audio controls src={audioUrl} style={{width: '100%', height: 30, marginTop: 15}} />}
+            {/* HEADER & CATEGORY */}
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20}}>
+                <select value={category} onChange={(e) => { setCategory(e.target.value); fetchSpeakingTasks(e.target.value); }}
+                    className="category-dropdown-native">
+                    <option value="System Design & Tech">💻 Technical</option>
+                    <option value="Business Meetings">💼 Business</option>
+                    <option value="General Conversation">🏠 General</option>
+                </select>
+                <h2 style={{color: 'var(--accent)', fontSize: '1.5rem', margin: 0}}>{currentData.topic}</h2>
+            </div>
+            
+            {/* 📝 INTERACTIVE TEXT BOX */}
+            <div className="word-playback-display-area">
+                {currentData.text.split(" ").map((word, index) => {
+                    const clean = word.toLowerCase().replace(/[.,!]/g, "");
+                    const isMatched = userTranscript.toLowerCase().includes(clean);
+                    return (
+                        <span key={index} onClick={() => speakSingleWord(word)}
+                            style={{ color: !userTranscript ? 'var(--text-dim)' : isMatched ? '#4ade80' : '#ef4444', marginRight: '10px', cursor: 'pointer', display: 'inline-block' }}>
+                            {word}
+                        </span>
+                    );
+                })}
+            </div>
+
+            {/* 📊 LIVE STATS & AUDIO */}
+            <div className="live-transcript-stats-row">
+                <div className="transcript-sub-card">
+                    <small style={{color: 'var(--text-dim)'}}>TRANSCRIPT:</small>
+                    <p style={{color: 'var(--text-main)', fontStyle:'italic', margin: '10px 0'}}>"{userTranscript || "Ready..."}"</p>
+                    {audioUrl && !recording && <audio controls src={audioUrl} style={{width: '100%', height: 30, marginTop: 15}} />}
+                </div>
+                <div className="accuracy-meters-sidebar-flex">
+                    <div style={{width: '100px', textAlign:'center', border: `1px solid ${accuracy >= 50 ? '#4ade80' : '#f43f5e'}`, borderRadius: 10, padding: '5px', background:'var(--bg-main, rgba(0,0,0,0.05))'}}>
+                        <div style={{color: accuracy >= 50 ? '#4ade80' : '#f43f5e', fontWeight: 800}}>{accuracy}%</div>
+                        <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>ACCURACY</small>
                     </div>
-                    <div className="accuracy-meters-stack">
-                        <div style={{width: '100px', textAlign:'center', border: `1px solid ${accuracy >= 50 ? '#4ade80' : '#f43f5e'}`, borderRadius: 10, padding: '5px', background:'var(--bg-main)'}}>
-                            <div style={{color: accuracy >= 50 ? '#4ade80' : '#f43f5e', fontWeight: 800}}>{accuracy}%</div>
-                            <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>ACCURACY</small>
-                        </div>
-                        <div style={{width: '100px', textAlign:'center', border: '1px solid var(--accent)', borderRadius: 10, padding: '5px', background:'var(--bg-main)'}}>
-                            <div style={{color: 'var(--accent)', fontWeight: 800}}>{wpm}</div>
-                            <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>WPM</small>
-                        </div>
+                    <div style={{width: '100px', textAlign:'center', border: '1px solid var(--accent)', borderRadius: 10, padding: '5px', background:'var(--bg-main, rgba(0,0,0,0.05))'}}>
+                        <div style={{color: 'var(--accent)', fontWeight: 800}}>{wpm}</div>
+                        <small style={{fontSize: '0.6rem', color: 'var(--text-dim)'}}>WPM</small>
                     </div>
                 </div>
+            </div>
 
-                {/* 🕹️ CONTROLS */}
-                <div style={{display:'flex', justifyContent: 'space-between', alignItems:'center', flexWrap:'wrap', gap: 15}}>
-                    <div style={{display:'flex', gap: 15, alignItems:'center', flexWrap:'wrap'}}>
-                        <button onClick={toggleRecording} style={{padding: '12px 30px', borderRadius: 50, background: recording ? '#ef4444' : 'var(--accent)', color:'white', border:'none', fontWeight:'bold', cursor:'pointer'}}>
-                            {recording ? 'Stop' : 'Record'}
-                        </button>
-                        
-                        <div style={{display:'flex', alignItems:'center', background:'var(--bg-main)', borderRadius:'50px', border:'1px solid var(--accent)'}}>
-                            <button onClick={handleSpeakAll} style={{background: 'transparent', border: 'none', color: 'var(--accent)', padding: '10px 15px', cursor: 'pointer', fontWeight:'bold'}}>🔈 Listen</button>
-                            <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} style={{background:'transparent', color:'var(--accent)', border:'none', borderLeft:'1px solid var(--accent)', padding:'0 5px', outline:'none', cursor:'pointer'}}>
-                                <option value="0.8">0.8x</option><option value="1.0">1.0x</option><option value="1.2">1.2x</option>
-                            </select>
-                        </div>
-                    </div>
+            {/* 🕹️ CONTROLS */}
+            <div style={{display:'flex', justifyContent: 'space-between', alignItems:'center'}}>
+                <div style={{display:'flex', gap: 15, alignItems:'center'}}>
+                    <button onClick={toggleRecording} style={{padding: '12px 30px', borderRadius: 50, background: recording ? '#ef4444' : 'var(--accent)', color:'white', border:'none', fontWeight:'bold', cursor:'pointer'}}>
+                        {recording ? 'Stop' : 'Record'}
+                    </button>
                     
-                    <div style={{display:'flex', gap: 10}}>
-                        <button onClick={() => { if(currentIndex > 0) setCurrentIndex(c => c-1); resetState(); }} 
-                            style={{background: 'var(--bg-sidebar)', color: 'var(--text-main)', padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border)', cursor:'pointer'}}>
-                            Prev
-                        </button>
-                        <button 
-                            onClick={handleNextAndSave} 
-                            disabled={accuracy < 50}
-                            style={{
-                                background: accuracy < 50 ? 'var(--border)' : accuracy >= 80 ? 'var(--accent)' : '#f59e0b', 
-                                color: 'white', padding: '12px 30px', borderRadius: 10, border:'none', 
-                                fontWeight:'bold', cursor: accuracy < 50 ? 'not-allowed' : 'pointer',
-                                transition: '0.3s'
-                            }}
-                        >
-                            {accuracy < 50 ? `Locked (${accuracy}%)` : accuracy >= 80 ? 'Next & Save +100 XP' : 'Next & Save +20 XP'}
-                        </button>
+                    <div style={{display:'flex', alignItems:'center', background:'var(--bg-main, rgba(0,0,0,0.05))', borderRadius:'50px', border:'1px solid var(--accent)'}}>
+                        <button onClick={handleSpeakAll} style={{background: 'transparent', border: 'none', color: 'var(--accent)', padding: '10px 15px', cursor: 'pointer', fontWeight:'bold'}}>🔈 Listen</button>
+                        <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} style={{background:'transparent', color:'var(--accent)', border:'none', borderLeft:'1px solid var(--accent)', padding:'0 5px', outline:'none', cursor:'pointer'}}>
+                            <option value="0.8">0.8x</option><option value="1.0">1.0x</option><option value="1.2">1.2x</option>
+                        </select>
                     </div>
+                </div>
+                
+                <div style={{display:'flex', gap: 10}}>
+                    <button onClick={() => { if(currentIndex > 0) setCurrentIndex(c => c-1); resetState(); }} 
+                        style={{background: 'var(--bg-sidebar, rgba(0,0,0,0.02))', color: 'var(--text-main)', padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border)', cursor:'pointer'}}>
+                        Prev
+                    </button>
+
+                    <button 
+                        onClick={handleNextAndSave} 
+                        disabled={accuracy < 50}
+                        style={{
+                            background: accuracy < 50 ? 'var(--border)' : accuracy >= 80 ? 'var(--accent)' : '#f59e0b', 
+                            color: 'white', padding: '12px 30px', borderRadius: 10, border:'none', 
+                            fontWeight:'bold', cursor: accuracy < 50 ? 'not-allowed' : 'pointer',
+                            transition: '0.3s'
+                        }}
+                    >
+                        {accuracy < 50 ? `Locked (${accuracy}%)` : accuracy >= 80 ? 'Next & Save +100 XP' : 'Next & Save +20 XP'}
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
 
-// --- MODULE 2: VOCAB ---
+// --- MODULE 2: VOCAB (SCALABLE ARCHITECT EDITION 🏗️) ---
 const VocabModule = () => {
     const [index, setIndex] = useState(0);
     const [mode, setMode] = useState('tech'); 
@@ -463,8 +462,8 @@ const VocabModule = () => {
 
         if (type === "CLIENT_SERVER") {
             return (
-                <div className="diagram-card-box">
-                    <div style={{textAlign:'center'}}><FaUser style={{...iconStyle, color:'#fff'}} /><br/><small>{labels.left}</small></div>
+                <div className="vocab-diagram-box-container">
+                    <div style={{textAlign:'center'}}><FaUser style={{...iconStyle, color:'var(--text-main)'}} /><br/><small>{labels.left}</small></div>
                     <div style={arrowStyle}>➡</div>
                     <div style={{textAlign:'center', border:`1px solid ${current.color}`, padding:'5px', borderRadius:'6px', color:current.color}}>
                         {labels.middle}<br/><FaGlobe/>
@@ -477,8 +476,8 @@ const VocabModule = () => {
 
         if (type === "FLOW") {
             return (
-                <div className="diagram-card-box">
-                    <FaMobileAlt style={{...iconStyle, color:'#fff'}} />
+                <div className="vocab-diagram-box-container">
+                    <FaMobileAlt style={{...iconStyle, color:'var(--text-main)'}} />
                     <div style={{flex:1, height: 2, background:'var(--border)', position:'relative', minWidth: 60}}>
                         <motion.div 
                             animate={{ left: ['0%', '100%'] }} 
@@ -494,8 +493,8 @@ const VocabModule = () => {
 
         if (type === "CLUSTER") {
             return (
-                <div className="diagram-card-box">
-                    <FaUser style={{...iconStyle, color:'#fff'}} />
+                <div className="vocab-diagram-box-container">
+                    <FaUser style={{...iconStyle, color:'var(--text-main)'}} />
                     <div style={arrowStyle}>{labels.top || "Traffic"} ➡</div>
                     <div style={{display:'flex', flexDirection:'column', gap: 5}}>
                         {[1, 2, 3].map(n => (
@@ -527,9 +526,9 @@ const VocabModule = () => {
     };
 
     return (
-        <div className="inner-vocab-wrapper-box" style={{ borderTop: `4px solid ${current.color}` }}>
+        <div className="outer-vocab-card-body" style={{ borderTop: `4px solid ${current.color}` }}>
             {/* PROGRESS */}
-            <div style={{width:'100%', height: 4, background:'#21262d'}}>
+            <div style={{width:'100%', height: 4, background:'var(--border)'}}>
                 <motion.div animate={{ width: `${((index + 1) / concepts.length) * 100}%` }} style={{height:'100%', background: current.color, boxShadow: `0 0 10px ${current.color}`}} />
             </div>
 
@@ -540,7 +539,7 @@ const VocabModule = () => {
                 </div>
                 <div style={{display:'flex', gap: 5}}>
                     {current.companies.map((co, i) => (
-                        <span key={i} style={{fontSize:'0.65rem', background:'var(--border)', color:'var(--text-dim)', padding:'2px 8px', borderRadius:'4px', border:'1px solid #444'}}>{co}</span>
+                        <span key={i} style={{fontSize:'0.65rem', background:'var(--border)', color:'var(--text-dim)', padding:'2px 8px', borderRadius:'4px', border:'1px solid var(--border)'}}>{co}</span>
                     ))}
                 </div>
             </div>
@@ -549,7 +548,7 @@ const VocabModule = () => {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 30px' }}>
                 <div style={{marginTop: 5, marginBottom: 15, textAlign: 'center', cursor: 'pointer'}} onClick={speakWord}>
                     <motion.h1 
-                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} 
+                    whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} 
                     style={{ fontSize: '3.5rem', fontWeight: 900, margin: 0, color: current.color, display: 'flex', alignItems: 'center', gap: 15 }}>
                         {current.word} <FaVolumeUp size={25} style={{ opacity: 0.5, color: current.color }} />
                     </motion.h1>
@@ -567,13 +566,13 @@ const VocabModule = () => {
                 </div>
 
                 {/* TOGGLE */}
-                <div style={{ background: '#21262d', padding: '4px', borderRadius: '40px', display: 'inline-flex', marginBottom: 20, border: '1px solid var(--border)' }}>
-                    <button onClick={() => setMode('tech')} style={{ padding: '8px 20px', borderRadius: '40px', border: 'none', cursor: 'pointer', background: mode === 'tech' ? current.color : 'transparent', color: mode === 'tech' ? '#000' : 'var(--text-dim)', fontWeight: 'bold' }}>Technical</button>
-                    <button onClick={() => setMode('simple')} style={{ padding: '8px 20px', borderRadius: '40px', border: 'none', cursor: 'pointer', background: mode === 'simple' ? '#fff' : 'transparent', color: mode === 'simple' ? '#000' : 'var(--text-dim)', fontWeight: 'bold' }}>Simple</button>
+                <div style={{ background: 'var(--bg-main, rgba(0,0,0,0.05))', padding: '4px', borderRadius: '50px', display: 'inline-flex', marginBottom: 20, border: '1px solid var(--border)' }}>
+                    <button onClick={() => setMode('tech')} style={{ padding: '8px 20px', borderRadius: '40px', border: 'none', cursor: 'pointer', background: mode === 'tech' ? current.color : 'transparent', color: mode === 'tech' ? '#fff' : 'var(--text-dim)', fontWeight: 'bold' }}>Technical</button>
+                    <button onClick={() => setMode('simple')} style={{ padding: '8px 20px', borderRadius: '40px', border: 'none', cursor: 'pointer', background: mode === 'simple' ? 'var(--text-main)' : 'transparent', color: mode === 'simple' ? 'var(--bg-main)' : 'var(--text-dim)', fontWeight: 'bold' }}>Simple</button>
                 </div>
 
                 {/* DEF */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '15px', borderRadius: '12px', minHeight: '80px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign:'center', marginBottom: 20 }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border)', padding: '15px', borderRadius: '12px', minHeight: '80px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign:'center', marginBottom: 20 }}>
                     <p style={{ fontSize: '0.95rem', lineHeight: 1.5, color: 'var(--text-main)', fontStyle: mode === 'simple' ? 'italic' : 'normal', margin:0 }}>
                         {mode === 'tech' ? current.techDef : `"${current.simpleDef}"`}
                     </p>
@@ -587,8 +586,8 @@ const VocabModule = () => {
                      </button>
                      <AnimatePresence>
                         {showCode && (
-                            <motion.div initial={{height:0, opacity:0}} animate={{height:'auto', opacity:1}} exit={{height:0, opacity:0}} style={{overflow:'hidden', background:'#000', borderRadius:'0 0 8px 8px', border:'1px solid var(--border)', borderTop:'none'}}>
-                                <div style={{padding:'5px 10px', background:'#21262d', color:'var(--text-dim)', fontSize:'0.7rem', fontFamily:'monospace'}}>{current.codeTitle}.js</div>
+                            <motion.div initial={{height:0, opacity:0}} animate={{height:'auto', opacity:1}} exit={{height:0, opacity:0}} style={{overflow:'hidden', background:'rgba(0,0,0,0.2)', borderRadius:'0 0 8px 8px', border:'1px solid var(--border)', borderTop:'none'}}>
+                                <div style={{padding:'5px 10px', background:'var(--bg-sidebar)', color:'var(--text-dim)', fontSize:'0.7rem', fontFamily:'monospace'}}>{current.codeTitle}.js</div>
                                 <pre style={{margin:0, padding:'15px', color:'#a5d6ff', fontFamily:'monospace', fontSize:'0.8rem', overflowX:'auto'}}>
                                     {current.code}
                                 </pre>
@@ -598,22 +597,22 @@ const VocabModule = () => {
                 </div>
 
                 {/* VS MODE */}
-                <div style={{width:'100%', background:'var(--bg-main)', border:'1px solid var(--border)', borderRadius:'12px', padding:'12px', marginBottom: 20, position:'relative', overflow:'hidden'}}>
-                     <div style={{position:'absolute', right: 0, top: 0, fontSize:'3rem', opacity: 0.05, fontWeight:'900', color:'#fff', lineHeight:1}}>VS</div>
+                <div style={{width:'100%', background:'var(--bg-main, rgba(0,0,0,0.02))', border:'1px solid var(--border)', borderRadius:'12px', padding:'12px', marginBottom: 20, position:'relative', overflow:'hidden'}}>
+                     <div style={{position:'absolute', right: 0, top: 0, fontSize:'3rem', opacity: 0.05, fontWeight:'900', color:'var(--text-main)', lineHeight:1}}>VS</div>
                      <div style={{display:'flex', alignItems:'center', gap: 8, marginBottom: 5}}>
                         <span>⚔️</span>
-                        <span style={{color: '#fff', fontWeight:'bold', fontSize:'0.9rem'}}>{current.vsTopic}</span>
+                        <span style={{color: 'var(--text-main)', fontWeight:'bold', fontSize:'0.9rem'}}>{current.vsTopic}</span>
                      </div>
                      <p style={{color:'var(--text-dim)', fontSize:'0.85rem', margin:0, fontStyle:'italic'}}>"{current.vsDiff}"</p>
                 </div>
 
                 {/* TRADE-OFFS */}
-                <div style={{width:'100%', display:'flex', gap: 10, marginBottom: 20, flexWrap:'wrap'}}>
-                    <div style={{flex:1, minWidth:'140px', background: 'rgba(35, 134, 54, 0.1)', borderLeft: '3px solid #238636', padding: '10px', borderRadius: '0 8px 8px 0'}}>
+                <div style={{width:'100%', display:'flex', gap: 10, marginBottom: 20}}>
+                    <div style={{flex:1, background: 'rgba(35, 134, 54, 0.1)', borderLeft: '3px solid #238636', padding: '10px', borderRadius: '0 8px 8px 0'}}>
                         <div style={{color:'#238636', fontSize:'0.6rem', fontWeight:'bold', marginBottom:5, textTransform:'uppercase'}}>Pros</div>
                         {current.pros.map((p, i) => <div key={i} style={{fontSize:'0.7rem', color:'var(--text-main)', marginBottom: 2}}>✓ {p}</div>)}
                     </div>
-                    <div style={{flex:1, minWidth:'140px', background: 'rgba(218, 54, 51, 0.1)', borderLeft: '3px solid #da3633', padding: '10px', borderRadius: '0 8px 8px 0'}}>
+                    <div style={{flex:1, background: 'rgba(218, 54, 51, 0.1)', borderLeft: '3px solid #da3633', padding: '10px', borderRadius: '0 8px 8px 0'}}>
                         <div style={{color:'#da3633', fontSize:'0.6rem', fontWeight:'bold', marginBottom:5, textTransform:'uppercase'}}>Cons</div>
                         {current.cons.map((c, i) => <div key={i} style={{fontSize:'0.7rem', color:'var(--text-main)', marginBottom: 2}}>✖ {c}</div>)}
                     </div>
@@ -621,7 +620,7 @@ const VocabModule = () => {
 
                 {/* RED FLAG */}
                 <div style={{width:'100%', background:'rgba(255, 165, 0, 0.1)', border:'1px dashed orange', padding:'10px', borderRadius:'8px', marginBottom: 20, display:'flex', gap:10, alignItems:'center'}}>
-                    <FaExclamationTriangle color="orange" size={20} style={{flexShrink:0}} />
+                    <FaExclamationTriangle color="orange" size={20} />
                     <div style={{fontSize:'0.8rem', color:'var(--text-main)'}}>
                         <strong style={{color:'orange', display:'block', fontSize:'0.7rem', textTransform:'uppercase'}}>Common Mistake:</strong>
                         {current.mistake}
@@ -629,22 +628,22 @@ const VocabModule = () => {
                 </div>
 
                 {/* SCENARIO */}
-                <div style={{width:'100%', marginBottom: 25}}>
+                <div style={{width:'100%', marginBottom: 20}}>
                     {!showScenario ? (
-                        <motion.button whileHover={{ scale: 1.01 }} onClick={() => setShowScenario(true)} style={{ width:'100%', padding:'10px', background:'rgba(59, 130, 246, 0.1)', border:'1px dashed #3b82f6', borderRadius:'12px', color:'#3b82f6', cursor:'pointer', fontWeight:'bold', display:'flex', alignItems:'center', justifyContent:'center', gap: 10 }}>
+                        <motion.button whileHover={{ scale: 1.02 }} onClick={() => setShowScenario(true)} style={{ width:'100%', padding:'10px', background:'rgba(59, 130, 246, 0.1)', border:'1px dashed #3b82f6', borderRadius:'12px', color:'#3b82f6', cursor:'pointer', fontWeight:'bold', display:'flex', alignItems:'center', justifyContent:'center', gap: 10 }}>
                             <FaTerminal /> See Interview Example
                         </motion.button>
                     ) : (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{background:'var(--bg-main)', border:'1px solid var(--border)', borderRadius:'12px', padding:'15px', fontSize:'0.9rem'}}>
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{background:'var(--bg-main, rgba(0,0,0,0.05))', border:'1px solid var(--border)', borderRadius:'12px', padding:'15px', fontSize:'0.9rem'}}>
                             <div style={{marginBottom: 10, display:'flex', gap: 10}}>
-                                <div style={{minWidth: 25, height: 25, borderRadius:'50%', background:'#333', display:'flex', alignItems:'center', justifyContent:'center'}}>👨‍💼</div>
-                                <div style={{background:'#21262d', padding:'8px 12px', borderRadius:'0 12px 12px 12px', color:'var(--text-dim)'}}>{current.question}</div>
+                                <div style={{minWidth: 25, height: 25, borderRadius:'50%', background:'var(--border)', display:'flex', alignItems:'center', justifyContent:'center'}}>👨‍💼</div>
+                                <div style={{background:'var(--bg-card)', padding:'8px 12px', borderRadius:'0 12px 12px 12px', color:'var(--text-dim)'}}>{current.question}</div>
                             </div>
                             <div style={{display:'flex', gap: 10, justifyContent:'flex-end'}}>
                                 <div style={{background: current.color, padding:'8px 12px', borderRadius:'12px 0 12px 12px', color:'#000', fontWeight:'500'}}>
                                     <span dangerouslySetInnerHTML={{ __html: current.answer.replace(current.word, `<b>${current.word}</b>`) }} />
                                 </div>
-                                <div style={{minWidth: 25, height: 25, borderRadius:'50%', background:'#fff', display:'flex', alignItems:'center', justifyContent:'center'}}>🧑‍💻</div>
+                                <div style={{minWidth: 25, height: 25, borderRadius:'50%', background:'var(--text-main)', display:'flex', alignItems:'center', justifyContent:'center'}}>🧑‍💻</div>
                             </div>
                         </motion.div>
                     )}
@@ -652,13 +651,13 @@ const VocabModule = () => {
             </div>
 
             {/* FOOTER */}
-            <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderTop:'1px solid rgba(255,255,255,0.05)', background:'var(--bg-sidebar)' }}>
+            <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderTop:'1px solid var(--border)', background:'var(--bg-sidebar)' }}>
                 {mastered ? (
                     <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ background: '#238636', color: 'white', padding: '12px 40px', borderRadius: '30px', fontWeight: 'bold', display: 'flex', gap: 10, alignItems: 'center', fontSize: '1.2rem', boxShadow: '0 0 20px #238636' }}>
                         <FaCheck /> MASTERED!
                     </motion.div>
                 ) : (
-                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleMastered} style={{ background: '#e6edf3', color: '#000', border: 'none', padding: '12px 40px', borderRadius: '30px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', gap: 10, alignItems: 'center', fontSize: '1rem' }}>
+                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleMastered} style={{ background: 'var(--text-main)', color: 'var(--bg-main)', border: 'none', padding: '12px 40px', borderRadius: '30px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', gap: 10, alignItems: 'center', fontSize: '1rem' }}>
                         I Understood This <FaArrowRight />
                     </motion.button>
                 )}
@@ -770,7 +769,7 @@ const GrammarModule = () => {
 
     if (loadingQuestions && questions.length === 0) {
         return (
-            <div className="loader-container-center-box">
+            <div className="grammar-loader-box-fallback">
                 <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} style={{ width: 50, height: 50, border: '5px solid var(--border)', borderTop: '5px solid #3b82f6', borderRadius: '50%' }} />
                 <p style={{ color: 'var(--text-dim)', marginTop: 20, fontSize: '1.1rem', fontWeight: '500' }}>AI is thinking of fresh challenges...</p>
             </div>
@@ -778,51 +777,53 @@ const GrammarModule = () => {
     }
 
     return (
-        <div className="inner-grammar-module-main">
+        <div className="inner-grammar-card-architecture">
             {/* SCENARIO GRID SELECTOR */}
-            <div style={{ padding: '25px 30px', borderBottom: '1px solid var(--border)', background: 'var(--bg-sidebar)' }}>
-                <h3 style={{ margin: '0 0 15px 0', color: 'var(--text-dim)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '800' }}>
+            <div style={{ padding: '30px 40px', borderBottom: '1px solid var(--border)', background: 'var(--bg-sidebar)' }}>
+                <h3 style={{ margin: '0 0 20px 0', color: 'var(--text-dim)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '800' }}>
                     Select Your Grammar Battle
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
                     {questions.map((q, i) => (
-                        <div 
+                        <motion.div 
                             key={i}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                             onClick={() => { setActiveQ(i); setInputText(""); setResult(null); }}
-                            className={`battle-selector-card-item ${activeQ === i ? 'active' : ''}`}
+                            className={`grammar-battle-grid-block ${activeQ === i ? 'active' : ''}`}
                             style={{ 
-                                borderLeft: activeQ === i ? `4px solid ${q.color}` : '1px solid var(--border)',
-                                background: activeQ === i ? `${q.color}10` : 'var(--bg-main)'
+                                borderLeft: activeQ === i ? `5px solid ${q.color}` : '1px solid var(--border)',
+                                background: activeQ === i ? `${q.color}15` : 'var(--bg-main, rgba(0,0,0,0.02))'
                             }}
                         >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: activeQ === i ? q.color : 'var(--text-dim)' }}>
-                                <div style={{ background: activeQ === i ? q.color : 'var(--border)', color: '#fff', padding: '6px', borderRadius: '8px', display: 'flex' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: activeQ === i ? q.color : 'var(--text-dim)' }}>
+                                <div style={{ background: activeQ === i ? q.color : 'var(--border)', color: '#fff', padding: '8px', borderRadius: '10px', display: 'flex' }}>
                                     {q.icon}
                                 </div>
-                                <span style={{ fontWeight: '700' }}>{q.title}</span>
+                                <span style={{ fontWeight: '800', fontSize: '1.1rem' }}>{q.title}</span>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                     
-                    <div onClick={fetchAIQuestions} className="battle-selector-card-item add-new-trigger-btn">
+                    <motion.div whileHover={{ scale: 1.03 }} onClick={fetchAIQuestions} className="grammar-battle-grid-block reload-trigger-button">
                         <FaSync className={loadingQuestions ? "spin-animation" : ""} /> 
-                        <strong>New Tasks</strong>
-                    </div>
+                        <strong style={{ fontSize: '1rem' }}>New Tasks</strong>
+                    </motion.div>
                 </div>
             </div>
     
             {/* MAIN INTERACTIVE AREA */}
-            <div style={{ padding: '30px', flex: 1, display: 'flex', flexDirection: 'column', gap: 25 }}>
+            <div style={{ padding: '40px', flex: 1, display: 'flex', flexDirection: 'column', gap: 30 }}>
                 {/* AI COACH PROMPT */}
-                <div style={{ background: `linear-gradient(90deg, ${currentQ.color}15, transparent)`, borderLeft: `5px solid ${currentQ.color}`, padding: '20px 25px', borderRadius: '0 16px 16px 0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: currentQ.color, fontWeight: '900', marginBottom: 10, textTransform: 'uppercase', fontSize: '0.8rem' }}>
-                        <FaCommentDots size={16} /> AI Grammar Coach is asking:
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ background: `linear-gradient(90deg, ${currentQ.color}20, transparent)`, borderLeft: `5px solid ${currentQ.color}`, padding: '25px 35px', borderRadius: '0 20px 20px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: currentQ.color, fontWeight: '900', marginBottom: 12, textTransform: 'uppercase', fontSize: '0.8rem' }}>
+                        <FaCommentDots size={18} /> AI Grammar Coach is asking:
                     </div>
-                    <h2 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.5rem', lineHeight: 1.4, fontWeight: '700' }}>"{currentQ.question}"</h2>
-                    <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-dim)', fontSize: '0.85rem', fontStyle: 'italic' }}>
-                        <FaBolt size={12} color="#f2cc60" /> {currentQ.hint}
+                    <h2 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.7rem', lineHeight: 1.5, fontWeight: '700' }}>"{currentQ.question}"</h2>
+                    <div style={{ marginTop: '15px', display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-dim)', fontSize: '0.9rem', fontStyle: 'italic' }}>
+                        <FaBolt size={14} color="#f2cc60" /> {currentQ.hint}
                     </div>
-                </div>
+                </motion.div>
     
                 {/* TEXTAREA & MICROPHONE */}
                 <div style={{ position: 'relative' }}>
@@ -831,71 +832,71 @@ const GrammarModule = () => {
                         onChange={(e) => setInputText(e.target.value)}
                         placeholder="Click the mic to speak your answer, or start typing here..."
                         style={{ 
-                            width: '100%', minHeight: '180px', background: 'var(--bg-main)', border: '1px solid var(--border)', 
-                            borderRadius: '16px', padding: '20px', color: 'var(--text-main)', fontSize: '1.1rem', lineHeight: 1.6, 
+                            width: '100%', minHeight: '220px', background: 'var(--bg-main, rgba(0,0,0,0.02))', border: '1px solid var(--border)', 
+                            borderRadius: '20px', padding: '30px', color: 'var(--text-main)', fontSize: '1.2rem', lineHeight: 1.7, 
                             resize: 'none', outline: 'none'
                         }}
                     />
-                    <button 
-                        onClick={toggleRecording}
+                    <motion.button 
+                        whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={toggleRecording}
                         style={{ 
-                            position: 'absolute', bottom: 20, right: 20, width: 50, height: 50, borderRadius: '50%',
+                            position: 'absolute', bottom: 30, right: 30, width: 65, height: 65, borderRadius: '50%',
                             background: isRecording ? '#ef4444' : '#238636', border: 'none', color: '#fff',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 5
                         }}
                     >
-                        {isRecording ? <FaStop size={18} /> : <FaMicrophone size={18} />}
-                    </button>
+                        {isRecording ? <FaStop size={24} /> : <FaMicrophone size={24} />}
+                    </motion.button>
                 </div>
     
                 {/* ACTION BUTTONS */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 20 }}>
-                    <button 
-                        onClick={handleAnalyze}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 25 }}>
+                    <motion.button 
+                        whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleAnalyze}
                         disabled={analyzing || !inputText.trim()}
                         style={{ 
                             background: analyzing ? 'var(--border)' : currentQ.color, 
-                            color: '#fff', border: 'none', padding: '14px 40px', 
-                            borderRadius: '30px', cursor: 'pointer', fontWeight: '800', display: 'flex', alignItems: 'center', 
-                            gap: 10, fontSize: '1.1rem'
+                            color: '#fff', border: 'none', padding: '16px 50px', 
+                            borderRadius: '50px', cursor: 'pointer', fontWeight: '900', display: 'flex', alignItems: 'center', 
+                            gap: 15, fontSize: '1.2rem'
                         }}
                     >
                         {analyzing ? <>Analyzing...</> : <><FaMagic /> Polish My Answer</>}
-                    </button>
+                    </motion.button>
                     
                     {activeQ < questions.length - 1 && (
-                        <button 
-                            onClick={() => { setActiveQ(prev => prev + 1); setInputText(""); setResult(null); }}
-                            style={{ background: 'var(--bg-main)', color: 'var(--text-main)', padding: '14px 30px', borderRadius: '30px', border: '1px solid var(--border)', cursor: 'pointer', fontWeight: 'bold' }}
+                        <motion.button 
+                            whileHover={{ scale: 1.05 }} onClick={() => { setActiveQ(prev => prev + 1); setInputText(""); setResult(null); }}
+                            style={{ background: 'var(--bg-main)', color: 'var(--text-main)', padding: '16px 40px', borderRadius: '50px', border: '1px solid var(--border)', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem' }}
                         >
-                            Next Task <FaChevronRight style={{ marginLeft: 5 }} />
-                        </button>
+                            Next Task <FaChevronRight style={{ marginLeft: 10 }} />
+                        </motion.button>
                     )}
                 </div>
     
                 {/* RESULT FEEDBACK ENGINE */}
                 <AnimatePresence>
                     {result && !analyzing && (
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
-                            <div style={{ padding: '15px 20px', background: 'var(--bg-sidebar)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontWeight: '800', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <FaStar color="#f59e0b" /> AI EVALUATION
+                        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '24px', overflow: 'hidden' }}>
+                            <div style={{ padding: '20px 30px', background: 'var(--bg-sidebar)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontWeight: '900', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <FaStar color="#f59e0b" /> AI COACH EVALUATION
                                 </span>
-                                <div style={{ background: result.score > 7 ? '#238636' : '#8b5cf6', color: '#fff', padding: '4px 12px', borderRadius: '8px', fontWeight: '800' }}>
+                                <div style={{ background: result.score > 7 ? '#238636' : '#8b5cf6', color: '#fff', padding: '5px 15px', borderRadius: '10px', fontWeight: '900', fontSize: '1.2rem' }}>
                                     {result.score}/10
                                 </div>
                             </div>
-                            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 15 }}>
-                                <div style={{ background: 'var(--bg-card)', padding: '15px', borderRadius: '12px', borderLeft: '4px solid #f43f5e' }}>
-                                    <small style={{ color: 'var(--text-dim)', fontWeight:'bold' }}>What you said:</small>
-                                    <div style={{ color: '#ef4444', fontStyle: 'italic', marginTop: 5 }}>"{result.original}"</div>
+                            <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                <div style={{ background: 'var(--bg-main)', padding: '20px', borderRadius: '16px', borderLeft: '5px solid #f43f5e' }}>
+                                    <small style={{ color: 'var(--text-dim)', textTransform:'uppercase' }}>What you said:</small>
+                                    <div style={{ color: '#ef4444', fontSize: '1.1rem', fontStyle: 'italic', marginTop: 5 }}>"{result.original}"</div>
                                 </div>
-                                <div style={{ background: 'var(--bg-card)', padding: '15px', borderRadius: '12px', borderLeft: '4px solid #3fb950' }}>
-                                    <small style={{ color: 'var(--text-dim)', fontWeight:'bold' }}>The Professional Way:</small>
-                                    <div style={{ color: '#10b981', fontWeight: '700', marginTop: 5 }}>"{result.fixed}"</div>
+                                <div style={{ background: 'var(--bg-main)', padding: '20px', borderRadius: '16px', borderLeft: '5px solid #3fb950' }}>
+                                    <small style={{ color: 'var(--text-dim)', textTransform:'uppercase' }}>The Professional Way:</small>
+                                    <div style={{ color: '#10b981', fontWeight: '800', fontSize: '1.2rem', marginTop: 5 }}>"{result.fixed}"</div>
                                 </div>
-                                <div style={{ background: 'var(--bg-sidebar)', padding: '15px', borderRadius: '12px', border: '1px solid var(--border)', color: 'var(--text-main)', fontSize:'0.9rem' }}>
-                                    <strong style={{ color: '#f2cc60', display:'block', marginBottom:4 }}>💡 Feedback:</strong> {result.feedback}
+                                <div style={{ background: 'var(--bg-sidebar)', padding: '20px', borderRadius: '16px', border: '1px solid var(--border)', color: 'var(--text-main)', lineHeight: 1.6 }}>
+                                    <strong style={{ color: '#f2cc60', display: 'block', marginBottom: 8 }}>💡 Feedback:</strong> {result.feedback}
                                 </div>
                             </div>
                         </motion.div>
@@ -922,7 +923,6 @@ const EnglishPrep = () => {
     
     useEffect(() => {
         let isCancelled = false;
-    
         const runTypingSequence = async () => {
             let currentTitle = "";
             setTitleText(""); 
@@ -956,30 +956,30 @@ const EnglishPrep = () => {
             isCancelled = true;
         };
     }, []);
+
+    // 🎯 LOCALSTORAGE REAL-TIME VARIABLES DIRECT FORWARDED TO STATS PANEL
+    const liveXP = Number(localStorage.getItem('userXP')) || 0;
+    const liveStreak = Number(localStorage.getItem('userStreak')) || 0;
+    const liveLevel = Math.floor(liveXP / 1000) + 1;
     
     return (
-        /* --- 🌍 MAIN WRAPPER (Responsive Fluid Core) --- */
+        /* --- 🌍 MAIN WRAPPER (Fluid Theme Passthrough Layer) --- */
         <div className="dashboard-content-layout">
             
-            {/* --- 🟦 INTERNAL SIDEBAR (Pro Plan Box Removed 🎯) --- */}
+            {/* --- 🟦 INTERNAL SUB-SIDEBAR (Pro Plan Block Removed 🎯) --- */}
             <div className="internal-sidebar">
                 <div className="brand-title">
                     <FaLayerGroup color="#3b82f6" /> Prep<span>AI</span>
                 </div>
                 
                 {/* Navigation Items */}
-                <div className={`nav-item ${activeTab === 'read' ? 'active' : ''}`} 
-                     onClick={() => setActiveTab('read')}>
+                <div className={`nav-item ${activeTab === 'read' ? 'active' : ''}`} onClick={() => setActiveTab('read')}>
                     <FaMicrophone /> Speaking
                 </div>
-                
-                <div className={`nav-item ${activeTab === 'vocab' ? 'active' : ''}`} 
-                     onClick={() => setActiveTab('vocab')}>
+                <div className={`nav-item ${activeTab === 'vocab' ? 'active' : ''}`} onClick={() => setActiveTab('vocab')}>
                     <FaBook /> Vocabulary
                 </div>
-                
-                <div className={`nav-item ${activeTab === 'grammar' ? 'active' : ''}`} 
-                     onClick={() => setActiveTab('grammar')}>
+                <div className={`nav-item ${activeTab === 'grammar' ? 'active' : ''}`} onClick={() => setActiveTab('grammar')}>
                     <FaTools /> Grammar
                 </div>
             </div>
@@ -1003,7 +1003,7 @@ const EnglishPrep = () => {
                     </div>
                 </div>
     
-                {/* --- CONTENT MODULES WITH RIGID FLEX WRAPPING SYSTEM --- */}
+                {/* --- TWO COLUMN WRAPPED WORKSPACE --- */}
                 <div className="modules-and-stats-flex-container">
                     <div className="active-module-render-box">
                         {activeTab === 'read' && <ReadModule />}
@@ -1011,9 +1011,14 @@ const EnglishPrep = () => {
                         {activeTab === 'grammar' && <GrammarModule />}
                     </div>
 
-                    {/* Dashboard Stats Fixed Right Panel */}
+                    {/* Right-Side Dashboard Sync Box */}
                     <div className="stats-panel-sticky-wrapper">
-                        <StatsPanel />
+                        <StatsPanel 
+                            streak={liveStreak} 
+                            totalXP={liveXP} 
+                            level={liveLevel} 
+                            accuracy={liveXP > 0 ? 85 : 0}
+                        />
                     </div>
                 </div>
             </div>
