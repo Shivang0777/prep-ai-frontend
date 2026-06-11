@@ -53,9 +53,10 @@
   box-shadow: 0 0 10px rgba(255, 165, 2, 0.1);
 }
 
+/* --- 🔔 Notification Button Fix --- */
 .notif-btn {
   background: var(--bg-card);
-  color: var(--text-main);
+  color: var(--text-main); /* 👈 Yeh automatic light/dark text handle karega */
   border: 1px solid var(--border);
   width: 42px;
   height: 42px;
@@ -67,17 +68,29 @@
   transition: 0.3s;
 }
 
+/* 🎯 ISKO ADD KARO: Taaki iske andar ka SVG icon hamesha visible text color le */
+.notif-btn svg {
+  fill: var(--text-main); 
+  color: var(--text-main);
+}
+
 .notif-btn:hover {
   background: #3b82f6;
   border-color: #3b82f6;
   color: white;
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
 }
+/* Iske hover par icon white ho jaye */
+.notif-btn:hover svg {
+  fill: white;
+  color: white;
+}
 
+/* --- 🚪 Logout Button Fix --- */
 .logout-btn-header {
   background: rgba(255, 75, 43, 0.1);
   border: 1px solid rgba(255, 75, 43, 0.3);
-  color: #ff4b2b;
+  color: #ff4b2b; /* 👈 Base color red */
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -88,10 +101,19 @@
   transition: 0.3s;
 }
 
+/* 🎯 ISKO ADD KARO: Taaki light mode ho ya dark, logout icon hamesha solid red dikhe */
+.logout-btn-header svg {
+  fill: #ff4b2b;
+  color: #ff4b2b;
+}
+
 .logout-btn-header:hover {
   background: #ff4b2b;
   color: white;
-  box-shadow: 0 0 15px rgba(255, 75, 43, 0.4);
+}
+.logout-btn-header:hover svg {
+  fill: white;
+  color: white;
 }
 
 /* --- 🃏 Cards Section --- */
@@ -269,11 +291,20 @@
     padding: 6px 15px !important;   /* Badge thoda compact kiya */
     font-size: 13px !important;
   }
+/* 2. Header actions buttons inside mobile media query */
+.notif-btn, .logout-btn-header {
+  width: 36px !important;         
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 
-  .notif-btn, .logout-btn-header {
-    width: 36px !important;         /* Slim buttons for mobile */
-    height: 36px !important;
-  }
+/* 🎯 ISKO BHI ADD KARO MOBILE QUERY KE ANDAR: SVG clear positioning ke liye */
+.notif-btn svg, .logout-btn-header svg {
+  font-size: 16px !important;
+  display: block !important;
+}
 
   /* 3. 🃏 Cards Stack (Grid to Column Override) */
   .card-container {

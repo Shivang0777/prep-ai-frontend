@@ -1058,14 +1058,16 @@ const EnglishPrep = () => {
     const fullSubtitle = "Refine your communication skills for high-stakes interviews.";
     
     useEffect(() => {
-        let isCancelled = false; // ✨ Strict Mode ke double trigger ko rokne ke liye
+        let isCancelled = false;
     
         const runTypingSequence = async () => {
-            // 1. Title Type
-            setTitleText(""); // Pehle clear karo taaki double-type na ho
+            // 1. Title Type (Using local variable to avoid stale state bugs)
+            let currentTitle = "";
+            setTitleText(""); 
             for (let i = 0; i < fullTitle.length; i++) {
-                if (isCancelled) return; // Agar components reload ho toh loop yahin stop ho jaye
-                setTitleText(prev => prev + fullTitle[i]);
+                if (isCancelled) return;
+                currentTitle += fullTitle[i]; // ✨ Local string build ho rahi hai
+                setTitleText(currentTitle);   // ✨ Direct state set ho rahi hai, collision ka chance hi nahi
                 await new Promise(r => setTimeout(r, 100)); 
             }
     
@@ -1074,11 +1076,13 @@ const EnglishPrep = () => {
             if (isCancelled) return;
             setTypingPhase('subtitle');
     
-            // 3. Subtitle Type
-            setSubtitleText(""); // Clear subtitle before typing
+            // 3. Subtitle Type (Same robust approach)
+            let currentSubtitle = "";
+            setSubtitleText(""); 
             for (let i = 0; i < fullSubtitle.length; i++) {
                 if (isCancelled) return;
-                setSubtitleText(prev => prev + fullSubtitle[i]);
+                currentSubtitle += fullSubtitle[i];
+                setSubtitleText(currentSubtitle);
                 await new Promise(r => setTimeout(r, 30));
             }
     
@@ -1089,7 +1093,6 @@ const EnglishPrep = () => {
     
         runTypingSequence();
     
-        // 🧹 Cleanup function: Component unmount hote hi purana asynchronous code cancel
         return () => {
             isCancelled = true;
         };
