@@ -10,7 +10,7 @@ import {
     FaUserTie, 
     FaSignOutAlt, 
     FaRegBell 
-  } from "react-icons/fa";
+} from "react-icons/fa";
 
 const data = [
     { day: "Mon", value: 30 },
@@ -61,12 +61,13 @@ const Dashboard = () => {
                         <FaFire /> <span>{streak} Days</span>
                     </div>
                     
-                    <button className="notif-btn">
+                    <button className="notif-btn" aria-label="Notification">
                         <FaRegBell />
                     </button>
                     
+                    {/* 🎯 FIXED: Mobile par button ko choke hone se bachane ke liye text ko responsive wrapper mein dala */}
                     <button onClick={handleLogout} className="logout-btn-header" title="Logout Session">
-                        <FaSignOutAlt />
+                      <span className="logout-text">Log ouT</span> <FaSignOutAlt />
                     </button>
                 </div>
             </header>
@@ -96,58 +97,53 @@ const Dashboard = () => {
             </div>
 
             {/* --- PERFORMANCE GRAPH --- */}
-            {/* --- PERFORMANCE GRAPH --- */}
-<div className="stats-container">
-    <div className="stats-header">
-        <h3>Weekly Performance</h3>
-        <span className="stats-label">Progress Tracker</span>
-    </div>
-    
-    {/* Strict responsive height locks for mobile and desktop */}
-    <div className="graph-box" style={{ width: '100%', height: window.innerWidth < 768 ? 220 : 300, position: 'relative' }}>
-        
-        {/* 🎯 FIXED: key property lagayi taaki window resize hone par warning crash ho jaye aur graph instantly visible ho */}
-        <ResponsiveContainer width="100%" height="100%" key={window.innerWidth}>
-            <LineChart data={data} margin={{ right: 20, left: -25, top: 10, bottom: 0 }}>
+            <div className="stats-container">
+                <div className="stats-header">
+                    <h3>Weekly Performance</h3>
+                    <span className="stats-label">Progress Tracker</span>
+                </div>
                 
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} opacity={0.3} />
-                
-                <XAxis 
-                    dataKey="day" 
-                    stroke="var(--text-dim)" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: 'var(--text-dim)', fontSize: 11 }}
-                />
-                <YAxis 
-                    stroke="var(--text-dim)" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: 'var(--text-dim)', fontSize: 11 }}
-                />
-                
-                <Tooltip 
-                    contentStyle={{ 
-                        backgroundColor: 'var(--bg-card)', 
-                        border: '1px solid var(--border)', 
-                        borderRadius: '8px', 
-                        color: 'var(--text-main)' 
-                    }}
-                    itemStyle={{ color: 'var(--text-main)' }}
-                />
-                
-                <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="var(--accent)" 
-                    strokeWidth={3} 
-                    dot={{ r: 4, fill: 'var(--accent)', strokeWidth: 2, stroke: 'var(--bg-card)' }}
-                    activeDot={{ r: 6, stroke: 'var(--bg-main)', strokeWidth: 2 }}
-                />
-            </LineChart>
-        </ResponsiveContainer>
-    </div>
-</div>
+                <div className="graph-box" style={{ width: '100%', height: window.innerWidth < 768 ? 220 : 300, position: 'relative' }}>
+                    <ResponsiveContainer width="100%" height="100%" key={window.innerWidth}>
+                        <LineChart data={data} margin={{ right: 20, left: -25, top: 10, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} opacity={0.3} />
+                            
+                            <XAxis 
+                                dataKey="day" 
+                                stroke="var(--text-dim)" 
+                                axisLine={false} 
+                                tickLine={false} 
+                                tick={{ fill: 'var(--text-dim)', fontSize: 11 }}
+                            />
+                            <YAxis 
+                                stroke="var(--text-dim)" 
+                                axisLine={false} 
+                                tickLine={false} 
+                                tick={{ fill: 'var(--text-dim)', fontSize: 11 }}
+                            />
+                            
+                            <Tooltip 
+                                contentStyle={{ 
+                                    backgroundColor: 'var(--bg-card)', 
+                                    border: '1px solid var(--border)', 
+                                    borderRadius: '8px', 
+                                    color: 'var(--text-main)' 
+                                }}
+                                itemStyle={{ color: 'var(--text-main)' }}
+                            />
+                            
+                            <Line 
+                                type="monotone" 
+                                dataKey="value" 
+                                stroke="var(--accent)" 
+                                strokeWidth={3} 
+                                dot={{ r: 4, fill: 'var(--accent)', strokeWidth: 2, stroke: 'var(--bg-card)' }}
+                                activeDot={{ r: 6, stroke: 'var(--bg-main)', strokeWidth: 2 }}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
         </div>
     );
 }

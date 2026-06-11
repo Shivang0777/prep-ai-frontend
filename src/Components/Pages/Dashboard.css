@@ -1,12 +1,12 @@
 .dashboard-content {
   flex: 1;
-  /* background-color: #0b0c10;  <- Purana hata diya */
   background-color: var(--bg-main);
   padding: 40px;
   color: var(--text-main);
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
   transition: background-color 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .dash-header {
@@ -14,6 +14,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
+  width: 100%;
 }
 
 /* --- ✨ Text Glow Effects --- */
@@ -22,7 +23,6 @@
   margin-bottom: 5px;
   font-weight: 800;
   color: var(--text-main);
-  /* Dark mode mein halka glow effect */
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); 
 }
 
@@ -56,7 +56,7 @@
 /* --- 🔔 Notification Button Fix --- */
 .notif-btn {
   background: var(--bg-card);
-  color: var(--text-main); /* 👈 Yeh automatic light/dark text handle karega */
+  color: var(--text-main);
   border: 1px solid var(--border);
   width: 42px;
   height: 42px;
@@ -68,7 +68,6 @@
   transition: 0.3s;
 }
 
-/* 🎯 ISKO ADD KARO: Taaki iske andar ka SVG icon hamesha visible text color le */
 .notif-btn svg {
   fill: var(--text-main); 
   color: var(--text-main);
@@ -80,7 +79,7 @@
   color: white;
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
 }
-/* Iske hover par icon white ho jaye */
+
 .notif-btn:hover svg {
   fill: white;
   color: white;
@@ -90,18 +89,19 @@
 .logout-btn-header {
   background: rgba(255, 75, 43, 0.1);
   border: 1px solid rgba(255, 75, 43, 0.3);
-  color: #ff4b2b; /* 👈 Base color red */
-  width: 42px;
+  color: #ff4b2b;
+  padding: 0 15px; /* Added padding for explicit width handle */
   height: 42px;
-  border-radius: 50%;
+  border-radius: 21px; /* Starts as pill shape on desktop */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   transition: 0.3s;
+  font-weight: 600;
 }
 
-/* 🎯 ISKO ADD KARO: Taaki light mode ho ya dark, logout icon hamesha solid red dikhe */
 .logout-btn-header svg {
   fill: #ff4b2b;
   color: #ff4b2b;
@@ -111,9 +111,14 @@
   background: #ff4b2b;
   color: white;
 }
+
 .logout-btn-header:hover svg {
   fill: white;
   color: white;
+}
+
+.logout-text {
+  display: inline-block;
 }
 
 /* --- 🃏 Cards Section --- */
@@ -145,7 +150,7 @@
 .icon-box {
   font-size: 38px;
   margin-bottom: 20px;
-  filter: drop-shadow(0 0 8px currentColor); /* Icon Glow */
+  filter: drop-shadow(0 0 8px currentColor);
 }
 
 .card-tech .icon-box { color: #3b82f6; }
@@ -225,7 +230,6 @@
   overflow: hidden;
 }
 
-
 @media (max-width: 900px) {
     .card-container {
         grid-template-columns: 1fr;
@@ -233,101 +237,110 @@
 }
 
 /* ==========================================================================
-   📱 MOBILE DASHBOARD GAP CLEANER & GRAPH REPAIR (Add at the very bottom)
-   ========================================================================== */
-
-  /* ==========================================================================
-   📱 DASHBOARD MOBILE RESPONSIVE BLOCK (Add at the very bottom of Dashboard.css)
+   📱 DASHBOARD MOBILE RESPONSIVE BLOCK (Overhauled & Bulletproof)
    ========================================================================== */
 
 @media (max-width: 768px) {
   
-  /* 1. Main Dashboard Body Wrapper Spacing Reset */
-  /* 1. Main Dashboard Body Wrapper Spacing Reset */
   .dashboard-content {
     padding: 15px !important;       
-    
-    /* 🚨 YAHAN CHANGE KARNA HAIN: 100vh hata kar ye do lines daal do */
-    /* Extra height ko kill kiya */
-    min-height: auto !important;   /* 👈 100% hata kar AUTO kar diya */
+    min-height: auto !important;   
     height: auto !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    margin-top: 0 !important;       
-    padding-top: 10px !important;
-       /* Content ab upar khinch jayega */
+    overflow-x: hidden !important;
   }
 
-  /* 2. 🚨 THE GAP DESTROYER: Header margins and padding tight */
   .dash-header {
-    margin-bottom: 15px !important; /* Desktop ka 40px margin saaf kiya */
+    margin-bottom: 20px !important; 
     padding: 5px 0 !important;
     display: flex !important;
-    flex-direction: column !important; /* Elements ek ke niche ek */
+    flex-direction: column !important; 
     align-items: flex-start !important;
-    gap: 12px !important;
+    gap: 15px !important;
     width: 100% !important;
-    background: transparent !important;
   }
 
   .welcome-text h1 {
-    font-size: 24px !important;     /* Mobile standard size */
+    font-size: 26px !important;    
     margin-bottom: 3px !important;
   }
 
   .welcome-text p {
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
 
-  /* Streak badge aur buttons ko line mein rakha */
+  /* 🎯 SOLID WRAPPING RULE: Prevent components from flying out of the viewport */
   .header-actions {
     width: 100% !important;
     display: flex !important;
-    flex-wrap: wrap !important;     /* ✨ Yeh circles ko katne se rokega aur automatic niche adjust karega */
+    flex-wrap: wrap !important;     
     justify-content: flex-start !important;
+    align-items: center !important;
     gap: 10px !important;
   }
 
   .streak-badge {
-    padding: 6px 15px !important;   /* Badge thoda compact kiya */
+    padding: 8px 16px !important;   
     font-size: 13px !important;
   }
-/* 2. Header actions buttons inside mobile media query */
-.notif-btn, .logout-btn-header {
-  width: 36px !important;         
-  height: 36px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
 
-/* 🎯 ISKO BHI ADD KARO MOBILE QUERY KE ANDAR: SVG clear positioning ke liye */
-/* Dono circles ke andar ke icons ko force-color do */
-.notif-btn svg {
-  fill: var(--text-main) !important; 
-  color: var(--text-main) !important;
-  display: block !important;
-}
+  /* 🎯 OVERRIDE FOR PERFECT CIRCLES: Enforcing strict dimensions on mobile */
+  .notif-btn {
+    width: 38px !important;         
+    height: 38px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 
-.logout-btn-header svg {
-  fill: #ff4b2b !important; /* Isse logout icon hamesha solid red dikhega */
-  color: #ff4b2b !important;
-  display: block !important;
-}
+  .logout-btn-header {
+    width: 38px !important;         
+    height: 38px !important;
+    border-radius: 50% !important; /* Forces it into a flawless circle on mobile */
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 
-  /* 3. 🃏 Cards Stack (Grid to Column Override) */
+  /* 🎯 TEXT DESTROYER: Hide text string inside logout button so it won't break layout */
+  .logout-text {
+    display: none !important;
+  }
+
+  /* Force exact color values onto child SVGs */
+  .notif-btn svg, .logout-btn-header svg {
+    font-size: 16px !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .notif-btn svg {
+    fill: var(--text-main) !important;
+    color: var(--text-main) !important;
+  }
+
+  .logout-btn-header svg {
+    fill: #ff4b2b !important;
+    color: #ff4b2b !important;
+  }
+
   .card-container {
-    grid-template-columns: 1fr !important; /* Ek ke neeche ek aayenge */
+    grid-template-columns: 1fr !important; 
     gap: 15px !important;
     margin-bottom: 20px !important;
+    width: 100% !important;
   }
 
   .card {
-    padding: 25px !important;        /* Clean desktop inner padding fix */
+    padding: 25px !important;        
     border-radius: 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
-
-  /* 4. 📊 GRAPH RESPONSIVE ACCELERATOR (Strict Layout Physics) */
 
   .stats-container {
     display: block !important;
@@ -337,23 +350,21 @@
     box-sizing: border-box !important;
   }
 
-  /* 🎯 Parent ko strict dimension do taaki runtime pe layout collapse na ho */
   .graph-box {
     display: block !important;
     position: relative !important;
     width: 100% !important;
-    height: 260px !important;
-    min-height: 260px !important;
+    height: 220px !important;
+    min-height: 220px !important;
     margin-top: 15px !important;
     overflow: hidden !important;
   }
 
-  /* Recharts ke andruni SVG elements ko forceful layout do */
   .graph-box .recharts-responsive-container {
     width: 100% !important;
     height: 100% !important;
     display: block !important;
-    position: absolute !important; /* Fixed: Absolute karne se parent box ko bypass karega */
+    position: absolute !important; 
     top: 0;
     left: 0;
   }
