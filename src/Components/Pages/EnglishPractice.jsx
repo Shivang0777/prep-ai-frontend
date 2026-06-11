@@ -831,7 +831,8 @@ const GrammarModule = () => {
         if (!inputText.trim()) return;
         setAnalyzing(true);
         try {
-            const response = await fetch('http://localhost:5000/api/coach/analyze', {
+            // 🚀 Yahan badlaav kiya hai: localhost hata kar dynamic ${API_URL} daal diya
+            const response = await fetch(`${API_URL}/api/coach/analyze`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
