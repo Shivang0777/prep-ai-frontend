@@ -1054,49 +1054,11 @@ const EnglishPrep = () => {
     
     const hasRun = useRef(false);
 
-    const fullTitle = "English Studio"; 
-    const fullSubtitle = "Refine your communication skills for high-stakes interviews.";
-    
-    useEffect(() => {
-        let isCancelled = false;
-    
-        const runTypingSequence = async () => {
-            // 1. Title Type (Using local variable to avoid stale state bugs)
-            let currentTitle = "";
-            setTitleText(""); 
-            for (let i = 0; i < fullTitle.length; i++) {
-                if (isCancelled) return;
-                currentTitle += fullTitle[i]; // ✨ Local string build ho rahi hai
-                setTitleText(currentTitle);   // ✨ Direct state set ho rahi hai, collision ka chance hi nahi
-                await new Promise(r => setTimeout(r, 100)); 
-            }
-    
-            // 2. Pause
-            await new Promise(r => setTimeout(r, 300));
-            if (isCancelled) return;
-            setTypingPhase('subtitle');
-    
-            // 3. Subtitle Type (Same robust approach)
-            let currentSubtitle = "";
-            setSubtitleText(""); 
-            for (let i = 0; i < fullSubtitle.length; i++) {
-                if (isCancelled) return;
-                currentSubtitle += fullSubtitle[i];
-                setSubtitleText(currentSubtitle);
-                await new Promise(r => setTimeout(r, 30));
-            }
-    
-            // 4. Done
-            if (isCancelled) return;
-            setTypingPhase('done');
-        };
-    
-        runTypingSequence();
-    
-        return () => {
-            isCancelled = true;
-        };
-    }, []);
+  // 2. Bas normal static text header render karo 🚀
+<div className="english-studio-header">
+    <h1 className="premium-gradient-title">English Studio</h1>
+    <p className="clean-subtext">Refine your communication skills for high-stakes interviews.</p>
+</div>
     
     return (
         /* --- 🌍 MAIN WRAPPER --- */

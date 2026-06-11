@@ -61,14 +61,33 @@ const Dashboard = () => {
                         <FaFire /> <span>{streak} Days</span>
                     </div>
                     
-                    <button className="notif-btn" aria-label="Notification" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <FaRegBell style={{ 
-        color: '#3b82f6',     /* ✨ Isse icon bright blue color mein hamesha chamkega */
-        fill: '#3b82f6', 
-        width: '18px', 
-        height: '18px', 
-        display: 'block' 
-    }} />
+                  {/* 🚀 BULLETPROOF SVG NOTIFICATION BUTTON */}
+<button className="notif-btn" aria-label="Notification" style={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    width: window.innerWidth < 768 ? '38px' : '42px',
+    height: window.innerWidth < 768 ? '38px' : '42px',
+    borderRadius: '50%'
+}}>
+    <svg 
+        viewBox="0 0 24 24" 
+        style={{ 
+            width: '18px', 
+            height: '18px', 
+            fill: 'none', 
+            stroke: '#3b82f6', /* Solid Blue Color */
+            strokeWidth: '2', 
+            strokeLinecap: 'round', 
+            strokeLinejoin: 'round',
+            display: 'block'
+        }}
+    >
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
 </button>
                     
                     {/* 🎯 FIXED: Mobile par button ko choke hone se bachane ke liye text ko responsive wrapper mein dala */}
