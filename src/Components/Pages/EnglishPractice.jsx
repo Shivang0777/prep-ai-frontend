@@ -1066,8 +1066,8 @@ const EnglishPrep = () => {
             setTitleText(""); 
             for (let i = 0; i < fullTitle.length; i++) {
                 if (isCancelled) return;
-                currentTitle += fullTitle[i]; // ✨ Local string build ho rahi hai
-                setTitleText(currentTitle);   // ✨ Direct state set ho rahi hai, collision ka chance hi nahi
+                currentTitle += fullTitle[i];
+                setTitleText(currentTitle);
                 await new Promise(r => setTimeout(r, 100)); 
             }
     
@@ -1109,126 +1109,114 @@ const EnglishPrep = () => {
             boxSizing: 'border-box'
         }}>
             
-            {/* --- 🟦 INTERNAL SIDEBAR (Speaking, Vocab, Grammar वाला) --- */}
+            {/* --- 🟦 INTERNAL SIDEBAR (Pro Plan Box Removed 🎯) --- */}
             <div className="internal-sidebar" style={{ 
-    width: '240px', 
-    flexShrink: 0, 
-    display: 'flex', 
-    flexDirection: 'column',
-    gap: '10px',
-    borderRight: '1px solid var(--border)',
-    paddingRight: '20px',
-    marginRight: '20px',
-    background: 'var(--bg-sidebar)',
-    transition: 'all 0.3s ease'
-}}>
-    <div className="brand-title" style={{ 
-        color: 'var(--text-main)', 
-        fontWeight: 800, 
-        fontSize: '1.2rem', 
-        marginBottom: '20px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '10px' 
-    }}>
-        <FaLayerGroup color="#3b82f6" /> Prep<span>AI</span>
-    </div>
-    
-    {/* Navigation Items */}
-    <div className={`nav-item ${activeTab === 'read' ? 'active' : ''}`} 
-         onClick={() => setActiveTab('read')}
-         style={{ 
-             padding: '12px', 
-             borderRadius: '10px', 
-             cursor: 'pointer', 
-             color: activeTab === 'read' ? 'var(--text-main)' : 'var(--text-dim)', 
-             background: activeTab === 'read' ? 'var(--accent-glow)' : 'transparent', 
-             display: 'flex', 
-             alignItems: 'center', 
-             gap: '10px', 
-             fontWeight: 600,
-             transition: '0.2s'
-         }}>
-        <FaMicrophone /> Speaking
-    </div>
-    
-    <div className={`nav-item ${activeTab === 'vocab' ? 'active' : ''}`} 
-         onClick={() => setActiveTab('vocab')}
-         style={{ 
-             padding: '12px', 
-             borderRadius: '10px', 
-             cursor: 'pointer', 
-             color: activeTab === 'vocab' ? 'var(--text-main)' : 'var(--text-dim)', 
-             background: activeTab === 'vocab' ? 'var(--accent-glow)' : 'transparent', 
-             display: 'flex', 
-             alignItems: 'center', 
-             gap: '10px', 
-             fontWeight: 600,
-             transition: '0.2s'
-         }}>
-        <FaBook /> Vocabulary
-    </div>
-    
-    <div className={`nav-item ${activeTab === 'grammar' ? 'active' : ''}`} 
-         onClick={() => setActiveTab('grammar')}
-         style={{ 
-             padding: '12px', 
-             borderRadius: '10px', 
-             cursor: 'pointer', 
-             color: activeTab === 'grammar' ? 'var(--text-main)' : 'var(--text-dim)', 
-             background: activeTab === 'grammar' ? 'var(--accent-glow)' : 'transparent', 
-             display: 'flex', 
-             alignItems: 'center', 
-             gap: '10px', 
-             fontWeight: 600,
-             transition: '0.2s'
-         }}>
-        <FaTools /> Grammar
-    </div>
+                width: '240px', 
+                flexShrink: 0, 
+                display: 'flex', 
+                flexDirection: 'column',
+                gap: '10px',
+                borderRight: '1px solid var(--border)',
+                paddingRight: '20px',
+                marginRight: '20px',
+                background: 'var(--bg-sidebar)',
+                transition: 'all 0.3s ease'
+            }}>
+                <div className="brand-title" style={{ 
+                    color: 'var(--text-main)', 
+                    fontWeight: 800, 
+                    fontSize: '1.2rem', 
+                    marginBottom: '20px', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '10px' 
+                }}>
+                    <FaLayerGroup color="#3b82f6" /> Prep<span>AI</span>
+                </div>
+                
+                {/* Navigation Items */}
+                <div className={`nav-item ${activeTab === 'read' ? 'active' : ''}`} 
+                     onClick={() => setActiveTab('read')}
+                     style={{ 
+                         padding: '12px', 
+                         borderRadius: '10px', 
+                         cursor: 'pointer', 
+                         color: activeTab === 'read' ? 'var(--text-main)' : 'var(--text-dim)', 
+                         background: activeTab === 'read' ? 'var(--accent-glow)' : 'transparent', 
+                         display: 'flex', 
+                         alignItems: 'center', 
+                         gap: '10px', 
+                         fontWeight: 600,
+                         transition: '0.2s'
+                     }}>
+                    <FaMicrophone /> Speaking
+                </div>
+                
+                <div className={`nav-item ${activeTab === 'vocab' ? 'active' : ''}`} 
+                     onClick={() => setActiveTab('vocab')}
+                     style={{ 
+                         padding: '12px', 
+                         borderRadius: '10px', 
+                         cursor: 'pointer', 
+                         color: activeTab === 'vocab' ? 'var(--text-main)' : 'var(--text-dim)', 
+                         background: activeTab === 'vocab' ? 'var(--accent-glow)' : 'transparent', 
+                         display: 'flex', 
+                         alignItems: 'center', 
+                         gap: '10px', 
+                         fontWeight: 600,
+                         transition: '0.2s'
+                     }}>
+                    <FaBook /> Vocabulary
+                </div>
+                
+                <div className={`nav-item ${activeTab === 'grammar' ? 'active' : ''}`} 
+                     onClick={() => setActiveTab('grammar')}
+                     style={{ 
+                         padding: '12px', 
+                         borderRadius: '10px', 
+                         cursor: 'pointer', 
+                         color: activeTab === 'grammar' ? 'var(--text-main)' : 'var(--text-dim)', 
+                         background: activeTab === 'grammar' ? 'var(--accent-glow)' : 'transparent', 
+                         display: 'flex', 
+                         alignItems: 'center', 
+                         gap: '10px', 
+                         fontWeight: 600,
+                         transition: '0.2s'
+                     }}>
+                    <FaTools /> Grammar
+                </div>
+            </div>
 
-    {/* Pro Plan Box - Theme Synced */}
-    <div style={{
-        marginTop: 'auto', 
-        padding: 15, 
-        background: 'var(--bg-card)', 
-        borderRadius: 12, 
-        border: '1px solid var(--border)',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-    }}>
-        <div style={{display:'flex', justifyContent:'space-between', marginBottom: 8}}>
-            <small style={{color:'var(--text-dim)', fontSize: '0.7rem', fontWeight: 600}}>PRO PLAN</small>
-            <small style={{color:'#3b82f6', fontSize: '0.7rem', fontWeight: 700}}>Active</small>
-        </div>
-        <div style={{height:4, width:'100%', background:'var(--border)', borderRadius:2, overflow:'hidden'}}>
-            <div style={{
-                height:'100%', 
-                width:'75%', 
-                background: 'linear-gradient(90deg, #3b82f6, #60a5fa)'
-            }}></div>
-        </div>
-    </div>
-</div>
             {/* --- ⬜ MAIN CONTENT AREA --- */}
             <div className="main-area" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                 <div className="header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <div>
                         <h1 style={{
                             fontSize:'2.5rem',
-                             fontWeight: 800,
-                              color: 'var(--text-main)',
-                               margin: 0}}>
+                            fontWeight: 800,
+                            color: 'var(--text-main)',
+                            margin: 0
+                        }}>
                             {titleText}
                             {typingPhase === 'title' && <span className="cursor-blink"
                              style={{background: 'var(--accent)',
-                                width: '4px',           // 👈 Patli line
-            height: '2.5rem',
-            
-
+                                width: '4px',
+                                height: '2.5rem',
                              }}></span>}
                         </h1>
+                        <p style={{
+                            fontSize: '1.05rem',
+                            color: 'var(--text-dim)',
+                            margin: '5px 0 0 0',
+                            maxWidth: '600px',
+                            lineHeight: '1.5',
+                            whiteSpace: 'normal'
+                        }}>
+                            {subtitleText}
+                        </p>
                     </div>
     
-                    <div style={{display:'flex', gap: 15, opacity: typingPhase === 'done' ? 1 : 0}}>
+                    <div style={{display:'flex', gap: 15}}>
                         <button style={{background:'#111', color:'white', border:'1px solid #333', width: 40, height: 40, borderRadius:'50%', cursor:'pointer'}}>
                             <FaRegBell />
                         </button>
@@ -1237,13 +1225,11 @@ const EnglishPrep = () => {
                 </div>
     
                 {/* --- CONTENT MODULES --- */}
-                {typingPhase === 'done' && (
-                    <div className="fade-in-section" style={{ width: '100%' }}>
-                        {activeTab === 'read' && <ReadModule />}
-                        {activeTab === 'vocab' && <VocabModule />}
-                        {activeTab === 'grammar' && <GrammarModule />}
-                    </div>
-                )}
+                <div className="fade-in-section" style={{ width: '100%' }}>
+                    {activeTab === 'read' && <ReadModule />}
+                    {activeTab === 'vocab' && <VocabModule />}
+                    {activeTab === 'grammar' && <GrammarModule />}
+                </div>
             </div>
         </div>
     );
