@@ -125,12 +125,12 @@ const ReadModule = () => {
 
    // --- 🎙️ SPEECH ENGINE (EASY MOBILE-PROOF VERSION) ---
  // --- 🎙️ SPEECH ENGINE (PERMANENT PHONE CORRECTION) ---
+ // --- 🎙️ SPEECH ENGINE (PERMANENT PHONE CORRECTION) ---
  useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition();
         
-        // 🎯 PHONE FIX: Mobile network limits par crash rokne ke liye short-burst pattern
         recognitionRef.current.continuous = false; 
         recognitionRef.current.interimResults = false; 
         recognitionRef.current.lang = 'en-US';
@@ -165,8 +165,9 @@ const ReadModule = () => {
         };
 
         recognitionRef.current.onend = () => {
-            // state handler functions internally managed without state loop restarts
-            setRecording(false);
+            // 🎯 FIXED: Idhar se setRecording(false) hata diya hai 
+            // taaki phone browser automatic recording stop na kar sake.
+            console.log("Browser recognition session finished naturally.");
         };
     }
     if (questions.length === 0) fetchSpeakingTasks();
@@ -207,9 +208,8 @@ const ReadModule = () => {
             startTimeRef.current = Date.now();
             setRecording(true);
             try {
-                if (recognitionRef.current) {
-                    try { recognitionRef.current.start(); } catch(err){}
-                }
+                // 🎯 FIXED: Native browser speech recognition start ko yahan se hata diya hai
+                // taaki single mic resource par device conflict na ho.
 
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: { echoCancellation: true, noiseSuppression: true } 
