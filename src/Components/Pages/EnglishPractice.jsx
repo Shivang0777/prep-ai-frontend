@@ -846,24 +846,96 @@ const GrammarModule = () => {
     }, []);
 
     const toggleRecording = async () => {
-        // Universal pipeline wake lock for Android/iOS device hardware
+        // 🎯 PHONE FIX: Audio Pipeline Unlock
         if (window.AudioContext || window.webkitAudioContext) {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            const ctx = new AudioCtx();
-            if (ctx.state === 'suspended') await ctx.resume();
+            const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+            const ctxInstance = new AudioCtxClass();
+            if (ctxInstance.state === 'suspended') {
+                await ctxInstance.resume();
+            }
         }
-
-        if (!recognitionRef.current) {
-            alert("Speech Recognition engine not initialized or supported on this phone viewport.");
-            return;
-        }
-
-        if (isRecording) {
-            setIsRecording(false);
-            try { recognitionRef.current.stop(); } catch(e){}
+    
+        if (recording) {
+            setRecording(false);
+            // 🎯 PHONE FIX: Browser mic detector ko complete bypass karo, sirf media recorder stop hoga
+            try { if (mediaRecorderRef.current) mediaRecorderRef.current.stop(); } catch(e){}
         } else {
-            setIsRecording(true);
-            try { recognitionRef.current.start(); } catch (err) { console.error(err); }
+            resetState();
+            startTimeRef.current = Date.now();
+            setRecording(true);
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: { echoCancellation: true, noiseSuppression: true } 
+                });
+    
+                let targetMimeType = 'audio/mp4'; 
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    targetMimeType = 'audio/webm;codecs=opus';
+                }
+    
+                mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: targetMimeType });
+                audioChunksRef.current = [];
+                mediaRecorderRef.current.ondataavailable = (e) => audioChunksRef.current.push(e.data);
+                
+                // 🎯 SERVERLESS WHISPER LOGIC - JAB USER KHUD STOP DABAYEGA TABHI CHALEGA
+                mediaRecorderRef.current.onstop = async () => {
+                    const blob = new Blob(audioChunksRef.current, { type: targetMimeType });
+                    setAudioUrl(URL.createObjectURL(blob));
+                    setUserTranscript("AI is decoding your voice... Please wait 1s");
+    
+                    try {
+                        const hfResponse = await fetch(
+                            "https://api-inference.huggingface.co/models/openai/whisper-large-v3",
+                            {
+                                headers: { 
+                                    Authorization: `Bearer ${import.meta.env.VITE_HF_WHISPER_KEY}` 
+                                },
+                                method: "POST",
+                                body: blob,
+                            }
+                        );
+                        
+                        const aiResult = await hfResponse.json();
+                        
+                        if (aiResult && aiResult.text) {
+                            const cleanTranscript = aiResult.text.trim();
+                            setUserTranscript(cleanTranscript);
+    
+                            // Metrics calculation logic 100% same
+                            if (questions.length > 0 && questions[currentIndex]) {
+                                const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
+                                const spoken = cleanTranscript.toLowerCase();
+                                const targetWords = target.split(/\s+/);
+                                const spokenWords = spoken.split(/\s+/);
+                                
+                                let matches = 0;
+                                targetWords.forEach(word => {
+                                    if (spokenWords.includes(word)) matches++;
+                                });
+                                setAccuracy(Math.floor((matches / targetWords.length) * 100));
+    
+                                if (startTimeRef.current) {
+                                    const wordCount = spokenWords.length;
+                                    const minutes = (Date.now() - startTimeRef.current) / 1000 / 60;
+                                    setWpm(Math.round(wordCount / Math.max(minutes, 0.01)));
+                                }
+                            }
+                        } else {
+                            setUserTranscript("Could not process voice clearly, please try again.");
+                        }
+                    } catch (apiErr) {
+                        console.error("HF Error:", apiErr);
+                        setUserTranscript("AI Network Timeout. Please check connection.");
+                    }
+                };
+    
+                // 1-second segmenting hata kar direct continuous run karo taaki crash na ho
+                mediaRecorderRef.current.start();
+            } catch (err) { 
+                console.error("Mic Error:", err); 
+                setRecording(false);
+            }
         }
     };
 
