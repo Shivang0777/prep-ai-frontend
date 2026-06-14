@@ -208,14 +208,10 @@ const ReadModule = () => {
             startTimeRef.current = Date.now();
             setRecording(true);
             try {
-                // 🎯 FIXED: Native browser speech recognition start ko yahan se hata diya hai
-                // taaki single mic resource par device conflict na ho.
-
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: { echoCancellation: true, noiseSuppression: true } 
                 });
 
-                // Android aur iOS dono ke liye safe dynamic hybrid container
                 let targetMimeType = 'audio/mp4'; 
                 if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
                     targetMimeType = 'audio/webm;codecs=opus';
@@ -232,7 +228,6 @@ const ReadModule = () => {
                     setUserTranscript("AI is decoding your voice... Please wait 1s");
 
                     try {
-                        // Secure API Call using Vite Env variables (GitHub Bypass)
                         const hfResponse = await fetch(
                             "https://api-inference.huggingface.co/models/openai/whisper-large-v3",
                             {
@@ -246,14 +241,23 @@ const ReadModule = () => {
                         
                         const aiResult = await hfResponse.json();
                         
-                        if (aiResult && aiResult.text) {
-                            const cleanTranscript = aiResult.text.trim();
-                            setUserTranscript(cleanTranscript);
+                        // 🛠️ FIX 1: Array aur Object dono format ko support karne ke liye parse check
+                        let rawText = "";
+                        if (Array.isArray(aiResult) && aiResult[0] && aiResult[0].text) {
+                            rawText = aiResult[0].text;
+                        } else if (aiResult && aiResult.text) {
+                            rawText = aiResult.text;
+                        }
 
-                            // Metrics mapping logic untouched
+                        if (rawText) {
+                            const originalTranscript = rawText.trim();
+                            setUserTranscript(originalTranscript); // Screen par asli format dikhane ke liye
+
                             if (questions.length > 0 && questions[currentIndex]) {
+                                // 🛠️ FIX 2: Target aur Spoken dono ka base structure lower-case aur clean punctuation par match hoga
                                 const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
-                                const spoken = cleanTranscript.toLowerCase();
+                                const spoken = originalTranscript.toLowerCase().replace(/[.,!]/g, ""); // 👈 Clean text matching
+                                
                                 const targetWords = target.split(/\s+/);
                                 const spokenWords = spoken.split(/\s+/);
                                 
