@@ -198,7 +198,7 @@ const ReadModule = () => {
                 await ctxInstance.resume();
             }
         }
-
+    
         if (recording) {
             setRecording(false);
             try { if (recognitionRef.current) recognitionRef.current.stop(); } catch(e){}
@@ -211,52 +211,51 @@ const ReadModule = () => {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     audio: { echoCancellation: true, noiseSuppression: true } 
                 });
-
+    
                 let targetMimeType = 'audio/mp4'; 
                 if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
                     targetMimeType = 'audio/webm;codecs=opus';
                 }
-
+    
                 mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: targetMimeType });
                 audioChunksRef.current = [];
                 mediaRecorderRef.current.ondataavailable = (e) => audioChunksRef.current.push(e.data);
                 
-                // 🎯 SERVERLESS WHISPER ENGINE WITH SECURE ENVIRONMENT VARIABLES
+                // 🎯 NEW PROXY BYPASS ROUTE (No more VITE_HF_WHISPER_KEY on Frontend)
                 mediaRecorderRef.current.onstop = async () => {
                     const blob = new Blob(audioChunksRef.current, { type: targetMimeType });
                     setAudioUrl(URL.createObjectURL(blob));
                     setUserTranscript("AI is decoding your voice... Please wait 1s");
-
+    
                     try {
-                        const hfResponse = await fetch(
-                            "https://api-inference.huggingface.co/models/openai/whisper-large-v3",
-                            {
-                                headers: { 
-                                    Authorization: `Bearer ${import.meta.env.VITE_HF_WHISPER_KEY}` 
-                                },
-                                method: "POST",
-                                body: blob,
-                            }
-                        );
+                        // 1. Audio blob ko FormData mein convert karo taaki backend upload pakad sake
+                        const formData = new FormData();
+                        formData.append('audio', blob, 'recording.mp4');
+    
+                        // 2. Apne backend ke naye proxy router ko hit maaro
+                        const hfResponse = await fetch(`${API_URL}/api/coach/transcribe`, {
+                            method: "POST",
+                            body: formData // Body mein ab seedha FormData ja raha hai
+                        });
                         
                         const aiResult = await hfResponse.json();
                         
-                        // 🛠️ FIX 1: Array aur Object dono format ko support karne ke liye parse check
+                        // 🛠️ FIX 1: Array aur Object dono format ko support karne ke liye parse check (SAME LOGIC)
                         let rawText = "";
                         if (Array.isArray(aiResult) && aiResult[0] && aiResult[0].text) {
                             rawText = aiResult[0].text;
                         } else if (aiResult && aiResult.text) {
                             rawText = aiResult.text;
                         }
-
+    
                         if (rawText) {
                             const originalTranscript = rawText.trim();
                             setUserTranscript(originalTranscript); // Screen par asli format dikhane ke liye
-
+    
                             if (questions.length > 0 && questions[currentIndex]) {
-                                // 🛠️ FIX 2: Target aur Spoken dono ka base structure lower-case aur clean punctuation par match hoga
+                                // 🛠️ FIX 2: Target aur Spoken dono ka base structure clean matching (SAME LOGIC)
                                 const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
-                                const spoken = originalTranscript.toLowerCase().replace(/[.,!]/g, ""); // 👈 Clean text matching
+                                const spoken = originalTranscript.toLowerCase().replace(/[.,!]/g, ""); 
                                 
                                 const targetWords = target.split(/\s+/);
                                 const spokenWords = spoken.split(/\s+/);
@@ -266,7 +265,7 @@ const ReadModule = () => {
                                     if (spokenWords.includes(word)) matches++;
                                 });
                                 setAccuracy(Math.floor((matches / targetWords.length) * 100));
-
+    
                                 if (startTimeRef.current) {
                                     const wordCount = spokenWords.length;
                                     const minutes = (Date.now() - startTimeRef.current) / 1000 / 60;
@@ -277,11 +276,11 @@ const ReadModule = () => {
                             setUserTranscript("Could not process voice clearly, please try again.");
                         }
                     } catch (apiErr) {
-                        console.error("HF Error:", apiErr);
+                        console.error("HF Error through Backend Proxy:", apiErr);
                         setUserTranscript("AI Network Timeout. Please check connection.");
                     }
                 };
-
+    
                 mediaRecorderRef.current.start();
             } catch (err) { 
                 console.error("Mic Error:", err); 
