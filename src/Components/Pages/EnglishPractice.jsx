@@ -89,7 +89,7 @@ const ReadModule = () => {
     const fetchSpeakingTasks = async (selectedCat = category) => {
         setLoadingQuestions(true);
         try {
-            const res = await fetch(`${API_URL}/api/coach/generate-questions?category=${selectedCat}`);
+            const res = await fetch(`https://prep-ai-backend-s9uw.onrender.com/api/coach/generate-questions?category=${selectedCat}`);
             const data = await res.json();
             if (data.questions) {
                 const formatted = data.questions.map((q, i) => ({
@@ -233,7 +233,7 @@ const ReadModule = () => {
                         formData.append('audio', blob, 'recording.mp4');
     
                         // 2. Apne backend ke naye proxy router ko hit maaro
-                        const hfResponse = await fetch(`${API_URL}/api/coach/transcribe`, {
+                        const hfResponse = await fetch("https://prep-ai-backend-s9uw.onrender.com/api/coach/transcribe", {
                             method: "POST",
                             body: formData // Body mein ab seedha FormData ja raha hai
                         });
@@ -860,7 +860,6 @@ const GrammarModule = () => {
     
         if (recording) {
             setRecording(false);
-            // 🎯 PHONE FIX: Browser mic detector ko complete bypass karo, sirf media recorder stop hoga
             try { if (mediaRecorderRef.current) mediaRecorderRef.current.stop(); } catch(e){}
         } else {
             resetState();
@@ -881,34 +880,41 @@ const GrammarModule = () => {
                 audioChunksRef.current = [];
                 mediaRecorderRef.current.ondataavailable = (e) => audioChunksRef.current.push(e.data);
                 
-                // 🎯 SERVERLESS WHISPER LOGIC - JAB USER KHUD STOP DABAYEGA TABHI CHALEGA
+                // 🎯 FIXED PROXY LOGIC - HIT TO RENDER BACKEND
                 mediaRecorderRef.current.onstop = async () => {
                     const blob = new Blob(audioChunksRef.current, { type: targetMimeType });
                     setAudioUrl(URL.createObjectURL(blob));
                     setUserTranscript("AI is decoding your voice... Please wait 1s");
     
                     try {
-                        const hfResponse = await fetch(
-                            "https://api-inference.huggingface.co/models/openai/whisper-large-v3",
-                            {
-                                headers: { 
-                                    Authorization: `Bearer ${import.meta.env.VITE_HF_WHISPER_KEY}` 
-                                },
-                                method: "POST",
-                                body: blob,
-                            }
-                        );
+                        // Audio ko FormData mein convert karo taaki backend upload catch kar sake
+                        const formData = new FormData();
+                        formData.append('audio', blob, 'recording.mp4');
+    
+                        // Direct tere Render backend ke naye proxy route par request bhejo
+                        const hfResponse = await fetch("https://prep-ai-backend-s9uw.onrender.com/api/coach/transcribe", {
+                            method: "POST",
+                            body: formData
+                        });
                         
                         const aiResult = await hfResponse.json();
                         
-                        if (aiResult && aiResult.text) {
-                            const cleanTranscript = aiResult.text.trim();
+                        // Array aur Object dono responses ke liye safer parsing
+                        let rawText = "";
+                        if (Array.isArray(aiResult) && aiResult[0] && aiResult[0].text) {
+                            rawText = aiResult[0].text;
+                        } else if (aiResult && aiResult.text) {
+                            rawText = aiResult.text;
+                        }
+        
+                        if (rawText) {
+                            const cleanTranscript = rawText.trim();
                             setUserTranscript(cleanTranscript);
     
-                            // Metrics calculation logic 100% same
+                            // Metrics calculation logic
                             if (questions.length > 0 && questions[currentIndex]) {
                                 const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
-                                const spoken = cleanTranscript.toLowerCase();
+                                const spoken = cleanTranscript.toLowerCase().replace(/[.,!]/g, "");
                                 const targetWords = target.split(/\s+/);
                                 const spokenWords = spoken.split(/\s+/);
                                 
@@ -928,12 +934,11 @@ const GrammarModule = () => {
                             setUserTranscript("Could not process voice clearly, please try again.");
                         }
                     } catch (apiErr) {
-                        console.error("HF Error:", apiErr);
+                        console.error("Backend Proxy Error:", apiErr);
                         setUserTranscript("AI Network Timeout. Please check connection.");
                     }
                 };
     
-                // 1-second segmenting hata kar direct continuous run karo taaki crash na ho
                 mediaRecorderRef.current.start();
             } catch (err) { 
                 console.error("Mic Error:", err); 
