@@ -8,7 +8,9 @@ import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+// 🎯 FIX 1: Apne direct live render server ka URL set karo taaki phone se live hit ho sake
+const API_URL = "https://prep-ai-backend-s9uw.onrender.com";
 
 const MockInterview = () => {
   const [step, setStep] = useState('intro');
@@ -54,6 +56,12 @@ const MockInterview = () => {
       if (temporaryContext.state === 'suspended') {
         await temporaryContext.resume();
       }
+    }
+    // 🎯 FIX 2: Mobile par speech recognition aur TTS engine ko user interactions se initialize karna padta hai
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      const initialWakeUpUtterance = new SpeechSynthesisUtterance("");
+      window.speechSynthesis.speak(initialWakeUpUtterance);
     }
   };
 
@@ -101,9 +109,9 @@ const MockInterview = () => {
       });
 
       if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Backend Error Data:", errorData);
-          throw new Error("Backend connection failed!");
+        const errorData = await response.json();
+        console.error("Backend Error Data:", errorData);
+        throw new Error("Backend connection failed!");
       }
 
       const data = await response.json();
@@ -142,6 +150,7 @@ const MockInterview = () => {
     };
 
     utterance.onerror = (event) => {
+      console.error("TTS Engine issue intercepted:", event);
       setIsAiSpeaking(false); 
       isAiSpeakingRef.current = false; 
       if (callback) callback();
@@ -427,7 +436,8 @@ const MockInterview = () => {
                 </div>
               </div>
 
-              <button className="btn-neon-line" onClick={() => setStep('upload')}>INITIALIZE SEQUENCE</button>
+              {/* 🎯 FIX 3: Is button click par mobile audio sequence triggers completely bypass ho rahe hain */}
+              <button className="btn-neon-line" onClick={async () => { await forceWakeMobileAudioPipeline(); setStep('upload'); }}>INITIALIZE SEQUENCE</button>
             </motion.div>
           )}
 
@@ -437,7 +447,7 @@ const MockInterview = () => {
                 display: 'flex', 
                 flexDirection: 'column', 
                 alignItems: 'center', 
-                justify: 'center',
+                justifyContent: 'center',
                 gap: '50px', 
                 width: '100%',
                 minHeight: '60vh'
@@ -657,7 +667,7 @@ const MockInterview = () => {
                     boxSizing: 'border-box'
                   }}>
                     <h3 style={{ color: '#ff4757', fontSize: '1rem', marginBottom: '15px', letterSpacing: '1px' }}>
-                       FILLER WORD DETECTED (CRINGE LOG)
+                        FILLER WORD DETECTED (CRINGE LOG)
                     </h3>
                     
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
