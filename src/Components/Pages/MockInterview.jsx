@@ -247,60 +247,67 @@ const MockInterview = () => {
 
   // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
   // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
-  const startHardware = async () => {
+ // --- HARDWARE START (BULLETPROOF MOBILE FALLBACK HARNESS) ---
+ const startHardware = async () => {
+  try {
+    await forceWakeMobileAudioPipeline(); 
+
+    console.log("🚀 Initializing Mobile Hardware Stream...");
+    
+    let stream;
     try {
-      await forceWakeMobileAudioPipeline(); // Initializing smartphone media pipelines
-
-      // 🎯 PHONE AND LAPTOP DYNAMIC RESOLUTION FIX
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: "user",
-          // Fixed height/width ki jagah flexible limits lagayi taaki phone portrait mode handle kar sake
-          width: { min: 240, ideal: 640, max: 1280 },
-          height: { min: 320, ideal: 480, max: 720 }
-        }, 
-        audio: { echoCancellation: true, noiseSuppression: true } 
+      // First Attempt: Dono ek saath kholne ki koshish (Standard Laptop/High-end Phone)
+      stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "user" }, 
+        audio: true 
       });
-      streamRef.current = stream;
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-  
-      recordedChunks.current = [];
-
-      // 🎯 DYNAMIC CONTAINER SELECTOR: Checks mobile native browser support bounds
-      let structuralMimeType = 'video/webm;codecs=vp8,opus';
-      if (!MediaRecorder.isTypeSupported(structuralMimeType)) {
-        structuralMimeType = 'video/webm';
-        if (!MediaRecorder.isTypeSupported(structuralMimeType)) {
-          // Absolute fallback for mobile platforms natively matching safari/chrome frameworks
-          structuralMimeType = 'video/mp4';
-        }
-      }
-
-      console.log("🎯 Selective System Codec Context Hooked: ", structuralMimeType);
-      
-      const mr = new MediaRecorder(stream, { mimeType: structuralMimeType });
-      mediaRecorderRef.current = mr;
-      
-      mr.ondataavailable = (e) => {
-        if (e.data && e.data.size > 0) {
-          recordedChunks.current.push(e.data);
-        }
-      };
-      
-      mr.onstop = () => {
-        const fileBlobContainer = new Blob(recordedChunks.current, { type: structuralMimeType });
-        setVideoUrl(URL.createObjectURL(fileBlobContainer));
-      };
-
-      mr.start(1000); // Record chunks in 1-second dynamic segments to prevent phone memory crash
-    } catch (err) {
-      console.error("Hardware access error:", err);
-      alert("Mobile Camera/Mic access denied or codec support initialization dropped!");
+    } catch (firstErr) {
+      console.warn("⚠️ Dual hardware initialization failed, trying audio-only fallback...");
+      // Second Attempt Fallback: Agar camera crash kar raha hai phone par, toh sirf mic kholo taaki interview na ruke!
+      stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: true 
+      });
+      alert("Mobile Video stream dropped. Continuing with Voice-Only Mode!");
     }
-  };
+
+    streamRef.current = stream;
+    
+    if (videoRef.current && stream.getVideoTracks().length > 0) {
+      videoRef.current.srcObject = stream;
+    }
+
+    recordedChunks.current = [];
+
+    // Phone safe storage format selector
+    let structuralMimeType = 'video/mp4'; // Default stable for iOS/Android
+    if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
+      structuralMimeType = 'video/webm;codecs=vp8,opus';
+    } else if (MediaRecorder.isTypeSupported('video/webm')) {
+      structuralMimeType = 'video/webm';
+    }
+
+    console.log("🎯 Selective Codec Set: ", structuralMimeType);
+    
+    const mr = new MediaRecorder(stream, { mimeType: structuralMimeType });
+    mediaRecorderRef.current = mr;
+    
+    mr.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) {
+        recordedChunks.current.push(e.data);
+      }
+    };
+    
+    mr.onstop = () => {
+      const fileBlobContainer = new Blob(recordedChunks.current, { type: structuralMimeType });
+      setVideoUrl(URL.createObjectURL(fileBlobContainer));
+    };
+
+    mr.start(1000); 
+  } catch (err) {
+    console.error("Fatal Mobile Hardware Crash:", err);
+    alert("Bhai phone ke browser ne mic block kiya hai. Settings mein jaakar site settings clear karo!");
+  }
+};
 
   // --- 🚀 START INTERVIEW ---
   const startInterview = async (currentText, role) => {
