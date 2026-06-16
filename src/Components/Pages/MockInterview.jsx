@@ -251,42 +251,45 @@ const MockInterview = () => {
  const startHardware = async () => {
   try {
     await forceWakeMobileAudioPipeline(); 
-
     console.log("🚀 Initializing Mobile Hardware Stream...");
     
     let stream;
     try {
-      // First Attempt: Dono ek saath kholne ki koshish (Standard Laptop/High-end Phone)
+      // High-end devices ke liye video + audio dono
       stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: "user" }, 
+        video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, 
         audio: true 
       });
-    } catch (firstErr) {
-      console.warn("⚠️ Dual hardware initialization failed, trying audio-only fallback...");
-      // Second Attempt Fallback: Agar camera crash kar raha hai phone par, toh sirf mic kholo taaki interview na ruke!
-      stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: true 
-      });
-      alert("Mobile Video stream dropped. Continuing with Voice-Only Mode!");
+    } catch (videoErr) {
+      // 🔥 PHONE TRACKING ALERT 1: Agar camera constraints ya resolution fail hua
+      alert(`⚠️ Mobile Camera Mismatch: ${videoErr.message}. Trying Audio-Only Mode!`);
+      
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     }
 
     streamRef.current = stream;
     
-    if (videoRef.current && stream.getVideoTracks().length > 0) {
+    if (videoRef.current) {
       videoRef.current.srcObject = stream;
+      // 🎯 SAFARI/CHROME PHONE EXPLICIT UNLOCK
+      videoRef.current.setAttribute("playsinline", true);
+      videoRef.current.setAttribute("webkit-playsinline", true);
+      try {
+        await videoRef.current.play();
+      } catch (playErr) {
+        alert(`⚠️ Video AutoPlay Blocked by Phone: ${playErr.message}`);
+      }
     }
 
     recordedChunks.current = [];
 
-    // Phone safe storage format selector
-    let structuralMimeType = 'video/mp4'; // Default stable for iOS/Android
+    // Safe container format check for phones
+    let structuralMimeType = 'video/mp4'; 
     if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
       structuralMimeType = 'video/webm;codecs=vp8,opus';
     } else if (MediaRecorder.isTypeSupported('video/webm')) {
       structuralMimeType = 'video/webm';
     }
-
-    console.log("🎯 Selective Codec Set: ", structuralMimeType);
     
     const mr = new MediaRecorder(stream, { mimeType: structuralMimeType });
     mediaRecorderRef.current = mr;
@@ -304,38 +307,47 @@ const MockInterview = () => {
 
     mr.start(1000); 
   } catch (err) {
-    console.error("Fatal Mobile Hardware Crash:", err);
-    alert("Bhai phone ke browser ne mic block kiya hai. Settings mein jaakar site settings clear karo!");
+    // 🔥 PHONE TRACKING ALERT 2: Agar pooray phone ne permission ya hardware block kiya
+    alert(`🚨 CRITICAL HARDWARE ERROR: Name: ${err.name} | Msg: ${err.message}`);
   }
 };
 
   // --- 🚀 START INTERVIEW ---
  // --- 🚀 START INTERVIEW (MOBILE MOUNT SAFE WRAPPER) ---
  const startInterview = async (currentText, role) => {
-  // 🎯 STEP 1: Pehle state change karke DOM mein video element ko mount hone do
+  // Pehle mobile DOM ko set hone do
   setStep('interview');
   isInterviewActiveRef.current = true;
   
-  // 🎯 STEP 2: Mobile browser ko videoRef loading ka time dene ke liye 500ms ka timeout lagaya
+  // 500ms delay taaki phone browser video element ka ref catch kar sake
   setTimeout(async () => {
     await startHardware();
     
     const interviewContext = `Target Role: ${role}. Resume Details: ${currentText}`;
     
-    speak(`System active. I am Prep AI. Evaluating for ${role} position. Let's begin.`, async () => {
-      const firstQuestion = await generateAIQuestion([], interviewContext, role);
-      
-      historyRef.current = [{ role: "ai", content: firstQuestion }];
-      setChatHistory([...historyRef.current]);
-      setCurrentQIndex(1); 
-      
-      speak(firstQuestion, () => {
-        setUserTranscript("");
-        userTranscriptRef.current = "";
-        initVoice(); 
+    // Backend test trigger alert to see if AI responds
+    try {
+      speak(`System active. Evaluating for ${role} position.`, async () => {
+        const firstQuestion = await generateAIQuestion([], interviewContext, role);
+        
+        if(!firstQuestion) {
+           alert("🚨 Backend se question nahi aaya! Server sleep mode mein hai.");
+        }
+        
+        historyRef.current = [{ role: "ai", content: firstQuestion }];
+        setChatHistory([...historyRef.current]);
+        setCurrentQIndex(1); 
+        
+        speak(firstQuestion, () => {
+          setUserTranscript("");
+          userTranscriptRef.current = "";
+          initVoice(); 
+        });
       });
-    });
-  }, 500); // Yeh 500ms ka delay phone par cameraRef crash hone se bachaega
+    } catch (aiErr) {
+       alert(`🚨 AI Loop Error on Phone: ${aiErr.message}`);
+    }
+  }, 500);
 };
 
   // --- ⚙️ HANDLE NEXT ---
