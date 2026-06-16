@@ -166,37 +166,52 @@ const initVoice = () => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) return;
   
+  if (recognitionRef.current) {
+    try { recognitionRef.current.abort(); } catch(e) {}
+  }
+
   const recognition = new SpeechRecognition();
   
-  // 🎯 PHONE PAR ENGINE CRASH ROKNE KE LIYE DEFAULT SETTINGS BACK
+  // Chrome Mobile ko loop freeze se bachane ke liye strict configurations
   recognition.continuous = false;
-  recognition.interimResults = false; 
+  recognition.interimResults = true; 
   recognition.lang = 'en-US';
   
+  // 🎯 FIX: Shuruat mein jab tak bolna shuru na ho, tab tak screen blank rahegi
+  recognition.onstart = () => {
+    setUserTranscript(""); 
+    userTranscriptRef.current = "";
+  };
+
+  // 🎯 FIX: Jaise hi user ke bolne ki aawaz mic detect karega, tabhi text badlega
+  recognition.onsoundstart = () => {
+    setUserTranscript("Listening...");
+  };
+
   recognition.onresult = (event) => {
     if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
     
-    // Direct solid block text capture
-    const finalTranscript = event.results[0][0].transcript;
+    let currentResultText = '';
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      currentResultText += event.results[i][0].transcript;
+    }
 
-    setUserTranscript(finalTranscript);
-    userTranscriptRef.current = finalTranscript; 
+    // Live text screen par push hoga
+    setUserTranscript(currentResultText);
+    userTranscriptRef.current = currentResultText; 
 
-    const text = finalTranscript.toLowerCase().trim();
-    console.log("Mic Live Mobile Vector:", text); 
+    const text = currentResultText.toLowerCase().trim();
+    console.log("🔒 Chrome Mobile Fixed Capture:", text); 
 
-    // 🎯 LOOSE STRING MATCHING (Includes laga diya taaki phone easily pakad le)
+    // Commands matching inside the live text string
     if (text.includes("next question") || text.includes("next")) {
-       console.log("Next Question Command Detected!");
        handleNext(false);
     } 
     else if (
       text.includes("session end") || 
       text.includes("stop interview") || 
-      text.includes("end interview") ||
-      text.includes("stop")
+      text.includes("end interview")
     ) {
-      console.log("Stop Command Detected!");
       finish(); 
     }
     else if (text.includes("i am done") || text.includes("done")) {
@@ -205,21 +220,25 @@ const initVoice = () => {
   };
 
   recognition.onend = () => {
-    // Loop cycle automated restart for phone viewports
+    // Auto restart block loop
     if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
       try { recognition.start(); } catch(e) {}
     }
   };
 
   recognition.onerror = (e) => {
-    console.log("Speech engine warning caught:", e.error);
+    console.log("Chrome mic capture reset:", e.error);
+    if ((e.error === 'no-speech' || e.error === 'aborted') && isInterviewActiveRef.current && !isAiSpeakingRef.current) {
+      // Bina crash huye chupchaap engine ko reload karega
+      try { recognition.stop(); } catch(err) {}
+    }
   };
 
   try {
     recognition.start();
     recognitionRef.current = recognition;
   } catch (err) {
-    console.error("Mic start error:", err);
+    console.error("Mic hook error:", err);
   }
 };
 
@@ -235,46 +254,28 @@ const initVoice = () => {
  const startHardware = async () => {
   try {
     await forceWakeMobileAudioPipeline(); 
-    console.log("🚀 Initializing Mobile Hardware Stream...");
-    
-    let stream;
-    try {
-      // High-end devices ke liye video + audio dono
-      stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, 
-        audio: true 
-      });
-    } catch (videoErr) {
-      // 🔥 PHONE TRACKING ALERT 1: Agar camera constraints ya resolution fail hua
-      alert(`⚠️ Mobile Camera Mismatch: ${videoErr.message}. Trying Audio-Only Mode!`);
-      
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    }
 
+    // Chrome par mic track double allocation bypass karne ke liye explicit configuration
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, 
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
+    });
     streamRef.current = stream;
     
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
-      // 🎯 SAFARI/CHROME PHONE EXPLICIT UNLOCK
       videoRef.current.setAttribute("playsinline", true);
       videoRef.current.setAttribute("webkit-playsinline", true);
-      try {
-        await videoRef.current.play();
-      } catch (playErr) {
-        alert(`⚠️ Video AutoPlay Blocked by Phone: ${playErr.message}`);
-      }
+      await videoRef.current.play();
     }
 
     recordedChunks.current = [];
 
-    // Safe container format check for phones
     let structuralMimeType = 'video/mp4'; 
     if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
       structuralMimeType = 'video/webm;codecs=vp8,opus';
-    } else if (MediaRecorder.isTypeSupported('video/webm')) {
-      structuralMimeType = 'video/webm';
     }
-    
+
     const mr = new MediaRecorder(stream, { mimeType: structuralMimeType });
     mediaRecorderRef.current = mr;
     
@@ -291,47 +292,35 @@ const initVoice = () => {
 
     mr.start(1000); 
   } catch (err) {
-    // 🔥 PHONE TRACKING ALERT 2: Agar pooray phone ne permission ya hardware block kiya
-    alert(`🚨 CRITICAL HARDWARE ERROR: Name: ${err.name} | Msg: ${err.message}`);
+    console.error("Hardware error:", err);
   }
 };
 
-  // --- 🚀 START INTERVIEW ---
- // --- 🚀 START INTERVIEW (MOBILE MOUNT SAFE WRAPPER) ---
- const startInterview = async (currentText, role) => {
-  // Pehle mobile DOM ko set hone do
+// --- 🚀 START INTERVIEW (LAYOUT MOUNT ENFORCER) ---
+const startInterview = async (currentText, role) => {
   setStep('interview');
   isInterviewActiveRef.current = true;
   
-  // 500ms delay taaki phone browser video element ka ref catch kar sake
+  // Safe timing window taaki element visually mount ho jaye aur Chrome hardware freeze na kare
   setTimeout(async () => {
     await startHardware();
     
     const interviewContext = `Target Role: ${role}. Resume Details: ${currentText}`;
     
-    // Backend test trigger alert to see if AI responds
-    try {
-      speak(`System active. Evaluating for ${role} position.`, async () => {
-        const firstQuestion = await generateAIQuestion([], interviewContext, role);
-        
-        if(!firstQuestion) {
-           alert("🚨 Backend se question nahi aaya! Server sleep mode mein hai.");
-        }
-        
-        historyRef.current = [{ role: "ai", content: firstQuestion }];
-        setChatHistory([...historyRef.current]);
-        setCurrentQIndex(1); 
-        
-        speak(firstQuestion, () => {
-          setUserTranscript("");
-          userTranscriptRef.current = "";
-          initVoice(); 
-        });
+    speak(`System active. Evaluating for ${role} position.`, async () => {
+      const firstQuestion = await generateAIQuestion([], interviewContext, role);
+      
+      historyRef.current = [{ role: "ai", content: firstQuestion }];
+      setChatHistory([...historyRef.current]);
+      setCurrentQIndex(1); 
+      
+      speak(firstQuestion, () => {
+        setUserTranscript("");
+        userTranscriptRef.current = "";
+        initVoice(); 
       });
-    } catch (aiErr) {
-       alert(`🚨 AI Loop Error on Phone: ${aiErr.message}`);
-    }
-  }, 500);
+    });
+  }, 400);
 };
 
   // --- ⚙️ HANDLE NEXT ---
