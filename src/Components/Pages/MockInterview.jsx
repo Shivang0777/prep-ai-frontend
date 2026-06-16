@@ -310,11 +310,15 @@ const MockInterview = () => {
 };
 
   // --- 🚀 START INTERVIEW ---
-  const startInterview = async (currentText, role) => {
+ // --- 🚀 START INTERVIEW (MOBILE MOUNT SAFE WRAPPER) ---
+ const startInterview = async (currentText, role) => {
+  // 🎯 STEP 1: Pehle state change karke DOM mein video element ko mount hone do
+  setStep('interview');
+  isInterviewActiveRef.current = true;
+  
+  // 🎯 STEP 2: Mobile browser ko videoRef loading ka time dene ke liye 500ms ka timeout lagaya
+  setTimeout(async () => {
     await startHardware();
-    
-    setStep('interview');
-    isInterviewActiveRef.current = true;
     
     const interviewContext = `Target Role: ${role}. Resume Details: ${currentText}`;
     
@@ -331,7 +335,8 @@ const MockInterview = () => {
         initVoice(); 
       });
     });
-  };
+  }, 500); // Yeh 500ms ka delay phone par cameraRef crash hone se bachaega
+};
 
   // --- ⚙️ HANDLE NEXT ---
   const handleNext = async (isDone = false) => {
