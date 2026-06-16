@@ -161,13 +161,13 @@ const MockInterview = () => {
 
   // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
  // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
- const initVoice = () => {
+// --- 🎙️ THE MIC (MOBILE REAL-TIME VOICE COMMAND AGGREGATOR) ---
+const initVoice = () => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) return;
   
   const recognition = new SpeechRecognition();
   
-  // 🎯 MOBILE ULTIMATE FIX: interimResults on rakhenge taaki phone screen par continuous text feed aaye aur crash na ho
   recognition.continuous = true;
   recognition.interimResults = true; 
   recognition.lang = 'en-US';
@@ -175,49 +175,39 @@ const MockInterview = () => {
   recognition.onresult = (event) => {
     if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
     
-    let interimTranscript = '';
-    let finalTranscript = '';
-
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        finalTranscript += event.results[i][0].transcript;
-      } else {
-        interimTranscript += event.results[i][0].transcript;
-      }
+    // 🎯 MOBILE STABLE TEXT ACCUMULATION
+    let fullSpeechString = '';
+    for (let i = 0; i < event.results.length; ++i) {
+      fullSpeechString += event.results[i][0].transcript + ' ';
     }
 
-    // Live screen par dikhane ke liye jo bhi bol rahe ho
-    const currentLiveText = finalTranscript || interimTranscript;
-    setUserTranscript(currentLiveText);
-    userTranscriptRef.current = currentLiveText; 
+    // Live state update for user visibility
+    setUserTranscript(fullSpeechString);
+    userTranscriptRef.current = fullSpeechString; 
 
-    const text = currentLiveText.toLowerCase().trim();
-    console.log("Mic Live Mobile Vector:", text); 
+    const text = fullSpeechString.toLowerCase().trim();
+    console.log("🔥 Cleaned Mobile Speech Vector:", text); 
 
-    // 1. Agla sawaal Command
+    // 🎯 MOBILE LOOSE STRING MATCHING (.includes lagaya taaki spaces ka jhanjhat na ho)
     if (text.includes("next question")) {
-       console.log("Next Question Command Detected!");
+       console.log("🎯 Next Question Triggered via Phone!");
        handleNext(false);
     } 
-    
-    // 2. Session End Commands
     else if (
       text.includes("session end") || 
       text.includes("stop interview") || 
       text.includes("end interview")
     ) {
-      console.log("Stop Command Detected!");
+      console.log("🎯 Stop Triggered via Phone!");
       finish(); 
     }
-
-    // 3. Done Logic
     else if (text.includes("i am done") || text.includes("done")) {
+      console.log("🎯 Done Triggered via Phone!");
       handleNext(true); 
     }
   };
 
   recognition.onend = () => {
-    // Loop safe mode for phone viewports
     if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
       try { recognition.start(); } catch(e) {}
     }
@@ -225,7 +215,6 @@ const MockInterview = () => {
 
   recognition.onerror = (e) => {
     console.log("Speech engine warning caught:", e.error);
-    // Phone par audio capture drop hone par automatic restart trigger
     if (e.error === 'no-speech' && isInterviewActiveRef.current && !isAiSpeakingRef.current) {
       try { recognition.stop(); } catch(err) {}
     }
