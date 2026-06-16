@@ -161,53 +161,51 @@ const MockInterview = () => {
 
   // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
  // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
-// --- 🎙️ THE MIC (MOBILE REAL-TIME VOICE COMMAND AGGREGATOR) ---
+// --- 🎙️ THE MIC (SIMPLIFIED SOLID MOBILE MICROPHONE ENGINE) ---
 const initVoice = () => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) return;
   
   const recognition = new SpeechRecognition();
   
-  recognition.continuous = true;
-  recognition.interimResults = true; 
+  // 🎯 PHONE PAR ENGINE CRASH ROKNE KE LIYE DEFAULT SETTINGS BACK
+  recognition.continuous = false;
+  recognition.interimResults = false; 
   recognition.lang = 'en-US';
   
   recognition.onresult = (event) => {
     if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
     
-    // 🎯 MOBILE STABLE TEXT ACCUMULATION
-    let fullSpeechString = '';
-    for (let i = 0; i < event.results.length; ++i) {
-      fullSpeechString += event.results[i][0].transcript + ' ';
-    }
+    // Direct solid block text capture
+    const finalTranscript = event.results[0][0].transcript;
 
-    // Live state update for user visibility
-    setUserTranscript(fullSpeechString);
-    userTranscriptRef.current = fullSpeechString; 
+    setUserTranscript(finalTranscript);
+    userTranscriptRef.current = finalTranscript; 
 
-    const text = fullSpeechString.toLowerCase().trim();
-    console.log("🔥 Cleaned Mobile Speech Vector:", text); 
+    const text = finalTranscript.toLowerCase().trim();
+    console.log("Mic Live Mobile Vector:", text); 
 
-    // 🎯 MOBILE LOOSE STRING MATCHING (.includes lagaya taaki spaces ka jhanjhat na ho)
-    if (text.includes("next question")) {
-       console.log("🎯 Next Question Triggered via Phone!");
+    // 🎯 LOOSE STRING MATCHING (Includes laga diya taaki phone easily pakad le)
+    if (text.includes("next question") || text.includes("next")) {
+       console.log("Next Question Command Detected!");
        handleNext(false);
     } 
     else if (
       text.includes("session end") || 
       text.includes("stop interview") || 
-      text.includes("end interview")
+      text.includes("end interview") ||
+      text.includes("stop")
     ) {
-      console.log("🎯 Stop Triggered via Phone!");
+      console.log("Stop Command Detected!");
       finish(); 
     }
     else if (text.includes("i am done") || text.includes("done")) {
-      console.log("🎯 Done Triggered via Phone!");
       handleNext(true); 
     }
   };
 
   recognition.onend = () => {
+    // Loop cycle automated restart for phone viewports
     if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
       try { recognition.start(); } catch(e) {}
     }
@@ -215,9 +213,6 @@ const initVoice = () => {
 
   recognition.onerror = (e) => {
     console.log("Speech engine warning caught:", e.error);
-    if (e.error === 'no-speech' && isInterviewActiveRef.current && !isAiSpeakingRef.current) {
-      try { recognition.stop(); } catch(err) {}
-    }
   };
 
   try {
