@@ -47,7 +47,8 @@ const MockInterview = () => {
  
   const [mediaStream, setMediaStream] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
-
+  const chunkAudioChunksRef = useRef([]); // Sirf audio chunks track karne ke liye
+  const chunkIntervalRef = useRef(null);   // 3-second ka loop control karne ke liye
   // Helper to forcefully wake up audio routing layer on mobile phone viewports
   const forceWakeMobileAudioPipeline = async () => {
     if (window.AudioContext || window.webkitAudioContext) {
@@ -160,87 +161,65 @@ const MockInterview = () => {
   };
 
   // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
- // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
-// --- 🎙️ THE MIC (SIMPLIFIED SOLID MOBILE MICROPHONE ENGINE) ---
-const initVoice = () => {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return;
-  
-  if (recognitionRef.current) {
-    try { recognitionRef.current.abort(); } catch(e) {}
-  }
-
-  const recognition = new SpeechRecognition();
-  
-  // Chrome Mobile ko loop freeze se bachane ke liye strict configurations
-  recognition.continuous = false;
-  recognition.interimResults = true; 
-  recognition.lang = 'en-US';
-  
-  // 🎯 FIX: Shuruat mein jab tak bolna shuru na ho, tab tak screen blank rahegi
-  recognition.onstart = () => {
-    setUserTranscript(""); 
-    userTranscriptRef.current = "";
-  };
-
-  // 🎯 FIX: Jaise hi user ke bolne ki aawaz mic detect karega, tabhi text badlega
-  recognition.onsoundstart = () => {
-    setUserTranscript("Listening...");
-  };
-
-  recognition.onresult = (event) => {
-    if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
+  const initVoice = () => {
+    // Ab phone ka sadiyal Speech API use nahi karna, bas status "Listening" karenge
+    setUserTranscript("Listening (Hands-Free Dynamic Mode)...");
     
-    let currentResultText = '';
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      currentResultText += event.results[i][0].transcript;
-    }
-
-    // Live text screen par push hoga
-    setUserTranscript(currentResultText);
-    userTranscriptRef.current = currentResultText; 
-
-    const text = currentResultText.toLowerCase().trim();
-    console.log("🔒 Chrome Mobile Fixed Capture:", text); 
-
-    // Commands matching inside the live text string
-    if (text.includes("next question") || text.includes("next")) {
-       handleNext(false);
-    } 
-    else if (
-      text.includes("session end") || 
-      text.includes("stop interview") || 
-      text.includes("end interview")
-    ) {
-      finish(); 
-    }
-    else if (text.includes("i am done") || text.includes("done")) {
-      handleNext(true); 
-    }
+    // Har 3.5 second mein background mein bolte hue audio ko cut karke backend bhejo
+    if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
+    
+    chunkIntervalRef.current = setInterval(async () => {
+      if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
+      
+      if (chunkAudioChunksRef.current.length === 0) return;
+      
+      console.log("🚀 Sending 3-second background audio slice to Groq Whisper...");
+      const audioBlob = new Blob(chunkAudioChunksRef.current, { type: 'audio/webm' });
+      chunkAudioChunksRef.current = []; // Reset for next chunk
+      
+      const formData = new FormData();
+      formData.append('audio', audioBlob);
+      
+      try {
+        // 🔥 DIRECT HIT TO YOUR BACKEND TRANSCRIBE ROUTE
+        const res = await fetch(`${API_URL}/api/coach/transcribe`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await res.json();
+        if (data.text) {
+          const text = data.text.toLowerCase().trim();
+          console.log("📱 Whisper Decoded Text:", text);
+          
+          // Agar khali text nahi hai toh user transcript screen par update karo
+          if (text.length > 2) {
+            setUserTranscript(data.text);
+            userTranscriptRef.current = data.text;
+            
+            // 🎯 VOICE COMMANDS DETECTION (HANDS-FREE)
+            if (text.includes("next question") || text.includes("next")) {
+              console.log("⚡ Command Caught: Next");
+              clearInterval(chunkIntervalRef.current);
+              handleNext(false);
+            } 
+            else if (text.includes("session end") || text.includes("stop interview") || text.includes("end interview") || text.includes("stop")) {
+              console.log("⚡ Command Caught: Stop");
+              clearInterval(chunkIntervalRef.current);
+              finish();
+            }
+            else if (text.includes("i am done") || text.includes("done")) {
+              console.log("⚡ Command Caught: Done");
+              clearInterval(chunkIntervalRef.current);
+              handleNext(true);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Whisper background chunk failed:", err);
+      }
+    }, 3500); // Har 3.5 second mein continuous check
   };
-
-  recognition.onend = () => {
-    // Auto restart block loop
-    if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
-      try { recognition.start(); } catch(e) {}
-    }
-  };
-
-  recognition.onerror = (e) => {
-    console.log("Chrome mic capture reset:", e.error);
-    if ((e.error === 'no-speech' || e.error === 'aborted') && isInterviewActiveRef.current && !isAiSpeakingRef.current) {
-      // Bina crash huye chupchaap engine ko reload karega
-      try { recognition.stop(); } catch(err) {}
-    }
-  };
-
-  try {
-    recognition.start();
-    recognitionRef.current = recognition;
-  } catch (err) {
-    console.error("Mic hook error:", err);
-  }
-};
 
   useEffect(() => {
     if (step === 'interview' && videoRef.current && streamRef.current) {
@@ -249,52 +228,52 @@ const initVoice = () => {
   }, [step]);
 
   // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
-  // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
- // --- HARDWARE START (BULLETPROOF MOBILE FALLBACK HARNESS) ---
- const startHardware = async () => {
-  try {
-    await forceWakeMobileAudioPipeline(); 
+  const startHardware = async () => {
+    try {
+      await forceWakeMobileAudioPipeline(); 
 
-    // Chrome par mic track double allocation bypass karne ke liye explicit configuration
-    const stream = await navigator.mediaDevices.getUserMedia({ 
-      video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, 
-      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } 
-    });
-    streamRef.current = stream;
-    
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.setAttribute("playsinline", true);
-      videoRef.current.setAttribute("webkit-playsinline", true);
-      await videoRef.current.play();
-    }
-
-    recordedChunks.current = [];
-
-    let structuralMimeType = 'video/mp4'; 
-    if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
-      structuralMimeType = 'video/webm;codecs=vp8,opus';
-    }
-
-    const mr = new MediaRecorder(stream, { mimeType: structuralMimeType });
-    mediaRecorderRef.current = mr;
-    
-    mr.ondataavailable = (e) => {
-      if (e.data && e.data.size > 0) {
-        recordedChunks.current.push(e.data);
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, 
+        audio: { echoCancellation: true, noiseSuppression: true } 
+      });
+      streamRef.current = stream;
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute("playsinline", true);
+        videoRef.current.setAttribute("webkit-playsinline", true);
+        await videoRef.current.play();
       }
-    };
-    
-    mr.onstop = () => {
-      const fileBlobContainer = new Blob(recordedChunks.current, { type: structuralMimeType });
-      setVideoUrl(URL.createObjectURL(fileBlobContainer));
-    };
+  
+      recordedChunks.current = [];
+      chunkAudioChunksRef.current = []; // Clear whisper chunks
 
-    mr.start(1000); 
-  } catch (err) {
-    console.error("Hardware error:", err);
-  }
-};
+      let structuralMimeType = 'video/mp4'; 
+      if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
+        structuralMimeType = 'video/webm;codecs=vp8,opus';
+      }
+
+      const mr = new MediaRecorder(stream, { mimeType: structuralMimeType });
+      mediaRecorderRef.current = mr;
+      
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          recordedChunks.current.push(e.data);
+          // Simultaneous Whisper storage loop mein audio chunks push karo
+          chunkAudioChunksRef.current.push(e.data);
+        }
+      };
+      
+      mr.onstop = () => {
+        const fileBlobContainer = new Blob(recordedChunks.current, { type: structuralMimeType });
+        setVideoUrl(URL.createObjectURL(fileBlobContainer));
+      };
+
+      mr.start(1000); // 1-second interval chunks continue
+    } catch (err) {
+      console.error("Hardware initialization error:", err);
+    }
+  };
 
 // --- 🚀 START INTERVIEW (LAYOUT MOUNT ENFORCER) ---
 const startInterview = async (currentText, role) => {
@@ -376,6 +355,7 @@ const startInterview = async (currentText, role) => {
 
   // --- 🛑 FINISH ---
   const finish = async () => {
+    if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
     isInterviewActiveRef.current = false; 
     isProcessingRef.current = true; 
   
