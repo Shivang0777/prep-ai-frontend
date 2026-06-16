@@ -160,69 +160,84 @@ const MockInterview = () => {
   };
 
   // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
-  const initVoice = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
+ // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
+ const initVoice = () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return;
+  
+  const recognition = new SpeechRecognition();
+  
+  // 🎯 MOBILE ULTIMATE FIX: interimResults on rakhenge taaki phone screen par continuous text feed aaye aur crash na ho
+  recognition.continuous = true;
+  recognition.interimResults = true; 
+  recognition.lang = 'en-US';
+  
+  recognition.onresult = (event) => {
+    if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
     
-    const recognition = new SpeechRecognition();
+    let interimTranscript = '';
+    let finalTranscript = '';
+
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+      } else {
+        interimTranscript += event.results[i][0].transcript;
+      }
+    }
+
+    // Live screen par dikhane ke liye jo bhi bol rahe ho
+    const currentLiveText = finalTranscript || interimTranscript;
+    setUserTranscript(currentLiveText);
+    userTranscriptRef.current = currentLiveText; 
+
+    const text = currentLiveText.toLowerCase().trim();
+    console.log("Mic Live Mobile Vector:", text); 
+
+    // 1. Agla sawaal Command
+    if (text.includes("next question")) {
+       console.log("Next Question Command Detected!");
+       handleNext(false);
+    } 
     
-    // 🎯 MOBILE CORE FIX: Continuous processing mobile browser networks par drop ho jati hai
-    recognition.continuous = false;
-    recognition.interimResults = false; // Final solid sentence block direct hold karega
-    recognition.lang = 'en-US';
-    
-    recognition.onresult = (event) => {
-      if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
-      
-      // Short burst engine direct result block capture karga bina connection loss kiye
-      const finalTranscript = event.results[0][0].transcript;
+    // 2. Session End Commands
+    else if (
+      text.includes("session end") || 
+      text.includes("stop interview") || 
+      text.includes("end interview")
+    ) {
+      console.log("Stop Command Detected!");
+      finish(); 
+    }
 
-      setUserTranscript(finalTranscript);
-      userTranscriptRef.current = finalTranscript; 
-
-      const text = finalTranscript.toLowerCase().trim();
-      console.log("Mic Live Mobile Vector:", text); 
-
-      // 1. Agla sawaal 
-      if (text.endsWith("next question")) {
-         console.log("Next Question Command Detected!");
-         handleNext(false);
-      } 
-      
-      // 2. Session End Commands
-      else if (
-        text.endsWith("session end") || 
-        text.endsWith("stop interview") || 
-        text.endsWith("end interview")
-      ) {
-        console.log("Stop Command Detected!");
-        finish(); 
-      }
-
-      // 3. Done Logic
-      else if (text.endsWith("i am done") || text.endsWith("done")) {
-        handleNext(true); 
-      }
-    };
-
-    recognition.onend = () => {
-      // Short burst process end hote hi block cycle automated loop restart karega
-      if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
-        try { recognition.start(); } catch(e) {}
-      }
-    };
-
-    recognition.onerror = (e) => {
-      console.log("Speech engine warning caught:", e.error);
-    };
-
-    try {
-      recognition.start();
-      recognitionRef.current = recognition;
-    } catch (err) {
-      console.error("Mic start error:", err);
+    // 3. Done Logic
+    else if (text.includes("i am done") || text.includes("done")) {
+      handleNext(true); 
     }
   };
+
+  recognition.onend = () => {
+    // Loop safe mode for phone viewports
+    if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
+  recognition.onerror = (e) => {
+    console.log("Speech engine warning caught:", e.error);
+    // Phone par audio capture drop hone par automatic restart trigger
+    if (e.error === 'no-speech' && isInterviewActiveRef.current && !isAiSpeakingRef.current) {
+      try { recognition.stop(); } catch(err) {}
+    }
+  };
+
+  try {
+    recognition.start();
+    recognitionRef.current = recognition;
+  } catch (err) {
+    console.error("Mic start error:", err);
+  }
+};
 
   useEffect(() => {
     if (step === 'interview' && videoRef.current && streamRef.current) {
@@ -231,12 +246,19 @@ const MockInterview = () => {
   }, [step]);
 
   // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
+  // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
   const startHardware = async () => {
     try {
       await forceWakeMobileAudioPipeline(); // Initializing smartphone media pipelines
 
+      // 🎯 PHONE AND LAPTOP DYNAMIC RESOLUTION FIX
       const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" }, 
+        video: { 
+          facingMode: "user",
+          // Fixed height/width ki jagah flexible limits lagayi taaki phone portrait mode handle kar sake
+          width: { min: 240, ideal: 640, max: 1280 },
+          height: { min: 320, ideal: 480, max: 720 }
+        }, 
         audio: { echoCancellation: true, noiseSuppression: true } 
       });
       streamRef.current = stream;
