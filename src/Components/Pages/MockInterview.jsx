@@ -382,10 +382,10 @@ const startInterview = async (currentText, role) => {
 
   // --- 🛑 FINISH ---
   const finish = async () => {
+    console.log("🎬 Initiating interview teardown and video compilation...");
+    
+    // 1. Background interval loops ko sabse pehle clear karo
     if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
-    if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
-  try { mediaRecorderRef.current.stop(); } catch(e){}
-  try { audioOnlyRecorderRef.current.stop(); } catch(e){}
     isInterviewActiveRef.current = false; 
     isProcessingRef.current = true; 
   
@@ -393,14 +393,33 @@ const startInterview = async (currentText, role) => {
       try { recognitionRef.current.stop(); } catch(e) {}
     }
   
-    speak("Interview ended. Compiling telemetry log.", async () => {
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-        try { mediaRecorderRef.current.stop(); } catch(e){}
+    // 🎯 FIX 1: Video recorder se bacha hua saara data zabardasti request karo aur safely stop karo
+    try {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        mediaRecorderRef.current.requestData(); // Aakhiri ke saare frames kich lo
+        mediaRecorderRef.current.stop();
       }
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(t => t.stop());
+    } catch(e){ console.error("Error stopping video recorder:", e); }
+
+    try {
+      if (audioOnlyRecorderRef.current && audioOnlyRecorderRef.current.state === "recording") {
+        audioOnlyRecorderRef.current.stop();
       }
+    } catch(e){}
   
+    // AI se end message bulwao
+    speak("Interview ended. Compiling telemetry log.", async () => {
+      
+      // 🎯 FIX 2: Thoda sa 300ms ka delay do taaki MediaRecorder apna 'onstop' event poora chala sake 
+      // aur video file database/state mein register ho jaye, uske baad hi camera band karo!
+      setTimeout(() => {
+        if (streamRef.current) {
+          console.log("🔒 Shutting down camera hardware tracks safely.");
+          streamRef.current.getTracks().forEach(t => t.stop());
+        }
+      }, 300);
+  
+      // 2. Session save karne ki API call (Tera original code)
       try {
         const response = await fetch(`${API_URL}/api/coach/save-session`, {
           method: 'POST',
