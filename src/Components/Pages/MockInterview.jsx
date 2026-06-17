@@ -182,7 +182,7 @@ const MockInterview = () => {
       
       try {
         // 🔥 DIRECT HIT TO YOUR BACKEND TRANSCRIBE ROUTE
-        const res = await fetch(`${API_URL}/api/coach/transcribe`, {
+        const res = await fetch(`${API_URL}/api/coach/transcribe-interview`, {
           method: 'POST',
           body: formData
         });
