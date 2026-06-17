@@ -50,6 +50,9 @@ const MockInterview = () => {
   const chunkAudioChunksRef = useRef([]); // Sirf audio chunks track karne ke liye
   const chunkIntervalRef = useRef(null);   // 3-second ka loop control karne ke liye
   // Helper to forcefully wake up audio routing layer on mobile phone viewports
+
+  const audioOnlyRecorderRef = useRef(null); // Pure audio track track karne ke liye
+
   const forceWakeMobileAudioPipeline = async () => {
     if (window.AudioContext || window.webkitAudioContext) {
       const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
@@ -161,64 +164,71 @@ const MockInterview = () => {
   };
 
   // --- 🎙️ THE MIC (MOBILE SAFE SHORT BURST ENGINE FIXED) ---
+
   const initVoice = () => {
-    // Ab phone ka sadiyal Speech API use nahi karna, bas status "Listening" karenge
-    setUserTranscript("Listening (Hands-Free Dynamic Mode)...");
+    setUserTranscript("Listening (Hands-Free Pure Audio Mode)...");
     
-    // Har 3.5 second mein background mein bolte hue audio ko cut karke backend bhejo
     if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
     
     chunkIntervalRef.current = setInterval(async () => {
       if (isAiSpeakingRef.current || isProcessingRef.current || !isInterviewActiveRef.current) return;
       
+      // 🎯 FRESH AUDIO CYCLE: Audio recorder ko cycle karo taaki fresh sound metadata mile
+      if (audioOnlyRecorderRef.current && audioOnlyRecorderRef.current.state === "recording") {
+        audioOnlyRecorderRef.current.stop();
+        setTimeout(() => {
+          if (isInterviewActiveRef.current && !isAiSpeakingRef.current && !isProcessingRef.current) {
+            try { audioOnlyRecorderRef.current.start(); } catch(e) {}
+          }
+        }, 40);
+      }
+
       if (chunkAudioChunksRef.current.length === 0) return;
       
-      console.log("🚀 Sending 3-second background audio slice to Groq Whisper...");
+      console.log("🚀 Sending a PURE AUDIO webm chunk to Groq Whisper...");
+      
+      // Sirf pure audio data compile ho raha hai bina kisi video track ke kachre ke
       const audioBlob = new Blob(chunkAudioChunksRef.current, { type: 'audio/webm' });
-      chunkAudioChunksRef.current = []; // Reset for next chunk
+      chunkAudioChunksRef.current = []; 
       
       const formData = new FormData();
       formData.append('audio', audioBlob);
       
       try {
-        // 🔥 DIRECT HIT TO YOUR BACKEND TRANSCRIBE ROUTE
         const res = await fetch(`${API_URL}/api/coach/transcribe-interview`, {
           method: 'POST',
           body: formData
         });
         
         const data = await res.json();
+        
         if (data.text) {
           const text = data.text.toLowerCase().trim();
           console.log("📱 Whisper Decoded Text:", text);
           
-          // Agar khali text nahi hai toh user transcript screen par update karo
-          if (text.length > 2) {
+          if (text.length > 1) {
             setUserTranscript(data.text);
             userTranscriptRef.current = data.text;
             
-            // 🎯 VOICE COMMANDS DETECTION (HANDS-FREE)
-            if (text.includes("next question") || text.includes("next")) {
-              console.log("⚡ Command Caught: Next");
-              clearInterval(chunkIntervalRef.current);
+            if (data.command === "next") {
+              console.log("⚡ Action Fired: Next");
+              if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
               handleNext(false);
-            } 
-            else if (text.includes("session end") || text.includes("stop interview") || text.includes("end interview") || text.includes("stop")) {
-              console.log("⚡ Command Caught: Stop");
-              clearInterval(chunkIntervalRef.current);
+            } else if (data.command === "stop") {
+              console.log("⚡ Action Fired: Stop");
+              if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
               finish();
-            }
-            else if (text.includes("i am done") || text.includes("done")) {
-              console.log("⚡ Command Caught: Done");
-              clearInterval(chunkIntervalRef.current);
+            } else if (data.command === "done") {
+              console.log("⚡ Action Fired: Done");
+              if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
               handleNext(true);
             }
           }
         }
       } catch (err) {
-        console.error("Whisper background chunk failed:", err);
+        console.error("Whisper audio chunk transmission failed:", err);
       }
-    }, 3500); // Har 3.5 second mein continuous check
+    }, 3500); 
   };
 
   useEffect(() => {
@@ -228,6 +238,7 @@ const MockInterview = () => {
   }, [step]);
 
   // --- HARDWARE START (CODEC COMPATIBILITY HARNESS INTEGRATED) ---
+  
   const startHardware = async () => {
     try {
       await forceWakeMobileAudioPipeline(); 
@@ -246,8 +257,9 @@ const MockInterview = () => {
       }
   
       recordedChunks.current = [];
-      chunkAudioChunksRef.current = []; // Clear whisper chunks
+      chunkAudioChunksRef.current = [];
 
+      // 1. Main Video/Audio Recorder (Jo tera normal video save karta hai)
       let structuralMimeType = 'video/mp4'; 
       if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
         structuralMimeType = 'video/webm;codecs=vp8,opus';
@@ -258,9 +270,7 @@ const MockInterview = () => {
       
       mr.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) {
-          recordedChunks.current.push(e.data);
-          // Simultaneous Whisper storage loop mein audio chunks push karo
-          chunkAudioChunksRef.current.push(e.data);
+          recordedChunks.current.push(e.data); // Pure interview clip ke liye video tracks safe hain
         }
       };
       
@@ -269,9 +279,26 @@ const MockInterview = () => {
         setVideoUrl(URL.createObjectURL(fileBlobContainer));
       };
 
-      mr.start(1000); // 1-second interval chunks continue
+      mr.start(1000); 
+
+      // 🎯 2. PURE AUDIO ONLY RECORDER (Khaas Whisper Ke Liye)
+      // Hum isi stream ke audio track ko nikaal kar alag se record karenge bina kisi video trace ke
+      const audioTracksOnly = stream.getAudioTracks();
+      const audioOnlyStream = new MediaStream(audioTracksOnly);
+      
+      const audioRecorder = new MediaRecorder(audioOnlyStream, { mimeType: 'audio/webm' });
+      audioOnlyRecorderRef.current = audioRecorder;
+      
+      audioRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          chunkAudioChunksRef.current.push(e.data); // Sirf audio chunk database mein jayega
+        }
+      };
+      
+      audioRecorder.start(1000);
+
     } catch (err) {
-      console.error("Hardware initialization error:", err);
+      console.error("Dual hardware separator crash:", err);
     }
   };
 
@@ -356,6 +383,9 @@ const startInterview = async (currentText, role) => {
   // --- 🛑 FINISH ---
   const finish = async () => {
     if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
+    if (chunkIntervalRef.current) clearInterval(chunkIntervalRef.current);
+  try { mediaRecorderRef.current.stop(); } catch(e){}
+  try { audioOnlyRecorderRef.current.stop(); } catch(e){}
     isInterviewActiveRef.current = false; 
     isProcessingRef.current = true; 
   
