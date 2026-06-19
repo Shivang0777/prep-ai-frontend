@@ -770,6 +770,7 @@ const VocabModule = () => {
 
 // --- MODULE 3: GRAMMAR ---
 const GrammarModule = () => {
+    // 1. TERE ORIGINAL STATES (UNTOUCHED)
     const [activeQ, setActiveQ] = useState(0);
     const [inputText, setInputText] = useState("");
     const [isRecording, setIsRecording] = useState(false);
@@ -778,8 +779,20 @@ const GrammarModule = () => {
     const [questions, setQuestions] = useState([]); 
     const [loadingQuestions, setLoadingQuestions] = useState(true);
 
+    // 2. REFS & ADDITIONAL TELEMETRY STATES (FIXED)
     const recognitionRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef(null);
+    const startTimeRef = useRef(null);
 
+    // Context handling helper states for audio processing metrics
+    const [audioUrl, setAudioUrl] = useState(null);
+    const [accuracy, setAccuracy] = useState(null);
+    const [wpm, setWpm] = useState(null);
+
+    const API_URL = "https://prep-ai-backend-s9uw.onrender.com"; // API Base URL
+
+    // --- 📡 FETCH QUESTIONS LOGIC ---
     const fetchAIQuestions = async () => {
         setLoadingQuestions(true);
         try {
@@ -811,23 +824,22 @@ const GrammarModule = () => {
         }
     };
 
-    // 🎯 INITIALIZE QUESTIONS ON MOUNT
+    // --- 🎯 INITIALIZE ON MOUNT ---
     useEffect(() => {
         fetchAIQuestions();
     }, []);
 
-    // 🎯 FIX: ADDED MISSING MOBILE-PROOF SPEECH LISTENERS WITH EXPLICIT CLEANUP
+    // --- 🎙️ NATIVE SPEECH RECOGNITION FALLBACK ---
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             recognitionRef.current = new SpeechRecognition();
-            recognitionRef.current.continuous = false; // Short-burst processing for smooth phone support
+            recognitionRef.current.continuous = false; 
             recognitionRef.current.interimResults = false;
             recognitionRef.current.lang = 'en-US';
 
             recognitionRef.current.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
-                // Append securely to text area text inputs
                 setInputText(prev => prev ? prev + " " + transcript : transcript);
             };
 
@@ -848,8 +860,9 @@ const GrammarModule = () => {
         };
     }, []);
 
+    // --- 🎯 CORE FIXED: TOGGLE RECORDING PIPELINE ---
     const toggleRecording = async () => {
-        // 🎯 PHONE FIX: Audio Pipeline Unlock
+        // Mobile/Browser Audio Pipeline Unlock
         if (window.AudioContext || window.webkitAudioContext) {
             const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
             const ctxInstance = new AudioCtxClass();
@@ -858,13 +871,14 @@ const GrammarModule = () => {
             }
         }
     
-        if (recording) {
-            setRecording(false);
+        // FIX: Changed 'recording' check to match your actual 'isRecording' state variable
+        if (isRecording) {
+            setIsRecording(false); // FIX: Changed setRecording to setIsRecording
             try { if (mediaRecorderRef.current) mediaRecorderRef.current.stop(); } catch(e){}
         } else {
-            resetState();
+            setInputText(""); // Reset text field smoothly
             startTimeRef.current = Date.now();
-            setRecording(true);
+            setIsRecording(true); // FIX: Changed setRecording to setIsRecording
             
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -880,26 +894,23 @@ const GrammarModule = () => {
                 audioChunksRef.current = [];
                 mediaRecorderRef.current.ondataavailable = (e) => audioChunksRef.current.push(e.data);
                 
-                // 🎯 FIXED PROXY LOGIC - HIT TO RENDER BACKEND
+                // --- 🎧 ON RECORDER STOP (GROQ API PROXY LOGIC) ---
                 mediaRecorderRef.current.onstop = async () => {
                     const blob = new Blob(audioChunksRef.current, { type: targetMimeType });
                     setAudioUrl(URL.createObjectURL(blob));
-                    setUserTranscript("AI is decoding your voice... Please wait 1s");
+                    setInputText("AI is decoding your voice... Please wait 1s");
     
                     try {
-                        // Audio ko FormData mein convert karo taaki backend upload catch kar sake
                         const formData = new FormData();
                         formData.append('audio', blob, 'recording.mp4');
     
-                        // Direct tere Render backend ke naye proxy route par request bhejo
-                        const hfResponse = await fetch("https://prep-ai-backend-s9uw.onrender.com/api/coach/transcribe", {
+                        const hfResponse = await fetch(`${API_URL}/api/coach/transcribe`, {
                             method: "POST",
                             body: formData
                         });
                         
                         const aiResult = await hfResponse.json();
                         
-                        // Array aur Object dono responses ke liye safer parsing
                         let rawText = "";
                         if (Array.isArray(aiResult) && aiResult[0] && aiResult[0].text) {
                             rawText = aiResult[0].text;
@@ -909,11 +920,12 @@ const GrammarModule = () => {
         
                         if (rawText) {
                             const cleanTranscript = rawText.trim();
-                            setUserTranscript(cleanTranscript);
+                            setInputText(cleanTranscript); // Directly populate textarea
     
                             // Metrics calculation logic
-                            if (questions.length > 0 && questions[currentIndex]) {
-                                const target = questions[currentIndex].text.toLowerCase().replace(/[.,!]/g, "");
+                            if (questions.length > 0 && questions[activeQ]) {
+                                // FIX: Changed '.text' mapping and 'currentIndex' to match '.question' and 'activeQ'
+                                const target = questions[activeQ].question.toLowerCase().replace(/[.,!]/g, "");
                                 const spoken = cleanTranscript.toLowerCase().replace(/[.,!]/g, "");
                                 const targetWords = target.split(/\s+/);
                                 const spokenWords = spoken.split(/\s+/);
@@ -931,22 +943,23 @@ const GrammarModule = () => {
                                 }
                             }
                         } else {
-                            setUserTranscript("Could not process voice clearly, please try again.");
+                            setInputText("Could not process voice clearly, please try again.");
                         }
                     } catch (apiErr) {
                         console.error("Backend Proxy Error:", apiErr);
-                        setUserTranscript("AI Network Timeout. Please check connection.");
+                        setInputText("AI Network Timeout. Please check connection.");
                     }
                 };
     
                 mediaRecorderRef.current.start();
             } catch (err) { 
                 console.error("Mic Error:", err); 
-                setRecording(false);
+                setIsRecording(false); // FIX: Sync fallback state
             }
         }
     };
 
+    // --- 🧠 AI EVALUATION ENGINE ---
     const handleAnalyze = async () => {
         if (!inputText.trim()) return;
         setAnalyzing(true);
